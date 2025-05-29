@@ -1,5 +1,4 @@
 # RCE PSE Integration for Home Assistant
-## Rynkowa Cena Energii
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
 ![GitHub Release](https://img.shields.io/github/v/release/lewa-reka/ha-rce-pse?style=for-the-badge)
@@ -7,6 +6,8 @@
 ![GitHub License](https://img.shields.io/github/license/lewa-reka/ha-rce-pse?style=for-the-badge)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lewa-reka/ha-rce-pse?style=for-the-badge)
 ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
+
+## Rynkowa Cena Energii
 
 A Home Assistant integration for monitoring Polish electricity market prices (RCE - Rynkowa Cena Energii) from PSE (Polskie Sieci Elektroenergetyczne).
 
@@ -21,22 +22,22 @@ A Home Assistant integration for monitoring Polish electricity market prices (RC
 
 ## Installation
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Lewa-Reka&repository=ha-rce-pse&category=integration)
+
 ### HACS (Recommended)
 
 1. Add this repository to HACS as a custom repository
 2. Install the integration through HACS
 3. Restart Home Assistant
-4. Add the integration through Configuration > Integrations
+4. Add the integration through Configuration > Integrations > Add integration > Search "RCE PSE"
 
 ### Manual Installation
 
-1. Copy the `custom_components/rce-pse` folder to your Home Assistant `custom_components` directory
+1. Copy the `custom_components/rce_pse` folder to your Home Assistant `custom_components` directory
 2. Restart Home Assistant
 3. Add the integration through Configuration > Integrations
 
 ## Sensors
-
-The integration provides 23 sensors:
 
 ### Main Sensors
 - **Price** - Current electricity price
