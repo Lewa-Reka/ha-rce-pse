@@ -11,15 +11,6 @@
 
 A Home Assistant integration for monitoring Polish electricity market prices (RCE - Rynkowa Cena Energii) from PSE (Polskie Sieci Elektroenergetyczne).
 
-## Features
-
-- Current electricity price monitoring
-- Future prices (1h, 2h, 3h ahead)
-- Daily statistics (average, min, max, median)
-- Tomorrow's statistics (available after 14:00 CET)
-- Today vs tomorrow price comparison
-- Hours of highest and lowest prices
-
 ## Installation
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Lewa-Reka&repository=ha-rce-pse&category=integration)
@@ -36,6 +27,42 @@ A Home Assistant integration for monitoring Polish electricity market prices (RC
 1. Copy the `custom_components/rce_pse` folder to your Home Assistant `custom_components` directory
 2. Restart Home Assistant
 3. Add the integration through Configuration > Integrations
+
+## Usage Examples
+
+Here are two ready-to-use dashboard card configurations that showcase different ways to display energy price data:
+
+### 1. Advanced Charts with ApexCharts (Additional Dependencies Required)
+
+This card provides advanced charting capabilities with professional-looking graphs and real-time price analysis. Perfect for users who want detailed visual analytics.
+
+![ApexCharts Analysis Card](examples/images/card2_apexcharts.png)
+
+**Configuration file**: [`examples/card2_apexcharts_analysis.yaml`](examples/card2_apexcharts_analysis.yaml)
+
+
+**Requirements:**
+- `apexcharts-card` - Install via HACS → "ApexCharts Card"
+
+### 2. Basic Overview (No Dependencies Required)
+
+This card provides a comprehensive overview of current energy prices using standard Home Assistant entities. It's perfect for users who want a clean, simple display without additional dependencies.
+
+![Basic Overview Card](examples/images/card1_basic.png)
+
+**Configuration file**: [`examples/card1_basic_overview.yaml`](examples/card1_basic_overview.yaml)
+
+
+Both cards can be easily customized to match your dashboard theme and specific needs. Simply copy the YAML configuration from the respective files and paste them into your Home Assistant dashboard in edit mode.
+
+## Features
+
+- Current electricity price monitoring
+- Future prices (1h, 2h, 3h ahead)
+- Daily statistics (average, min, max, median)
+- Tomorrow's statistics (available after 14:00 CET)
+- Today vs tomorrow price comparison
+- Hours of highest and lowest prices
 
 ## Sensors
 

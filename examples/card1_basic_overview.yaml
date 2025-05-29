@@ -1,0 +1,76 @@
+# CARD 1: Current Energy Prices Overview
+# ===========================================
+# This card presents a comprehensive overview of current energy prices
+# using standard Home Assistant entities card
+#
+# REQUIREMENTS: None - uses only built-in Home Assistant features
+#
+# INSTALLATION:
+# 1. Copy this YAML content
+# 2. Open your Home Assistant dashboard in edit mode
+# 3. Click "+ ADD CARD" -> "Manual"
+# 4. Paste this content
+# 5. Click "SAVE"
+
+- type: entities
+  title: "💡 Aktualne Ceny Energii RCE"
+  icon: mdi:flash
+  show_header_toggle: false
+  state_color: true
+  entities:
+    - type: section
+      label: "Ceny"
+    - entity: sensor.rce_pse_cena
+      name: "Aktualna cena"
+      icon: mdi:cash-multiple
+      secondary_info: last-updated
+    - entity: sensor.rce_pse_cena_nastepnej_godziny
+      name: "Cena w następnej godzinie"
+      icon: mdi:clock-plus-outline
+    - entity: sensor.rce_pse_cena_za_2_godziny
+      name: "Cena za 2 godziny"
+      icon: mdi:clock-fast
+    - entity: sensor.rce_pse_cena_za_3_godziny
+      name: "Cena za 3 godziny"
+      icon: mdi:clock-time-eight
+    - type: section
+      label: "Statystyki Dzisiejsze"
+    - entity: sensor.rce_pse_srednia_cena_dzisiaj
+      name: "Średnia dziś"
+      icon: mdi:chart-line
+    - entity: sensor.rce_pse_minimalna_cena_dzisiaj
+      name: "Minimum dziś"
+      icon: mdi:arrow-down-bold
+    - entity: sensor.rce_pse_maksymalna_cena_dzisiaj
+      name: "Maksimum dziś"
+      icon: mdi:arrow-up-bold
+    - entity: sensor.rce_pse_aktualna_vs_srednia_dzisiaj
+      name: "Obecna vs średnia"
+      icon: mdi:percent
+    - type: section
+      label: "Najlepsze Godziny Dziś"
+    - entity: sensor.rce_pse_poczatek_godziny_min_ceny_dzisiaj
+      name: "Najtaniej od"
+      icon: mdi:clock-check
+    - entity: sensor.rce_pse_koniec_godziny_min_ceny_dzisiaj
+      name: "Najtaniej do"
+      icon: mdi:clock-check-outline
+    - entity: sensor.rce_pse_poczatek_godziny_maks_ceny_dzisiaj
+      name: "Najdrożej od"
+      icon: mdi:clock-alert
+    - entity: sensor.rce_pse_koniec_godziny_maks_ceny_dzisiaj
+      name: "Najdrożej do"
+      icon: mdi:clock-alert-outline
+# ===========================================
+# CUSTOMIZATION OPTIONS:
+# ===========================================
+# You can customize this card by:
+# - Changing the title and icons
+# - Adding/removing sensors
+# - Modifying entity names
+# - Changing section labels
+#
+# Example customization:
+# - entity: sensor.rce_pse_cena
+#   name: "Your custom name"
+#   icon: mdi:your-icon

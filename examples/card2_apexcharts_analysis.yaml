@@ -1,0 +1,147 @@
+# CARD 2: Energy Price Charts with ApexCharts
+# ===========================================
+# This card provides advanced charting with real-time price analysis
+# using ApexCharts for professional-looking graphs
+#
+# REQUIREMENTS:
+# - custom:apexcharts-card (install via HACS)
+#
+# INSTALLATION:
+# 1. Install ApexCharts Card via HACS:
+#    - HACS -> Frontend -> "+ EXPLORE & DOWNLOAD REPOSITORIES"
+#    - Search "ApexCharts Card" -> Install
+#    - Restart Home Assistant
+# 2. Copy this YAML content
+# 3. Open your Home Assistant dashboard in edit mode
+# 4. Click "+ ADD CARD" -> "Manual"
+# 5. Paste this content
+# 6. Click "SAVE"
+
+- type: custom:apexcharts-card
+  update_interval: 15m
+  header:
+    show: true
+    title: 📊 Analiza Cen Energii - 24h
+    show_states: true
+    colorize_states: true
+  graph_span: 48h
+  experimental:
+    color_threshold: true
+  span:
+    start: day
+  yaxis:
+    - id: price
+      min: ~0
+      apex_config:
+        title:
+          text: Cena [PLN/MWh]
+  apex_config:
+    chart:
+      height: 300
+      width: 100%
+    dataLabels:
+      enabled: false
+    stroke:
+      curve: smooth
+      width: 5
+    tooltip:
+      enabled: true
+      x:
+        format: dd MMM HH:mm
+    annotations:
+      yaxis:
+        - "y": 200
+          borderColor: "#00E396"
+          label:
+            text: Niska cena
+            style:
+              color: "#fff"
+              background: "#00E396"
+        - "y": 500
+          borderColor: "#FEB019"
+          label:
+            text: Wysoka cena
+            style:
+              color: "#fff"
+              background: "#FEB019"
+  series:
+    - entity: sensor.rce_pse_cena
+      attribute: prices
+      name: Cena bieżąca
+      yaxis_id: price
+      type: line
+      curve: smooth
+      stroke_width: 5
+      extend_to: false
+      color_threshold:
+        - value: 0
+          color: "#2196F3"
+        - value: 300
+          color: "#4CAF50"
+        - value: 500
+          color: "#FF9800"
+        - value: 700
+          color: "#F44336"
+      data_generator: |
+        return entity.attributes.prices.map((entry) => {
+          return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+        });
+    - entity: sensor.rce_pse_cena_jutro
+      attribute: prices
+      name: Cena jutro
+      yaxis_id: price
+      type: line
+      curve: smooth
+      stroke_width: 5
+      opacity: 0.7
+      extend_to: false
+      color_threshold:
+        - value: 0
+          color: "#64B5F6"
+        - value: 300
+          color: "#81C784"
+        - value: 500
+          color: "#FFB74D"
+        - value: 700
+          color: "#E57373"
+      data_generator: |
+        return entity.attributes.prices.map((entry) => {
+          return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+        });
+      show:
+        in_chart: false
+        legend_value: false
+    - entity: sensor.rce_pse_srednia_cena_dzisiaj
+      name: Średnia dzienna
+      yaxis_id: price
+      type: line
+      color: "#ff7f0e"
+      stroke_width: 2
+      extend_to: now
+      show:
+        in_chart: false
+        legend_value: true
+    - entity: sensor.rce_pse_minimalna_cena_dzisiaj
+      name: Minimum dziś
+      yaxis_id: price
+      type: line
+      color: "#2ca02c"
+      stroke_width: 1
+      extend_to: now
+      show:
+        in_chart: false
+        legend_value: true
+    - entity: sensor.rce_pse_maksymalna_cena_dzisiaj
+      name: Maksimum dziś
+      yaxis_id: price
+      type: line
+      color: "#d62728"
+      stroke_width: 1
+      extend_to: now
+      show:
+        in_chart: false
+        legend_value: true
+  now:
+    show: true
+    label: Teraz
+    color: red
