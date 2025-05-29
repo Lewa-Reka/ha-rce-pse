@@ -28,19 +28,30 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
             update_interval=API_UPDATE_INTERVAL,
         )
         self.session = None
+        self._last_api_fetch = None
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Update data via library."""
-        _LOGGER.debug("Starting data update from PSE API")
+        now = dt_util.now()
         
-        # Create session if it doesn't exist
+        if (self._last_api_fetch and 
+            self.data and 
+            now - self._last_api_fetch < API_UPDATE_INTERVAL):
+            time_since_fetch = now - self._last_api_fetch
+            _LOGGER.debug("Using cached data - last API fetch was %s ago (max interval: %s)", 
+                         time_since_fetch, API_UPDATE_INTERVAL)
+            return self.data
+        
+        _LOGGER.debug("Fetching fresh data from PSE API - last fetch: %s", self._last_api_fetch)
+        
         if self.session is None:
             self.session = aiohttp.ClientSession()
             
         try:
             async with async_timeout.timeout(30):
                 data = await self._fetch_data()
-                _LOGGER.debug("Successfully fetched data from PSE API, records count: %d", 
+                self._last_api_fetch = now
+                _LOGGER.debug("Successfully fetched fresh data from PSE API, records count: %d", 
                             len(data.get("raw_data", [])))
                 return data
         except asyncio.TimeoutError as exception:
