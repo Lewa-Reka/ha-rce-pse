@@ -1,0 +1,30 @@
+name: Create HACS Release
+
+on:
+  release:
+    types: [published, edited]
+
+permissions: {}
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: "Checkout the repository"
+        uses: actions/checkout@v4
+
+      - name: "ZIP the integration directory"
+        shell: bash
+        run: |
+          cd "${{ github.workspace }}/custom_components/rce_pse"
+          zip -r ../rce_pse.zip . -x "*.git*" "*.git/*" "*.github/*"
+
+      - name: "Upload the ZIP file to the release"
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{ github.workspace }}/custom_components/*.zip

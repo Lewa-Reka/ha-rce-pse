@@ -1,0 +1,6 @@
+{
+    "name": "RCE PSE - Rynkowa Cena Energii",
+    "homeassistant": "2025.1.0",
+    "zip_release": true,
+    "filename": "rce_pse.zip"
+}

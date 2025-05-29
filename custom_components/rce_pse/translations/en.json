@@ -1,0 +1,86 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "RCE PSE Configuration",
+                "description": "Set up the RCE PSE integration"
+            }
+        },
+        "abort": {
+            "single_instance_allowed": "Only a single configuration of RCE PSE is allowed."
+        }
+    },
+    "entity": {
+        "sensor": {
+            "rce_pse_today_price": {
+                "name": "Price"
+            },
+            "rce_pse_next_hour_price": {
+                "name": "Next Hour Price"
+            },
+            "rce_pse_next_2_hours_price": {
+                "name": "Price in 2 Hours"
+            },
+            "rce_pse_next_3_hours_price": {
+                "name": "Price in 3 Hours"
+            },
+            "rce_pse_today_avg_price": {
+                "name": "Today Average Price"
+            },
+            "rce_pse_today_max_price": {
+                "name": "Today Maximum Price"
+            },
+            "rce_pse_today_min_price": {
+                "name": "Today Minimum Price"
+            },
+            "rce_pse_today_median_price": {
+                "name": "Today Median Price"
+            },
+            "rce_pse_today_current_vs_average": {
+                "name": "Today Current vs Average"
+            },
+            "rce_pse_today_max_price_hour_start": {
+                "name": "Today Max Price Hour Start"
+            },
+            "rce_pse_today_max_price_hour_end": {
+                "name": "Today Max Price Hour End"
+            },
+            "rce_pse_today_min_price_hour_start": {
+                "name": "Today Min Price Hour Start"
+            },
+            "rce_pse_today_min_price_hour_end": {
+                "name": "Today Min Price Hour End"
+            },
+            "rce_pse_tomorrow_price": {
+                "name": "Tomorrow Price"
+            },
+            "rce_pse_tomorrow_avg_price": {
+                "name": "Tomorrow Average Price"
+            },
+            "rce_pse_tomorrow_max_price": {
+                "name": "Tomorrow Maximum Price"
+            },
+            "rce_pse_tomorrow_min_price": {
+                "name": "Tomorrow Minimum Price"
+            },
+            "rce_pse_tomorrow_median_price": {
+                "name": "Tomorrow Median Price"
+            },
+            "rce_pse_tomorrow_vs_today_avg": {
+                "name": "Tomorrow vs Today Average"
+            },
+            "rce_pse_tomorrow_max_price_hour_start": {
+                "name": "Tomorrow Max Price Hour Start"
+            },
+            "rce_pse_tomorrow_max_price_hour_end": {
+                "name": "Tomorrow Max Price Hour End"
+            },
+            "rce_pse_tomorrow_min_price_hour_start": {
+                "name": "Tomorrow Min Price Hour Start"
+            },
+            "rce_pse_tomorrow_min_price_hour_end": {
+                "name": "Tomorrow Min Price Hour End"
+            }
+        }
+    }
+}
