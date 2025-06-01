@@ -5,6 +5,7 @@ from .today_prices import (
     RCENextHourPriceSensor,
     RCENext2HoursPriceSensor,
     RCENext3HoursPriceSensor,
+    RCEPreviousHourPriceSensor,
 )
 from .today_stats import (
     RCETodayAvgPriceSensor,
@@ -18,6 +19,8 @@ from .today_hours import (
     RCETodayMaxPriceHourEndSensor,
     RCETodayMinPriceHourStartSensor,
     RCETodayMinPriceHourEndSensor,
+    RCETodayMinPriceRangeSensor,
+    RCETodayMaxPriceRangeSensor,
 )
 from .tomorrow_main import (
     RCETomorrowMainSensor,
@@ -34,6 +37,8 @@ from .tomorrow_hours import (
     RCETomorrowMaxPriceHourEndSensor,
     RCETomorrowMinPriceHourStartSensor,
     RCETomorrowMinPriceHourEndSensor,
+    RCETomorrowMinPriceRangeSensor,
+    RCETomorrowMaxPriceRangeSensor,
 )
 
 __all__ = [
@@ -42,6 +47,7 @@ __all__ = [
     "RCENextHourPriceSensor",
     "RCENext2HoursPriceSensor",
     "RCENext3HoursPriceSensor",
+    "RCEPreviousHourPriceSensor",
     "RCETodayAvgPriceSensor",
     "RCETodayMaxPriceSensor",
     "RCETodayMinPriceSensor",
@@ -49,6 +55,8 @@ __all__ = [
     "RCETodayMaxPriceHourEndSensor",
     "RCETodayMinPriceHourStartSensor",
     "RCETodayMinPriceHourEndSensor",
+    "RCETodayMinPriceRangeSensor",
+    "RCETodayMaxPriceRangeSensor",
     "RCETodayMedianPriceSensor",
     "RCETodayCurrentVsAverageSensor",
     "RCETomorrowMainSensor",
@@ -59,6 +67,8 @@ __all__ = [
     "RCETomorrowMaxPriceHourEndSensor",
     "RCETomorrowMinPriceHourStartSensor",
     "RCETomorrowMinPriceHourEndSensor",
+    "RCETomorrowMinPriceRangeSensor",
+    "RCETomorrowMaxPriceRangeSensor",
     "RCETomorrowMedianPriceSensor",
     "RCETomorrowTodayAvgComparisonSensor",
 ] 
