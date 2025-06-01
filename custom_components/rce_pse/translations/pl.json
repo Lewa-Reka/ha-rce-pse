@@ -3,11 +3,57 @@
         "step": {
             "user": {
                 "title": "Konfiguracja RCE PSE",
-                "description": "Skonfiguruj integrację RCE PSE"
+                "description": "Skonfiguruj integrację RCE PSE",
+                "data": {
+                    "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
+                    "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
+                    "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
+                    "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
+                    "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
+                    "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)"
+                },
+                "data_description": {
+                    "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
+                    "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
+                    "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
+                    "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
+                    "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
+                    "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)"
+                }
             }
+        },
+        "error": {
+            "invalid_time_window": "Godzina początku musi być wcześniejsza niż godzina końca"
         },
         "abort": {
             "single_instance_allowed": "Dozwolona jest tylko jedna konfiguracja RCE PSE."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Ustawienia RCE PSE",
+                "description": "Zmień ustawienia integracji RCE PSE",
+                "data": {
+                    "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
+                    "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
+                    "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
+                    "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
+                    "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
+                    "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)"
+                },
+                "data_description": {
+                    "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
+                    "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
+                    "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
+                    "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
+                    "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
+                    "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)"
+                }
+            }
+        },
+        "error": {
+            "invalid_time_window": "Godzina początku musi być wcześniejsza niż godzina końca"
         }
     },
     "entity": {

@@ -3,11 +3,57 @@
         "step": {
             "user": {
                 "title": "RCE PSE Configuration",
-                "description": "Set up the RCE PSE integration"
+                "description": "Set up the RCE PSE integration",
+                "data": {
+                    "cheapest_time_window_start": "Cheapest - time window start (hour)",
+                    "cheapest_time_window_end": "Cheapest - time window end (hour)",
+                    "cheapest_window_duration_hours": "Cheapest - search window duration (hours)",
+                    "expensive_time_window_start": "Most expensive - time window start (hour)",
+                    "expensive_time_window_end": "Most expensive - time window end (hour)",
+                    "expensive_window_duration_hours": "Most expensive - search window duration (hours)"
+                },
+                "data_description": {
+                    "cheapest_time_window_start": "Starting hour for searching cheapest windows (0-23)",
+                    "cheapest_time_window_end": "Ending hour for searching cheapest windows (1-24)",
+                    "cheapest_window_duration_hours": "Duration of continuous cheapest time window (1-24 hours)",
+                    "expensive_time_window_start": "Starting hour for searching most expensive windows (0-23)",
+                    "expensive_time_window_end": "Ending hour for searching most expensive windows (1-24)",
+                    "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)"
+                }
             }
+        },
+        "error": {
+            "invalid_time_window": "Start hour must be earlier than end hour"
         },
         "abort": {
             "single_instance_allowed": "Only a single configuration of RCE PSE is allowed."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "RCE PSE Settings",
+                "description": "Modify RCE PSE integration settings",
+                "data": {
+                    "cheapest_time_window_start": "Cheapest - time window start (hour)",
+                    "cheapest_time_window_end": "Cheapest - time window end (hour)",
+                    "cheapest_window_duration_hours": "Cheapest - search window duration (hours)",
+                    "expensive_time_window_start": "Most expensive - time window start (hour)",
+                    "expensive_time_window_end": "Most expensive - time window end (hour)",
+                    "expensive_window_duration_hours": "Most expensive - search window duration (hours)"
+                },
+                "data_description": {
+                    "cheapest_time_window_start": "Starting hour for searching cheapest windows (0-23)",
+                    "cheapest_time_window_end": "Ending hour for searching cheapest windows (1-24)",
+                    "cheapest_window_duration_hours": "Duration of continuous cheapest time window (1-24 hours)",
+                    "expensive_time_window_start": "Starting hour for searching most expensive windows (0-23)",
+                    "expensive_time_window_end": "Ending hour for searching most expensive windows (1-24)",
+                    "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)"
+                }
+            }
+        },
+        "error": {
+            "invalid_time_window": "Start hour must be earlier than end hour"
         }
     },
     "entity": {
