@@ -18,13 +18,14 @@
 # 6. Click "SAVE"
 
 - type: custom:apexcharts-card
-  update_interval: 15m
   header:
     show: true
     title: 📊 Analiza Cen Energii - 24h
     show_states: true
     colorize_states: true
   graph_span: 48h
+  update_interval: 1min
+  cache: false
   experimental:
     color_threshold: true
   span:
@@ -32,13 +33,13 @@
   yaxis:
     - id: price
       min: ~0
+      decimals: 0
       apex_config:
         title:
           text: Cena [PLN/MWh]
   apex_config:
     chart:
       height: 300
-      width: 100%
     dataLabels:
       enabled: false
     stroke:
@@ -86,9 +87,11 @@
         return entity.attributes.prices.map((entry) => {
           return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
         });
+      show:
+        extremas: true
     - entity: sensor.rce_pse_cena_jutro
       attribute: prices
-      name: Cena jutro
+      name: Cena jutro (w tej godzinie)
       yaxis_id: price
       type: line
       curve: smooth
@@ -109,15 +112,14 @@
           return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
         });
       show:
-        in_chart: false
-        legend_value: false
+        extremas: true
     - entity: sensor.rce_pse_srednia_cena_dzisiaj
       name: Średnia dzienna
       yaxis_id: price
       type: line
       color: "#ff7f0e"
-      stroke_width: 2
-      extend_to: now
+      stroke_width: 1
+      extend_to: end
       show:
         in_chart: false
         legend_value: true
@@ -126,8 +128,8 @@
       yaxis_id: price
       type: line
       color: "#2ca02c"
+      extend_to: end
       stroke_width: 1
-      extend_to: now
       show:
         in_chart: false
         legend_value: true
@@ -136,8 +138,8 @@
       yaxis_id: price
       type: line
       color: "#d62728"
+      extend_to: end
       stroke_width: 1
-      extend_to: now
       show:
         in_chart: false
         legend_value: true

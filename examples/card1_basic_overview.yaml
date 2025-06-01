@@ -49,17 +49,18 @@
       icon: mdi:percent
     - type: section
       label: "Najlepsze Godziny Dziś"
-    - entity: sensor.rce_pse_poczatek_godziny_min_ceny_dzisiaj
-      name: "Najtaniej od"
-      icon: mdi:clock-check
-    - entity: sensor.rce_pse_koniec_godziny_min_ceny_dzisiaj
-      name: "Najtaniej do"
-      icon: mdi:clock-check-outline
-    - entity: sensor.rce_pse_poczatek_godziny_maks_ceny_dzisiaj
-      name: "Najdrożej od"
-      icon: mdi:clock-alert
-    - entity: sensor.rce_pse_koniec_godziny_maks_ceny_dzisiaj
-      name: "Najdrożej do"
+    - type: section
+      label: "Najlepsze Okna Czasowe Dziś"
+    - entity: sensor.rce_pse_najtansze_okno_czasowe_dzisiaj
+      name: "Najtańsze okno czasowe"
+      icon: mdi:clock-time-four
+    - entity: sensor.rce_pse_najdrozsze_okno_czasowe_dzisiaj
+      name: "Najdroższe okno czasowe"
+      icon: mdi:clock-alert-outline
+    - entity: sensor.rce_pse_konfigurowalnie_najtansze_okno_dzisiaj
+      name: "Najtańsze 3 Godziny - Użytkownika"
+    - entity: sensor.rce_pse_konfigurowalnie_najdrozsze_okno_dzisiaj
+      name: "Najdroższe 4 Godziny - Użytkownika"
       icon: mdi:clock-alert-outline
 # ===========================================
 # CUSTOMIZATION OPTIONS:
