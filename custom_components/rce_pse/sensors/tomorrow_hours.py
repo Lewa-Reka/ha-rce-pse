@@ -104,4 +104,58 @@ class RCETomorrowMinPriceHourEndSensor(RCETomorrowHoursSensor):
             return None
         
         min_price_records = self.calculator.find_extreme_price_records(tomorrow_data, is_max=False)
-        return min_price_records[-1]["period"].split(" - ")[1] if min_price_records else None 
+        return min_price_records[-1]["period"].split(" - ")[1] if min_price_records else None
+
+
+class RCETomorrowMinPriceRangeSensor(RCETomorrowHoursSensor):
+    """Tomorrow's min price time range sensor."""
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, "tomorrow_min_price_range")
+        self._attr_icon = "mdi:clock-time-four"
+
+    @property
+    def native_value(self) -> str | None:
+        """Return time range when min price occurs."""
+        if not self.is_tomorrow_data_available():
+            return None
+            
+        tomorrow_data = self.get_tomorrow_data()
+        if not tomorrow_data:
+            return None
+        
+        min_price_records = self.calculator.find_extreme_price_records(tomorrow_data, is_max=False)
+        if not min_price_records:
+            return None
+            
+        start_time = min_price_records[0]["period"].split(" - ")[0]
+        end_time = min_price_records[-1]["period"].split(" - ")[1]
+        return f"{start_time} - {end_time}"
+
+
+class RCETomorrowMaxPriceRangeSensor(RCETomorrowHoursSensor):
+    """Tomorrow's max price time range sensor."""
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, "tomorrow_max_price_range")
+        self._attr_icon = "mdi:clock-time-four"
+
+    @property
+    def native_value(self) -> str | None:
+        """Return time range when max price occurs."""
+        if not self.is_tomorrow_data_available():
+            return None
+            
+        tomorrow_data = self.get_tomorrow_data()
+        if not tomorrow_data:
+            return None
+        
+        max_price_records = self.calculator.find_extreme_price_records(tomorrow_data, is_max=True)
+        if not max_price_records:
+            return None
+            
+        start_time = max_price_records[0]["period"].split(" - ")[0]
+        end_time = max_price_records[-1]["period"].split(" - ")[1]
+        return f"{start_time} - {end_time}" 

@@ -87,4 +87,52 @@ class RCETodayMinPriceHourEndSensor(RCETodayHoursSensor):
             return None
         
         min_price_records = self.calculator.find_extreme_price_records(today_data, is_max=False)
-        return min_price_records[-1]["period"].split(" - ")[1] if min_price_records else None 
+        return min_price_records[-1]["period"].split(" - ")[1] if min_price_records else None
+
+
+class RCETodayMinPriceRangeSensor(RCETodayHoursSensor):
+    """Today's min price time range sensor."""
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, "today_min_price_range")
+        self._attr_icon = "mdi:clock-time-four"
+
+    @property
+    def native_value(self) -> str | None:
+        """Return time range when min price occurs."""
+        today_data = self.get_today_data()
+        if not today_data:
+            return None
+        
+        min_price_records = self.calculator.find_extreme_price_records(today_data, is_max=False)
+        if not min_price_records:
+            return None
+            
+        start_time = min_price_records[0]["period"].split(" - ")[0]
+        end_time = min_price_records[-1]["period"].split(" - ")[1]
+        return f"{start_time} - {end_time}"
+
+
+class RCETodayMaxPriceRangeSensor(RCETodayHoursSensor):
+    """Today's max price time range sensor."""
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, "today_max_price_range")
+        self._attr_icon = "mdi:clock-time-four"
+
+    @property
+    def native_value(self) -> str | None:
+        """Return time range when max price occurs."""
+        today_data = self.get_today_data()
+        if not today_data:
+            return None
+        
+        max_price_records = self.calculator.find_extreme_price_records(today_data, is_max=True)
+        if not max_price_records:
+            return None
+            
+        start_time = max_price_records[0]["period"].split(" - ")[0]
+        end_time = max_price_records[-1]["period"].split(" - ")[1]
+        return f"{start_time} - {end_time}" 

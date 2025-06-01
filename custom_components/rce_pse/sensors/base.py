@@ -184,6 +184,29 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         
         return None
 
+    def get_price_at_past_hour(self, hours_back: int) -> float | None:
+        """Get price at specific number of hours back."""
+        if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
+            return None
+        
+        target_time = dt_util.now() - timedelta(hours=hours_back)
+        closest_record = None
+        closest_diff = None
+        
+        for record in self.coordinator.data["raw_data"]:
+            try:
+                record_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                # Find the record closest to target_time that is not in the future
+                if record_time <= target_time.replace(tzinfo=None):
+                    diff = abs((target_time.replace(tzinfo=None) - record_time).total_seconds())
+                    if closest_diff is None or diff < closest_diff:
+                        closest_diff = diff
+                        closest_record = record
+            except (ValueError, KeyError):
+                continue
+        
+        return float(closest_record["rce_pln"]) if closest_record else None
+
     def get_data_summary(self, data: list[dict]) -> dict[str, any]:
         """Get summary statistics for data."""
         if not data:
