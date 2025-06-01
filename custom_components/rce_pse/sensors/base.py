@@ -40,15 +40,14 @@ class PriceCalculator:
         for record in data:
             try:
                 period = record["period"]
-                # Check if period follows the expected format "HH:MM - HH:MM"
                 if " - " not in period:
                     continue
                 hour_part = period.split(" - ")[0]
-                # Validate that hour part is in format "HH:MM"
+
                 if ":" not in hour_part or len(hour_part) < 5:
                     continue
                 hour = hour_part[:2]
-                # Validate that hour is numeric
+
                 if not hour.isdigit():
                     continue
                 if hour not in hourly_prices:
@@ -79,6 +78,82 @@ class PriceCalculator:
         ]
         
         return sorted(extreme_records, key=lambda x: x["dtime"])
+
+    @staticmethod
+    def find_optimal_window(data: list[dict], window_start_hour: int, window_end_hour: int, 
+                          duration_hours: int, is_max: bool = False) -> list[dict]:
+        """Find optimal continuous time window within specified hours.
+        
+        Args:
+            data: List of price records (15-minute intervals)
+            window_start_hour: Start hour for search (0-23)
+            window_end_hour: End hour for search (1-24)  
+            duration_hours: Duration of continuous window to find in hours (1-24)
+            is_max: If True, find most expensive window; if False, find cheapest
+            
+        Returns:
+            List of records forming the optimal continuous window
+
+        """
+        if not data or duration_hours <= 0:
+            return []
+        
+        duration_periods = duration_hours * 4
+        
+        filtered_data = []
+        for record in data:
+            try:
+                end_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                
+                start_time = end_time - timedelta(minutes=15)
+                
+                if start_time.hour >= window_start_hour and start_time.hour < window_end_hour:
+                    filtered_data.append(record)
+                    
+            except (ValueError, KeyError):
+                continue
+        
+        if len(filtered_data) < duration_periods:
+            return []
+        
+        filtered_data.sort(key=lambda x: x["dtime"])
+        
+        best_window = []
+        best_avg_price = None
+        
+        for i in range(len(filtered_data) - duration_periods + 1):
+            window = filtered_data[i:i + duration_periods]
+            
+            is_continuous = True
+            for j in range(len(window) - 1):
+                try:
+                    curr_time = datetime.strptime(window[j]["dtime"], "%Y-%m-%d %H:%M:%S")
+                    next_time = datetime.strptime(window[j + 1]["dtime"], "%Y-%m-%d %H:%M:%S")
+                    
+                    if next_time != curr_time + timedelta(minutes=15):
+                        is_continuous = False
+                        break
+                except (ValueError, KeyError):
+                    is_continuous = False
+                    break
+            
+            if not is_continuous:
+                continue
+            
+            try:
+                window_prices = [float(record["rce_pln"]) for record in window]
+                avg_price = sum(window_prices) / len(window_prices)
+                
+                if best_avg_price is None:
+                    best_window = window
+                    best_avg_price = avg_price
+                elif (is_max and avg_price > best_avg_price) or (not is_max and avg_price < best_avg_price):
+                    best_window = window
+                    best_avg_price = avg_price
+            except (ValueError, KeyError):
+                continue
+        
+        return best_window
 
 
 class RCEBaseSensor(CoordinatorEntity, SensorEntity):
@@ -196,7 +271,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         for record in self.coordinator.data["raw_data"]:
             try:
                 record_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
-                # Find the record closest to target_time that is not in the future
                 if record_time <= target_time.replace(tzinfo=None):
                     diff = abs((target_time.replace(tzinfo=None) - record_time).total_seconds())
                     if closest_diff is None or diff < closest_diff:

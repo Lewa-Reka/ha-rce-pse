@@ -8,7 +8,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .coordinator import RCEPSEDataUpdateCoordinator
 from .sensors import (
     RCETodayMainSensor,
     RCENextHourPriceSensor,
@@ -38,6 +37,20 @@ from .sensors import (
     RCETomorrowMaxPriceRangeSensor,
     RCETomorrowMedianPriceSensor,
     RCETomorrowTodayAvgComparisonSensor,
+)
+from .sensors.custom_windows import (
+    RCETodayCheapestWindowStartSensor,
+    RCETodayCheapestWindowEndSensor,
+    RCETodayCheapestWindowRangeSensor,
+    RCETodayExpensiveWindowStartSensor,
+    RCETodayExpensiveWindowEndSensor,
+    RCETodayExpensiveWindowRangeSensor,
+    RCETomorrowCheapestWindowStartSensor,
+    RCETomorrowCheapestWindowEndSensor,
+    RCETomorrowCheapestWindowRangeSensor,
+    RCETomorrowExpensiveWindowStartSensor,
+    RCETomorrowExpensiveWindowEndSensor,
+    RCETomorrowExpensiveWindowRangeSensor,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -82,6 +95,20 @@ async def async_setup_entry(
         RCETomorrowMaxPriceRangeSensor(coordinator),
         RCETomorrowMedianPriceSensor(coordinator),
         RCETomorrowTodayAvgComparisonSensor(coordinator),
+        # Custom configurable window sensors
+        RCETodayCheapestWindowStartSensor(coordinator, config_entry),
+        RCETodayCheapestWindowEndSensor(coordinator, config_entry),
+        RCETodayCheapestWindowRangeSensor(coordinator, config_entry),
+        RCETodayExpensiveWindowStartSensor(coordinator, config_entry),
+        RCETodayExpensiveWindowEndSensor(coordinator, config_entry),
+        RCETodayExpensiveWindowRangeSensor(coordinator, config_entry),
+        # Tomorrow custom configurable window sensors
+        RCETomorrowCheapestWindowStartSensor(coordinator, config_entry),
+        RCETomorrowCheapestWindowEndSensor(coordinator, config_entry),
+        RCETomorrowCheapestWindowRangeSensor(coordinator, config_entry),
+        RCETomorrowExpensiveWindowStartSensor(coordinator, config_entry),
+        RCETomorrowExpensiveWindowEndSensor(coordinator, config_entry),
+        RCETomorrowExpensiveWindowRangeSensor(coordinator, config_entry),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE sensors to Home Assistant", len(sensors))

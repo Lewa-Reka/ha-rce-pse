@@ -5,7 +5,6 @@ import logging
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
@@ -23,7 +22,6 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-# Configuration schema
 CONFIG_SCHEMA = vol.Schema({
     vol.Required(CONF_CHEAPEST_TIME_WINDOW_START, default=DEFAULT_TIME_WINDOW_START): vol.All(
         vol.Coerce(int), vol.Range(min=0, max=23)
@@ -121,8 +119,7 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
                 _LOGGER.debug("Updating RCE PSE options: %s", user_input)
                 return self.async_create_entry(title="", data=user_input)
 
-        # Get current options from config entry or use defaults
-        current_data = self.config_entry.data
+        current_data = self.config_entry.options if self.config_entry.options else self.config_entry.data
         options_schema = vol.Schema({
             vol.Required(
                 CONF_CHEAPEST_TIME_WINDOW_START, 

@@ -141,6 +141,42 @@
             },
             "rce_pse_tomorrow_max_price_range": {
                 "name": "Tomorrow Most Expensive Time Range"
+            },
+            "rce_pse_today_cheapest_window_start": {
+                "name": "Today Custom Cheapest Window Start"
+            },
+            "rce_pse_today_cheapest_window_end": {
+                "name": "Today Custom Cheapest Window End"
+            },
+            "rce_pse_today_cheapest_window_range": {
+                "name": "Today Custom Cheapest Window"
+            },
+            "rce_pse_today_expensive_window_start": {
+                "name": "Today Custom Most Expensive Window Start"
+            },
+            "rce_pse_today_expensive_window_end": {
+                "name": "Today Custom Most Expensive Window End"
+            },
+            "rce_pse_today_expensive_window_range": {
+                "name": "Today Custom Most Expensive Window"
+            },
+            "rce_pse_tomorrow_cheapest_window_start": {
+                "name": "Tomorrow Custom Cheapest Window Start"
+            },
+            "rce_pse_tomorrow_cheapest_window_end": {
+                "name": "Tomorrow Custom Cheapest Window End"
+            },
+            "rce_pse_tomorrow_cheapest_window_range": {
+                "name": "Tomorrow Custom Cheapest Window"
+            },
+            "rce_pse_tomorrow_expensive_window_start": {
+                "name": "Tomorrow Custom Most Expensive Window Start"
+            },
+            "rce_pse_tomorrow_expensive_window_end": {
+                "name": "Tomorrow Custom Most Expensive Window End"
+            },
+            "rce_pse_tomorrow_expensive_window_range": {
+                "name": "Tomorrow Custom Most Expensive Window"
             }
         }
     }
