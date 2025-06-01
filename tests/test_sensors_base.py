@@ -5,6 +5,7 @@ import pytest
 from unittest.mock import Mock
 
 from custom_components.rce_pse.sensors.base import PriceCalculator, RCEBaseSensor
+from custom_components.rce_pse.sensors.custom_windows import RCECustomWindowSensor
 
 
 class TestPriceCalculator:
@@ -142,6 +143,97 @@ class TestPriceCalculator:
         assert max_records == []
         assert min_records == []
 
+    def test_find_optimal_window_cheapest(self):
+        """Test finding optimal cheapest window with 15-minute intervals."""
+        # Simulate 15-minute intervals: dtime is END of each period
+        data = [
+            {"rce_pln": "400.00", "dtime": "2024-01-01 09:00:00"},  # 08:45-09:00 (outside window)
+            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00"},  # 10:00-10:15 (cheapest window start)
+            {"rce_pln": "280.00", "dtime": "2024-01-01 10:30:00"},  # 10:15-10:30
+            {"rce_pln": "250.00", "dtime": "2024-01-01 10:45:00"},  # 10:30-10:45 
+            {"rce_pln": "260.00", "dtime": "2024-01-01 11:00:00"},  # 10:45-11:00
+            {"rce_pln": "270.00", "dtime": "2024-01-01 11:15:00"},  # 11:00-11:15
+            {"rce_pln": "280.00", "dtime": "2024-01-01 11:30:00"},  # 11:15-11:30
+            {"rce_pln": "290.00", "dtime": "2024-01-01 11:45:00"},  # 11:30-11:45
+            {"rce_pln": "300.00", "dtime": "2024-01-01 12:00:00"},  # 11:45-12:00 (cheapest window end)
+            {"rce_pln": "350.00", "dtime": "2024-01-01 15:45:00"},  # 15:30-15:45
+            {"rce_pln": "450.00", "dtime": "2024-01-01 16:00:00"},  # 15:45-16:00 (window end)
+            {"rce_pln": "500.00", "dtime": "2024-01-01 17:00:00"},  # 16:45-17:00 (outside window)
+        ]
+        
+        # Find cheapest 2-hour window (8 periods) between 10:00-16:00
+        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
+        
+        assert len(optimal_window) == 8  # 2 hours = 8 * 15-minute periods
+        # Should be the window with average price 278.75: from 10:00-10:15 to 11:45-12:00
+        assert optimal_window[0]["dtime"] == "2024-01-01 10:15:00"  # First period: 10:00-10:15
+        assert optimal_window[-1]["dtime"] == "2024-01-01 12:00:00"  # Last period: 11:45-12:00
+
+    def test_find_optimal_window_most_expensive(self):
+        """Test finding optimal most expensive window with 15-minute intervals."""
+        data = [
+            {"rce_pln": "200.00", "dtime": "2024-01-01 10:15:00"},  # 10:00-10:15
+            {"rce_pln": "450.00", "dtime": "2024-01-01 11:00:00"},  # 10:45-11:00 (expensive start)
+            {"rce_pln": "500.00", "dtime": "2024-01-01 11:15:00"},  # 11:00-11:15
+            {"rce_pln": "480.00", "dtime": "2024-01-01 11:30:00"},  # 11:15-11:30
+            {"rce_pln": "470.00", "dtime": "2024-01-01 11:45:00"},  # 11:30-11:45 (expensive end)
+            {"rce_pln": "300.00", "dtime": "2024-01-01 12:00:00"},  # 11:45-12:00
+        ]
+        
+        # Find most expensive 1-hour window (4 periods) between 10:00-16:00
+        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=True)
+        
+        assert len(optimal_window) == 4  # 1 hour = 4 * 15-minute periods
+        assert optimal_window[0]["dtime"] == "2024-01-01 11:00:00"  # 10:45-11:00
+        assert optimal_window[-1]["dtime"] == "2024-01-01 11:45:00"  # 11:30-11:45
+
+    def test_find_optimal_window_no_continuous_hours(self):
+        """Test finding optimal window with non-continuous 15-minute periods."""
+        data = [
+            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00"},  # 10:00-10:15
+            {"rce_pln": "250.00", "dtime": "2024-01-01 12:15:00"},  # 12:00-12:15 (gap - missing 10:15-12:00)
+            {"rce_pln": "280.00", "dtime": "2024-01-01 12:30:00"},  # 12:15-12:30
+            {"rce_pln": "270.00", "dtime": "2024-01-01 12:45:00"},  # 12:30-12:45
+            {"rce_pln": "260.00", "dtime": "2024-01-01 13:00:00"},  # 12:45-13:00
+        ]
+        
+        # Try to find 1-hour continuous window (4 periods)
+        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=False)
+        
+        assert len(optimal_window) == 4  # Should find the continuous 12:00-13:00 window
+        assert optimal_window[0]["dtime"] == "2024-01-01 12:15:00"
+        assert optimal_window[-1]["dtime"] == "2024-01-01 13:00:00"
+
+    def test_find_optimal_window_insufficient_data(self):
+        """Test finding optimal window with insufficient 15-minute periods."""
+        data = [
+            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00"},  # Only 1 period
+            {"rce_pln": "320.00", "dtime": "2024-01-01 10:30:00"},  # Only 2 periods
+        ]
+        
+        # Try to find 1-hour window (4 periods) with only 2 periods of data
+        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=False)
+        
+        assert optimal_window == []
+
+    def test_find_optimal_window_outside_time_range(self):
+        """Test finding optimal window outside specified time range."""
+        data = [
+            {"rce_pln": "100.00", "dtime": "2024-01-01 09:00:00"},   # 08:45-09:00 (outside)
+            {"rce_pln": "200.00", "dtime": "2024-01-01 09:30:00"},   # 09:15-09:30 (outside)
+            {"rce_pln": "500.00", "dtime": "2024-01-01 17:00:00"},   # 16:45-17:00 (outside)
+        ]
+        
+        # Try to find window between 10:00-16:00 but no data in range
+        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=False)
+        
+        assert optimal_window == []
+
+    def test_find_optimal_window_empty_data(self):
+        """Test finding optimal window with empty data."""
+        optimal_window = PriceCalculator.find_optimal_window([], 10, 16, 2, is_max=False)
+        assert optimal_window == []
+
 
 class TestRCEBaseSensor:
     """Test class for RCE base sensor."""
@@ -235,4 +327,60 @@ class TestRCEBaseSensor:
         # Mock coordinator with failed last update
         mock_coordinator.last_update_success = False
         
-        assert sensor.available is False 
+        assert sensor.available is False
+
+
+class TestRCECustomWindowSensor:
+    """Test class for RCE custom window sensor."""
+
+    def test_get_config_value_from_options(self, mock_coordinator):
+        """Test getting config value from options when available."""
+        # Mock config entry with both data and options
+        mock_config_entry = Mock()
+        mock_config_entry.data = {"test_key": "data_value"}
+        mock_config_entry.options = {"test_key": "options_value"}
+        
+        sensor = RCECustomWindowSensor(mock_coordinator, mock_config_entry, "test_sensor")
+        
+        # Should return value from options (higher priority)
+        value = sensor.get_config_value("test_key", "default_value")
+        assert value == "options_value"
+
+    def test_get_config_value_from_data_fallback(self, mock_coordinator):
+        """Test getting config value from data when options not available."""
+        # Mock config entry with only data
+        mock_config_entry = Mock()
+        mock_config_entry.data = {"test_key": "data_value"}
+        mock_config_entry.options = None
+        
+        sensor = RCECustomWindowSensor(mock_coordinator, mock_config_entry, "test_sensor")
+        
+        # Should return value from data
+        value = sensor.get_config_value("test_key", "default_value")
+        assert value == "data_value"
+
+    def test_get_config_value_from_data_when_not_in_options(self, mock_coordinator):
+        """Test getting config value from data when key not in options."""
+        # Mock config entry with options but key not present there
+        mock_config_entry = Mock()
+        mock_config_entry.data = {"test_key": "data_value"}
+        mock_config_entry.options = {"other_key": "options_value"}
+        
+        sensor = RCECustomWindowSensor(mock_coordinator, mock_config_entry, "test_sensor")
+        
+        # Should return value from data as fallback
+        value = sensor.get_config_value("test_key", "default_value")
+        assert value == "data_value"
+
+    def test_get_config_value_default(self, mock_coordinator):
+        """Test getting default value when key not found anywhere."""
+        # Mock config entry without the key
+        mock_config_entry = Mock()
+        mock_config_entry.data = {"other_key": "data_value"}
+        mock_config_entry.options = {"other_key": "options_value"}
+        
+        sensor = RCECustomWindowSensor(mock_coordinator, mock_config_entry, "test_sensor")
+        
+        # Should return default value
+        value = sensor.get_config_value("test_key", "default_value")
+        assert value == "default_value" 
