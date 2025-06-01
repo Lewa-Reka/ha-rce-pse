@@ -19,6 +19,11 @@ from custom_components.rce_pse.sensors.today_prices import (
     RCENextHourPriceSensor,
     RCENext2HoursPriceSensor,
     RCENext3HoursPriceSensor,
+    RCEPreviousHourPriceSensor,
+)
+from custom_components.rce_pse.sensors.today_hours import (
+    RCETodayMinPriceRangeSensor,
+    RCETodayMaxPriceRangeSensor,
 )
 
 
@@ -237,20 +242,46 @@ class TestTodayPriceSensors:
             assert state == 410.75
             mock_future_price.assert_called_once_with(3)
 
+    def test_previous_hour_price_sensor(self, mock_coordinator):
+        """Test previous hour price sensor."""
+        sensor = RCEPreviousHourPriceSensor(mock_coordinator)
+        
+        assert sensor._attr_unique_id == "rce_pse_previous_hour_price"
+        assert sensor._attr_native_unit_of_measurement == "PLN/MWh"
+
+    def test_previous_hour_price_calculation(self, mock_coordinator):
+        """Test previous hour price calculation."""
+        sensor = RCEPreviousHourPriceSensor(mock_coordinator)
+        
+        with patch.object(sensor, "get_price_at_past_hour") as mock_past_price:
+            mock_past_price.return_value = 295.30
+            
+            state = sensor.native_value
+            assert state == 295.30
+            mock_past_price.assert_called_once_with(1)
+
     def test_future_price_sensors_no_data(self, mock_coordinator):
         """Test future price sensors when no data available."""
         sensors = [
             RCENextHourPriceSensor(mock_coordinator),
             RCENext2HoursPriceSensor(mock_coordinator),
             RCENext3HoursPriceSensor(mock_coordinator),
+            RCEPreviousHourPriceSensor(mock_coordinator),
         ]
         
         for sensor in sensors:
-            with patch.object(sensor, "get_price_at_future_hour") as mock_future_price:
-                mock_future_price.return_value = None
-                
-                state = sensor.native_value
-                assert state is None
+            if isinstance(sensor, RCEPreviousHourPriceSensor):
+                with patch.object(sensor, "get_price_at_past_hour") as mock_past_price:
+                    mock_past_price.return_value = None
+                    
+                    state = sensor.native_value
+                    assert state is None
+            else:
+                with patch.object(sensor, "get_price_at_future_hour") as mock_future_price:
+                    mock_future_price.return_value = None
+                    
+                    state = sensor.native_value
+                    assert state is None
 
 
 class TestSensorAttributes:
@@ -290,4 +321,66 @@ class TestSensorAttributes:
         # All should have the same device info
         first_device_info = device_infos[0]
         for device_info in device_infos[1:]:
-            assert device_info == first_device_info 
+            assert device_info == first_device_info
+
+
+class TestTodayRangeSensors:
+    """Test class for time range sensors."""
+
+    def test_today_min_price_range_sensor(self, mock_coordinator):
+        """Test today min price range sensor."""
+        sensor = RCETodayMinPriceRangeSensor(mock_coordinator)
+        
+        assert sensor._attr_unique_id == "rce_pse_today_min_price_range"
+        assert sensor._attr_icon == "mdi:clock-time-four"
+
+    def test_today_min_price_range_calculation(self, mock_coordinator):
+        """Test today min price range calculation."""
+        sensor = RCETodayMinPriceRangeSensor(mock_coordinator)
+        
+        with patch.object(sensor, "get_today_data") as mock_today_data:
+            mock_today_data.return_value = [
+                {"rce_pln": "300.00", "period": "10:00 - 11:00", "dtime": "2024-01-01 10:00:00"},
+                {"rce_pln": "250.00", "period": "12:00 - 13:00", "dtime": "2024-01-01 12:00:00"},  # Min
+                {"rce_pln": "250.00", "period": "13:00 - 14:00", "dtime": "2024-01-01 13:00:00"},  # Min
+                {"rce_pln": "350.00", "period": "15:00 - 16:00", "dtime": "2024-01-01 15:00:00"},
+            ]
+            
+            state = sensor.native_value
+            assert state == "12:00 - 14:00"
+
+    def test_today_max_price_range_sensor(self, mock_coordinator):
+        """Test today max price range sensor."""
+        sensor = RCETodayMaxPriceRangeSensor(mock_coordinator)
+        
+        assert sensor._attr_unique_id == "rce_pse_today_max_price_range"
+        assert sensor._attr_icon == "mdi:clock-time-four"
+
+    def test_today_max_price_range_calculation(self, mock_coordinator):
+        """Test today max price range calculation."""
+        sensor = RCETodayMaxPriceRangeSensor(mock_coordinator)
+        
+        with patch.object(sensor, "get_today_data") as mock_today_data:
+            mock_today_data.return_value = [
+                {"rce_pln": "300.00", "period": "10:00 - 11:00", "dtime": "2024-01-01 10:00:00"},
+                {"rce_pln": "450.00", "period": "12:00 - 13:00", "dtime": "2024-01-01 12:00:00"},  # Max
+                {"rce_pln": "450.00", "period": "13:00 - 14:00", "dtime": "2024-01-01 13:00:00"},  # Max
+                {"rce_pln": "350.00", "period": "15:00 - 16:00", "dtime": "2024-01-01 15:00:00"},
+            ]
+            
+            state = sensor.native_value
+            assert state == "12:00 - 14:00"
+
+    def test_range_sensors_no_data(self, mock_coordinator):
+        """Test range sensors when no data available."""
+        sensors = [
+            RCETodayMinPriceRangeSensor(mock_coordinator),
+            RCETodayMaxPriceRangeSensor(mock_coordinator),
+        ]
+        
+        for sensor in sensors:
+            with patch.object(sensor, "get_today_data") as mock_today_data:
+                mock_today_data.return_value = []
+                
+                state = sensor.native_value
+                assert state is None 
