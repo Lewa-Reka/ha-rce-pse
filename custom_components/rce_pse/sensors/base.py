@@ -234,9 +234,12 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         
         for record in self.coordinator.data["raw_data"]:
             try:
-                record_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
-                if now.replace(tzinfo=None) < record_time:
+                period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                period_start = period_end - timedelta(minutes=15)
+                
+                if period_start <= now.replace(tzinfo=None) <= period_end:
                     return record
+                    
             except (ValueError, KeyError):
                 continue
         
@@ -251,9 +254,12 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         
         for record in self.coordinator.data["raw_data"]:
             try:
-                record_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
-                if target_time.replace(tzinfo=None) <= record_time:
+                period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                period_start = period_end - timedelta(minutes=15)
+                
+                if period_start <= target_time.replace(tzinfo=None) <= period_end:
                     return float(record["rce_pln"])
+                    
             except (ValueError, KeyError):
                 continue
         
@@ -270,9 +276,13 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         
         for record in self.coordinator.data["raw_data"]:
             try:
-                record_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
-                if record_time <= target_time.replace(tzinfo=None):
-                    diff = abs((target_time.replace(tzinfo=None) - record_time).total_seconds())
+                period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                period_start = period_end - timedelta(minutes=15)
+                
+                if period_start <= target_time.replace(tzinfo=None) <= period_end:
+                    return float(record["rce_pln"])
+                elif period_end <= target_time.replace(tzinfo=None):
+                    diff = abs((target_time.replace(tzinfo=None) - period_end).total_seconds())
                     if closest_diff is None or diff < closest_diff:
                         closest_diff = diff
                         closest_record = record
