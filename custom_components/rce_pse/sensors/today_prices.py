@@ -46,4 +46,19 @@ class RCENext3HoursPriceSensor(RCEFuturePriceSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
         """Initialize the sensor."""
-        super().__init__(coordinator, "next_3_hours_price", 3) 
+        super().__init__(coordinator, "next_3_hours_price", 3)
+
+
+class RCEPreviousHourPriceSensor(RCEBaseSensor):
+    """Previous hour RCE price sensor."""
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, "previous_hour_price")
+        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        """Return price for previous hour."""
+        return self.get_price_at_past_hour(1) 
