@@ -20,13 +20,20 @@ A Home Assistant integration for monitoring Polish electricity market prices (RC
 1. Add this repository to HACS as a custom repository
 2. Install the integration through HACS
 3. Restart Home Assistant
-4. Add the integration through Configuration > Integrations > Add integration > Search "RCE PSE"
 
 ### Manual Installation
 
 1. Copy the `custom_components/rce_pse` folder to your Home Assistant `custom_components` directory
 2. Restart Home Assistant
-3. Add the integration through Configuration > Integrations
+
+### Initial Setup
+
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=rce_pse)
+
+1. Go to **Settings** > **Integrations**
+2. Click **Add Integration** and search for "RCE PSE"
+3. Configure the time window settings (see below)
+4. Click **Submit** to complete the setup
 
 ## Usage Examples
 
@@ -72,13 +79,6 @@ Both cards can be easily customized to match your dashboard theme and specific n
 ## Configuration
 
 After installing the integration, you can configure it through the Home Assistant UI. The integration offers several customization options for optimal time windows that help you find the best electricity prices for your needs.
-
-### Initial Setup
-
-1. Go to **Configuration** > **Integrations**
-2. Click **Add Integration** and search for "RCE PSE"
-3. Configure the time window settings (see below)
-4. Click **Submit** to complete the setup
 
 ### Configuration Options
 

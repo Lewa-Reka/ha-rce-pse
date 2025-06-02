@@ -57,9 +57,9 @@
     - entity: sensor.rce_pse_najdrozsze_okno_czasowe_dzisiaj
       name: "Najdroższe okno czasowe"
       icon: mdi:clock-alert-outline
-    - entity: sensor.rce_pse_konfigurowalnie_najtansze_okno_dzisiaj
+    - entity: sensor.rce_pse_konfigurowalne_najtansze_okno_dzisiaj
       name: "Najtańsze 3 Godziny - Użytkownika"
-    - entity: sensor.rce_pse_konfigurowalnie_najdrozsze_okno_dzisiaj
+    - entity: sensor.rce_pse_konfigurowalne_najdrozsze_okno_dzisiaj
       name: "Najdroższe 4 Godziny - Użytkownika"
       icon: mdi:clock-alert-outline
 # ===========================================

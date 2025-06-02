@@ -1,4 +1,3 @@
-"""Today's min/max price hours sensors for RCE PSE integration."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -10,24 +9,19 @@ if TYPE_CHECKING:
 
 
 class RCETodayHoursSensor(RCEBaseSensor):
-    """Base class for today's hours sensors."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, unique_id)
         self._attr_icon = "mdi:clock"
 
 
 class RCETodayMaxPriceHourStartSensor(RCETodayHoursSensor):
-    """Today's max price hour start sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "today_max_price_hour_start")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when max price starts."""
         today_data = self.get_today_data()
         if not today_data:
             return None
@@ -37,15 +31,12 @@ class RCETodayMaxPriceHourStartSensor(RCETodayHoursSensor):
 
 
 class RCETodayMaxPriceHourEndSensor(RCETodayHoursSensor):
-    """Today's max price hour end sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "today_max_price_hour_end")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when max price ends."""
         today_data = self.get_today_data()
         if not today_data:
             return None
@@ -55,15 +46,12 @@ class RCETodayMaxPriceHourEndSensor(RCETodayHoursSensor):
 
 
 class RCETodayMinPriceHourStartSensor(RCETodayHoursSensor):
-    """Today's min price hour start sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "today_min_price_hour_start")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when min price starts."""
         today_data = self.get_today_data()
         if not today_data:
             return None
@@ -73,15 +61,12 @@ class RCETodayMinPriceHourStartSensor(RCETodayHoursSensor):
 
 
 class RCETodayMinPriceHourEndSensor(RCETodayHoursSensor):
-    """Today's min price hour end sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "today_min_price_hour_end")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when min price ends."""
         today_data = self.get_today_data()
         if not today_data:
             return None
@@ -91,16 +76,13 @@ class RCETodayMinPriceHourEndSensor(RCETodayHoursSensor):
 
 
 class RCETodayMinPriceRangeSensor(RCETodayHoursSensor):
-    """Today's min price time range sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "today_min_price_range")
         self._attr_icon = "mdi:clock-time-four"
 
     @property
     def native_value(self) -> str | None:
-        """Return time range when min price occurs."""
         today_data = self.get_today_data()
         if not today_data:
             return None
@@ -115,16 +97,13 @@ class RCETodayMinPriceRangeSensor(RCETodayHoursSensor):
 
 
 class RCETodayMaxPriceRangeSensor(RCETodayHoursSensor):
-    """Today's max price time range sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "today_max_price_range")
         self._attr_icon = "mdi:clock-time-four"
 
     @property
     def native_value(self) -> str | None:
-        """Return time range when max price occurs."""
         today_data = self.get_today_data()
         if not today_data:
             return None

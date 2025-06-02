@@ -1,4 +1,3 @@
-"""Config flow for RCE PSE integration."""
 from __future__ import annotations
 
 import logging
@@ -6,6 +5,7 @@ import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers import selector
 
 from .const import (
     DOMAIN,
@@ -23,29 +23,58 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 CONFIG_SCHEMA = vol.Schema({
-    vol.Required(CONF_CHEAPEST_TIME_WINDOW_START, default=DEFAULT_TIME_WINDOW_START): vol.All(
-        vol.Coerce(int), vol.Range(min=0, max=23)
+    vol.Required(CONF_CHEAPEST_TIME_WINDOW_START, default=DEFAULT_TIME_WINDOW_START): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=0,
+            max=23,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
     ),
-    vol.Required(CONF_CHEAPEST_TIME_WINDOW_END, default=DEFAULT_TIME_WINDOW_END): vol.All(
-        vol.Coerce(int), vol.Range(min=1, max=24)
+    vol.Required(CONF_CHEAPEST_TIME_WINDOW_END, default=DEFAULT_TIME_WINDOW_END): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=1,
+            max=24,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
     ),
-    vol.Required(CONF_CHEAPEST_WINDOW_DURATION_HOURS, default=DEFAULT_WINDOW_DURATION_HOURS): vol.All(
-        vol.Coerce(int), vol.Range(min=1, max=24)
+    vol.Required(CONF_CHEAPEST_WINDOW_DURATION_HOURS, default=DEFAULT_WINDOW_DURATION_HOURS): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=1,
+            max=24,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
     ),
-    vol.Required(CONF_EXPENSIVE_TIME_WINDOW_START, default=DEFAULT_TIME_WINDOW_START): vol.All(
-        vol.Coerce(int), vol.Range(min=0, max=23)
+    vol.Required(CONF_EXPENSIVE_TIME_WINDOW_START, default=DEFAULT_TIME_WINDOW_START): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=0,
+            max=23,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
     ),
-    vol.Required(CONF_EXPENSIVE_TIME_WINDOW_END, default=DEFAULT_TIME_WINDOW_END): vol.All(
-        vol.Coerce(int), vol.Range(min=1, max=24)
+    vol.Required(CONF_EXPENSIVE_TIME_WINDOW_END, default=DEFAULT_TIME_WINDOW_END): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=1,
+            max=24,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
     ),
-    vol.Required(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, default=DEFAULT_WINDOW_DURATION_HOURS): vol.All(
-        vol.Coerce(int), vol.Range(min=1, max=24)
+    vol.Required(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, default=DEFAULT_WINDOW_DURATION_HOURS): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=1,
+            max=24,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
     ),
 })
 
 
 class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for RCE PSE."""
 
     VERSION = 1
     MINOR_VERSION = 1
@@ -53,13 +82,11 @@ class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     def async_get_options_flow(config_entry):
-        """Create the options flow."""
-        return RCEOptionsFlow(config_entry)
+        return RCEOptionsFlow()
 
     async def async_step_user(
         self, user_input: dict[str, any] | None = None
     ) -> FlowResult:
-        """Handle the initial step."""
         _LOGGER.debug("Starting RCE PSE config flow")
         
         if self._async_current_entries():
@@ -93,16 +120,10 @@ class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class RCEOptionsFlow(config_entries.OptionsFlow):
-    """Handle RCE PSE options."""
-
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        self.config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, any] | None = None
     ) -> FlowResult:
-        """Manage the options."""
         errors = {}
 
         if user_input is not None:
@@ -124,27 +145,69 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
             vol.Required(
                 CONF_CHEAPEST_TIME_WINDOW_START, 
                 default=current_data.get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-            ): vol.All(vol.Coerce(int), vol.Range(min=0, max=23)),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=23,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
             vol.Required(
                 CONF_CHEAPEST_TIME_WINDOW_END, 
                 default=current_data.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
-            ): vol.All(vol.Coerce(int), vol.Range(min=1, max=24)),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
             vol.Required(
                 CONF_CHEAPEST_WINDOW_DURATION_HOURS, 
                 default=current_data.get(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-            ): vol.All(vol.Coerce(int), vol.Range(min=1, max=24)),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
             vol.Required(
                 CONF_EXPENSIVE_TIME_WINDOW_START, 
                 default=current_data.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-            ): vol.All(vol.Coerce(int), vol.Range(min=0, max=23)),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=23,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
             vol.Required(
                 CONF_EXPENSIVE_TIME_WINDOW_END, 
                 default=current_data.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
-            ): vol.All(vol.Coerce(int), vol.Range(min=1, max=24)),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
             vol.Required(
                 CONF_EXPENSIVE_WINDOW_DURATION_HOURS, 
                 default=current_data.get(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-            ): vol.All(vol.Coerce(int), vol.Range(min=1, max=24)),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
         })
 
         return self.async_show_form(

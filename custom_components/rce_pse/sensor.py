@@ -1,4 +1,3 @@
-"""Sensor platform for RCE PSE integration."""
 from __future__ import annotations
 
 import logging
@@ -61,7 +60,6 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the sensor platform."""
     _LOGGER.debug("Setting up RCE PSE sensors for config entry: %s", config_entry.entry_id)
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     
@@ -82,7 +80,6 @@ async def async_setup_entry(
         RCETodayMaxPriceRangeSensor(coordinator),
         RCETodayMedianPriceSensor(coordinator),
         RCETodayCurrentVsAverageSensor(coordinator),
-        # Tomorrow sensors (available after 14:00 CET)
         RCETomorrowMainSensor(coordinator),
         RCETomorrowAvgPriceSensor(coordinator),
         RCETomorrowMaxPriceSensor(coordinator),
@@ -95,14 +92,12 @@ async def async_setup_entry(
         RCETomorrowMaxPriceRangeSensor(coordinator),
         RCETomorrowMedianPriceSensor(coordinator),
         RCETomorrowTodayAvgComparisonSensor(coordinator),
-        # Custom configurable window sensors
         RCETodayCheapestWindowStartSensor(coordinator, config_entry),
         RCETodayCheapestWindowEndSensor(coordinator, config_entry),
         RCETodayCheapestWindowRangeSensor(coordinator, config_entry),
         RCETodayExpensiveWindowStartSensor(coordinator, config_entry),
         RCETodayExpensiveWindowEndSensor(coordinator, config_entry),
         RCETodayExpensiveWindowRangeSensor(coordinator, config_entry),
-        # Tomorrow custom configurable window sensors
         RCETomorrowCheapestWindowStartSensor(coordinator, config_entry),
         RCETomorrowCheapestWindowEndSensor(coordinator, config_entry),
         RCETomorrowCheapestWindowRangeSensor(coordinator, config_entry),

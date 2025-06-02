@@ -1,4 +1,3 @@
-"""Tomorrow's min/max price hours sensors for RCE PSE integration."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -10,29 +9,23 @@ if TYPE_CHECKING:
 
 
 class RCETomorrowHoursSensor(RCEBaseSensor):
-    """Base class for tomorrow's hours sensors."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, unique_id)
         self._attr_icon = "mdi:clock"
 
     @property
     def available(self) -> bool:
-        """Return if entity is available."""
         return super().available and self.is_tomorrow_data_available()
 
 
 class RCETomorrowMaxPriceHourStartSensor(RCETomorrowHoursSensor):
-    """Tomorrow's max price hour start sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_max_price_hour_start")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when max price starts."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -45,15 +38,12 @@ class RCETomorrowMaxPriceHourStartSensor(RCETomorrowHoursSensor):
 
 
 class RCETomorrowMaxPriceHourEndSensor(RCETomorrowHoursSensor):
-    """Tomorrow's max price hour end sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_max_price_hour_end")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when max price ends."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -66,15 +56,12 @@ class RCETomorrowMaxPriceHourEndSensor(RCETomorrowHoursSensor):
 
 
 class RCETomorrowMinPriceHourStartSensor(RCETomorrowHoursSensor):
-    """Tomorrow's min price hour start sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_min_price_hour_start")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when min price starts."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -87,15 +74,12 @@ class RCETomorrowMinPriceHourStartSensor(RCETomorrowHoursSensor):
 
 
 class RCETomorrowMinPriceHourEndSensor(RCETomorrowHoursSensor):
-    """Tomorrow's min price hour end sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_min_price_hour_end")
 
     @property
     def native_value(self) -> str | None:
-        """Return hour when min price ends."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -108,16 +92,13 @@ class RCETomorrowMinPriceHourEndSensor(RCETomorrowHoursSensor):
 
 
 class RCETomorrowMinPriceRangeSensor(RCETomorrowHoursSensor):
-    """Tomorrow's min price time range sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_min_price_range")
         self._attr_icon = "mdi:clock-time-four"
 
     @property
     def native_value(self) -> str | None:
-        """Return time range when min price occurs."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -135,16 +116,13 @@ class RCETomorrowMinPriceRangeSensor(RCETomorrowHoursSensor):
 
 
 class RCETomorrowMaxPriceRangeSensor(RCETomorrowHoursSensor):
-    """Tomorrow's max price time range sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_max_price_range")
         self._attr_icon = "mdi:clock-time-four"
 
     @property
     def native_value(self) -> str | None:
-        """Return time range when max price occurs."""
         if not self.is_tomorrow_data_available():
             return None
             

@@ -1,4 +1,3 @@
-"""The RCE PSE integration."""
 from __future__ import annotations
 
 import logging
@@ -6,6 +5,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
+import homeassistant.helpers.config_validation as cv
 
 from .const import DOMAIN
 from .coordinator import RCEPSEDataUpdateCoordinator
@@ -14,9 +14,10 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = ["sensor"]
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Set up the RCE PSE component."""
     _LOGGER.debug("Setting up RCE PSE integration")
     hass.data.setdefault(DOMAIN, {})
     _LOGGER.debug("RCE PSE integration setup completed")
@@ -24,7 +25,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up RCE PSE from a config entry."""
     _LOGGER.debug("Setting up RCE PSE config entry: %s", entry.entry_id)
     hass.data.setdefault(DOMAIN, {})
     
@@ -45,13 +45,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Update options."""
     _LOGGER.debug("Options updated for RCE PSE, reloading entry: %s", entry.entry_id)
     await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Unload a config entry."""
     _LOGGER.debug("Unloading RCE PSE config entry: %s", entry.entry_id)
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     

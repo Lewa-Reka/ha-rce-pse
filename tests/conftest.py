@@ -1,4 +1,3 @@
-"""Fixtures for RCE PSE integration tests."""
 from __future__ import annotations
 
 from datetime import datetime, timedelta
@@ -13,24 +12,21 @@ from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
 
 @pytest.fixture
 def mock_hass():
-    """Mock Home Assistant."""
     hass = Mock(spec=HomeAssistant)
     hass.config = Mock()
     hass.config.time_zone = "Europe/Warsaw"
-    hass.data = {}  # Dodaję data attribute
+    hass.data = {}
     return hass
 
 
 @pytest.fixture
 def sample_api_response():
-    """Sample API response data."""
     now = dt_util.now()
     today = now.strftime("%Y-%m-%d")
     tomorrow = (now + timedelta(days=1)).strftime("%Y-%m-%d")
     
     return {
         "value": [
-            # Today's data
             {
                 "dtime": f"{today} 00:00:00",
                 "period": "00:00 - 01:00",
@@ -59,7 +55,6 @@ def sample_api_response():
                 "business_date": today,
                 "publication_ts": f"{today}T23:00:00Z"
             },
-            # Tomorrow's data
             {
                 "dtime": f"{tomorrow} 00:00:00",
                 "period": "00:00 - 01:00",
@@ -87,7 +82,6 @@ def sample_api_response():
 
 @pytest.fixture
 def coordinator_data(sample_api_response):
-    """Sample coordinator data."""
     return {
         "raw_data": sample_api_response["value"],
         "last_update": dt_util.now().isoformat(),
@@ -96,7 +90,6 @@ def coordinator_data(sample_api_response):
 
 @pytest.fixture
 def mock_coordinator(mock_hass, coordinator_data):
-    """Mock coordinator with data."""
     coordinator = Mock(spec=RCEPSEDataUpdateCoordinator)
     coordinator.hass = mock_hass
     coordinator.data = coordinator_data
@@ -109,17 +102,14 @@ def mock_coordinator(mock_hass, coordinator_data):
 
 @pytest.fixture
 def mock_aiohttp_session():
-    """Mock aiohttp session with proper async context manager."""
     session = AsyncMock()
     response = AsyncMock()
     response.status = 200
     response.json = AsyncMock()
     
-    # Create a proper async context manager
     async def async_context_manager(*args, **kwargs):
         return response
         
-    # Mock the get method to return an async context manager
     session.get.return_value.__aenter__ = AsyncMock(return_value=response)
     session.get.return_value.__aexit__ = AsyncMock(return_value=None)
     

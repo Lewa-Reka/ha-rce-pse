@@ -1,4 +1,3 @@
-"""Sensors for RCE PSE integration."""
 from .base import RCEBaseSensor
 from .today_main import RCETodayMainSensor
 from .today_prices import (

@@ -1,4 +1,3 @@
-"""Base sensor class for RCE PSE integration."""
 from __future__ import annotations
 
 import statistics
@@ -16,26 +15,21 @@ if TYPE_CHECKING:
 
 
 class PriceCalculator:
-    """Helper class for price calculations."""
     
     @staticmethod
     def get_prices_from_data(data: list[dict]) -> list[float]:
-        """Extract prices from data records."""
         return [float(record["rce_pln"]) for record in data]
     
     @staticmethod
     def calculate_average(prices: list[float]) -> float:
-        """Calculate average price."""
         return sum(prices) / len(prices) if prices else 0.0
     
     @staticmethod
     def calculate_median(prices: list[float]) -> float:
-        """Calculate median price."""
         return statistics.median(prices) if prices else 0.0
     
     @staticmethod
     def get_hourly_prices(data: list[dict]) -> dict[str, float]:
-        """Get hourly prices dictionary."""
         hourly_prices = {}
         for record in data:
             try:
@@ -58,14 +52,12 @@ class PriceCalculator:
     
     @staticmethod
     def calculate_percentage_difference(current: float, reference: float) -> float:
-        """Calculate percentage difference between current and reference value."""
         if reference == 0:
             return 0.0
         return ((current - reference) / reference) * 100
     
     @staticmethod
     def find_extreme_price_records(data: list[dict], is_max: bool = True) -> list[dict]:
-        """Find records with extreme (min or max) prices."""
         if not data:
             return []
         
@@ -82,19 +74,6 @@ class PriceCalculator:
     @staticmethod
     def find_optimal_window(data: list[dict], window_start_hour: int, window_end_hour: int, 
                           duration_hours: int, is_max: bool = False) -> list[dict]:
-        """Find optimal continuous time window within specified hours.
-        
-        Args:
-            data: List of price records (15-minute intervals)
-            window_start_hour: Start hour for search (0-23)
-            window_end_hour: End hour for search (1-24)  
-            duration_hours: Duration of continuous window to find in hours (1-24)
-            is_max: If True, find most expensive window; if False, find cheapest
-            
-        Returns:
-            List of records forming the optimal continuous window
-
-        """
         if not data or duration_hours <= 0:
             return []
         
@@ -157,10 +136,8 @@ class PriceCalculator:
 
 
 class RCEBaseSensor(CoordinatorEntity, SensorEntity):
-    """Base class for RCE PSE sensors."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator)
         self._attr_unique_id = f"rce_pse_{unique_id}"
         self._attr_has_entity_name = True
@@ -169,7 +146,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def device_info(self):
-        """Return device information."""
         return {
             "identifiers": {(DOMAIN, "rce_pse")},
             "name": "RCE PSE",
@@ -179,7 +155,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         }
 
     def get_today_data(self) -> list[dict]:
-        """Get today's data from coordinator."""
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return []
         
@@ -190,7 +165,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         ]
 
     def get_tomorrow_data(self) -> list[dict]:
-        """Get tomorrow's data from coordinator."""
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return []
         
@@ -201,12 +175,10 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         ]
 
     def is_tomorrow_data_available(self) -> bool:
-        """Check if tomorrow's data is available (after 14:00)."""
         now = dt_util.now()
         return now.hour >= 14
 
     def get_tomorrow_price_at_hour(self, hour: int) -> dict | None:
-        """Get tomorrow's price data for specific hour."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -226,7 +198,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         return None
 
     def get_current_price_data(self) -> dict | None:
-        """Get current price data based on time."""
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
         
@@ -246,7 +217,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         return None
 
     def get_price_at_future_hour(self, hours_ahead: int) -> float | None:
-        """Get price at specific number of hours ahead."""
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
         
@@ -266,7 +236,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         return None
 
     def get_price_at_past_hour(self, hours_back: int) -> float | None:
-        """Get price at specific number of hours back."""
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
         
@@ -292,7 +261,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         return float(closest_record["rce_pln"]) if closest_record else None
 
     def get_data_summary(self, data: list[dict]) -> dict[str, any]:
-        """Get summary statistics for data."""
         if not data:
             return {}
         
@@ -308,7 +276,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def available(self) -> bool:
-        """Return if entity is available."""
         return (
             self.coordinator.last_update_success 
             and self.coordinator.data is not None

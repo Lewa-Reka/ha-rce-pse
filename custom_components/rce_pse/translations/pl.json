@@ -149,7 +149,7 @@
                 "name": "Koniec Konfigurowalnego Najtańszego Okna Dzisiaj"
             },
             "rce_pse_today_cheapest_window_range": {
-                "name": "Konfigurowalnie Najtańsze Okno Dzisiaj"
+                "name": "Konfigurowalne Najtańsze Okno Dzisiaj"
             },
             "rce_pse_today_expensive_window_start": {
                 "name": "Początek Konfigurowalnego Najdroższego Okna Dzisiaj"
@@ -158,7 +158,7 @@
                 "name": "Koniec Konfigurowalnego Najdroższego Okna Dzisiaj"
             },
             "rce_pse_today_expensive_window_range": {
-                "name": "Konfigurowalnie Najdroższe Okno Dzisiaj"
+                "name": "Konfigurowalne Najdroższe Okno Dzisiaj"
             },
             "rce_pse_tomorrow_cheapest_window_start": {
                 "name": "Początek Konfigurowalnego Najtańszego Okna Jutro"
@@ -167,7 +167,7 @@
                 "name": "Koniec Konfigurowalnego Najtańszego Okna Jutro"
             },
             "rce_pse_tomorrow_cheapest_window_range": {
-                "name": "Konfigurowalnie Najtańsze Okno Jutro"
+                "name": "Konfigurowalne Najtańsze Okno Jutro"
             },
             "rce_pse_tomorrow_expensive_window_start": {
                 "name": "Początek Konfigurowalnego Najdroższego Okna Jutro"
@@ -176,7 +176,7 @@
                 "name": "Koniec Konfigurowalnego Najdroższego Okna Jutro"
             },
             "rce_pse_tomorrow_expensive_window_range": {
-                "name": "Konfigurowalnie Najdroższe Okno Jutro"
+                "name": "Konfigurowalne Najdroższe Okno Jutro"
             }
         }
     }

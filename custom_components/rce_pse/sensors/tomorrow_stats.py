@@ -1,4 +1,3 @@
-"""Tomorrow's statistics sensors for RCE PSE integration."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -10,30 +9,24 @@ if TYPE_CHECKING:
 
 
 class RCETomorrowStatsSensor(RCEBaseSensor):
-    """Base class for tomorrow's statistics sensors."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str, unit: str = "PLN/MWh", icon: str = "mdi:cash") -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, unique_id)
         self._attr_native_unit_of_measurement = unit
         self._attr_icon = icon
 
     @property
     def available(self) -> bool:
-        """Return if entity is available."""
         return super().available and self.is_tomorrow_data_available()
 
 
 class RCETomorrowAvgPriceSensor(RCETomorrowStatsSensor):
-    """Tomorrow's average price sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_avg_price")
 
     @property
     def native_value(self) -> float | None:
-        """Return tomorrow's average price."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -46,15 +39,12 @@ class RCETomorrowAvgPriceSensor(RCETomorrowStatsSensor):
 
 
 class RCETomorrowMaxPriceSensor(RCETomorrowStatsSensor):
-    """Tomorrow's maximum price sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_max_price")
 
     @property
     def native_value(self) -> float | None:
-        """Return tomorrow's maximum price."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -67,15 +57,12 @@ class RCETomorrowMaxPriceSensor(RCETomorrowStatsSensor):
 
 
 class RCETomorrowMinPriceSensor(RCETomorrowStatsSensor):
-    """Tomorrow's minimum price sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_min_price")
 
     @property
     def native_value(self) -> float | None:
-        """Return tomorrow's minimum price."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -88,15 +75,12 @@ class RCETomorrowMinPriceSensor(RCETomorrowStatsSensor):
 
 
 class RCETomorrowMedianPriceSensor(RCETomorrowStatsSensor):
-    """Tomorrow's median price sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_median_price")
 
     @property
     def native_value(self) -> float | None:
-        """Return tomorrow's median price."""
         if not self.is_tomorrow_data_available():
             return None
             
@@ -109,15 +93,12 @@ class RCETomorrowMedianPriceSensor(RCETomorrowStatsSensor):
 
 
 class RCETomorrowTodayAvgComparisonSensor(RCETomorrowStatsSensor):
-    """Tomorrow vs today average comparison sensor."""
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        """Initialize the sensor."""
         super().__init__(coordinator, "tomorrow_vs_today_avg", "%", "mdi:percent")
 
     @property
     def native_value(self) -> float | None:
-        """Return percentage difference between tomorrow and today average price."""
         if not self.is_tomorrow_data_available():
             return None
             

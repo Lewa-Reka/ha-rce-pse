@@ -1,4 +1,3 @@
-"""Data update coordinator for RCE PSE integration."""
 from __future__ import annotations
 
 import asyncio
@@ -17,10 +16,8 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
-    """Class to manage fetching data from the PSE API."""
 
     def __init__(self, hass: HomeAssistant) -> None:
-        """Initialize."""
         super().__init__(
             hass,
             _LOGGER,
@@ -31,7 +28,6 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         self._last_api_fetch = None
 
     async def _async_update_data(self) -> dict[str, Any]:
-        """Update data via library."""
         now = dt_util.now()
         
         if (self._last_api_fetch and 
@@ -62,7 +58,6 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
             raise UpdateFailed(f"Error communicating with API: {exception}") from exception
 
     async def _fetch_data(self) -> dict[str, Any]:
-        """Fetch data from PSE API."""
         today = dt_util.now().strftime("%Y-%m-%d")
         _LOGGER.debug("Fetching PSE data for business_date >= %s", today)
         
@@ -110,7 +105,6 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
             raise UpdateFailed(f"Error fetching data: {exception}") from exception
 
     async def async_close(self) -> None:
-        """Close the session."""
         _LOGGER.debug("Closing PSE API session")
         if self.session:
             await self.session.close() 
