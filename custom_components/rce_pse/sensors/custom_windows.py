@@ -26,9 +26,20 @@ class RCECustomWindowSensor(RCEBaseSensor):
         self.config_entry = config_entry
 
     def get_config_value(self, key: str, default: any) -> any:
+        value = None
         if self.config_entry.options and key in self.config_entry.options:
-            return self.config_entry.options[key]
-        return self.config_entry.data.get(key, default)
+            value = self.config_entry.options[key]
+        else:
+            value = self.config_entry.data.get(key, default)
+        
+        if key in [
+            CONF_CHEAPEST_TIME_WINDOW_START, CONF_CHEAPEST_TIME_WINDOW_END,
+            CONF_CHEAPEST_WINDOW_DURATION_HOURS, CONF_EXPENSIVE_TIME_WINDOW_START,
+            CONF_EXPENSIVE_TIME_WINDOW_END, CONF_EXPENSIVE_WINDOW_DURATION_HOURS
+        ]:
+            return int(value)
+        
+        return value
 
 
 class RCETodayCheapestWindowStartSensor(RCECustomWindowSensor):

@@ -1,8 +1,13 @@
 from __future__ import annotations
 
 import pytest
-from unittest.mock import Mock
+from unittest.mock import Mock, MagicMock
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityDescription
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.rce_pse.const import CONF_CHEAPEST_TIME_WINDOW_START, CONF_CHEAPEST_TIME_WINDOW_END, CONF_CHEAPEST_WINDOW_DURATION_HOURS
 from custom_components.rce_pse.sensors.base import PriceCalculator, RCEBaseSensor
 from custom_components.rce_pse.sensors.custom_windows import RCECustomWindowSensor
 
@@ -199,7 +204,26 @@ class TestPriceCalculator:
 
     def test_find_optimal_window_empty_data(self):
         optimal_window = PriceCalculator.find_optimal_window([], 10, 16, 2, is_max=False)
+        
         assert optimal_window == []
+
+    def test_find_optimal_window_with_float_duration(self):
+        data = [
+            {"dtime": "2024-01-01 10:15:00", "rce_pln": "100.0"},
+            {"dtime": "2024-01-01 10:30:00", "rce_pln": "120.0"},
+            {"dtime": "2024-01-01 10:45:00", "rce_pln": "80.0"},
+            {"dtime": "2024-01-01 11:00:00", "rce_pln": "90.0"},
+            {"dtime": "2024-01-01 11:15:00", "rce_pln": "70.0"},
+            {"dtime": "2024-01-01 11:30:00", "rce_pln": "110.0"},
+            {"dtime": "2024-01-01 11:45:00", "rce_pln": "95.0"},
+            {"dtime": "2024-01-01 12:00:00", "rce_pln": "85.0"},
+        ]
+        
+        optimal_window_float = PriceCalculator.find_optimal_window(data, 10, 16, 2.0, is_max=False)
+        optimal_window_int = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
+        
+        assert optimal_window_float == optimal_window_int
+        assert len(optimal_window_float) == 8
 
 
 class TestRCEBaseSensor:
@@ -318,12 +342,40 @@ class TestRCECustomWindowSensor:
         value = sensor.get_config_value("test_key", "default_value")
         assert value == "data_value"
 
-    def test_get_config_value_default(self, mock_coordinator):
-        mock_config_entry = Mock()
-        mock_config_entry.data = {"other_key": "data_value"}
-        mock_config_entry.options = {"other_key": "options_value"}
+    def test_get_config_value_default(self):
+        config_entry = MockConfigEntry(
+            domain="rce_pse",
+            data={},
+            options={}
+        )
+        coordinator = MagicMock()
+        sensor = RCECustomWindowSensor(coordinator, config_entry, "test")
         
-        sensor = RCECustomWindowSensor(mock_coordinator, mock_config_entry, "test_sensor")
+        value = sensor.get_config_value("non_existent_key", "default_value")
+        assert value == "default_value"
+
+    def test_get_config_value_converts_float_to_int_for_window_keys(self):
+        config_entry = MockConfigEntry(
+            domain="rce_pse",
+            data={
+                CONF_CHEAPEST_TIME_WINDOW_START: 8.0,
+                CONF_CHEAPEST_TIME_WINDOW_END: 20.0,
+                CONF_CHEAPEST_WINDOW_DURATION_HOURS: 2.0,
+                "other_key": 5.5
+            },
+            options={}
+        )
+        coordinator = MagicMock()
+        sensor = RCECustomWindowSensor(coordinator, config_entry, "test")
         
-        value = sensor.get_config_value("test_key", "default_value")
-        assert value == "default_value" 
+        assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, 0) == 8
+        assert type(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, 0)) == int
+        
+        assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, 24) == 20
+        assert type(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, 24)) == int
+        
+        assert sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, 2) == 2
+        assert type(sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, 2)) == int
+        
+        assert sensor.get_config_value("other_key", 0) == 5.5
+        assert type(sensor.get_config_value("other_key", 0)) == float 

@@ -77,7 +77,7 @@ class PriceCalculator:
         if not data or duration_hours <= 0:
             return []
         
-        duration_periods = duration_hours * 4
+        duration_periods = int(duration_hours) * 4
         
         filtered_data = []
         for record in data:
