@@ -1,4 +1,4 @@
-# RCE PSE Integration for Home Assistant
+# RCE PSE Integration for Home Assistant - API v2 ready
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
 ![GitHub Release](https://img.shields.io/github/v/release/lewa-reka/ha-rce-pse?style=for-the-badge)
