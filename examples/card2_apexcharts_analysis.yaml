@@ -89,9 +89,11 @@
         });
       show:
         extremas: true
+        in_header: before_now
+        legend_value: false
     - entity: sensor.rce_pse_cena_jutro
       attribute: prices
-      name: Cena jutro (w tej godzinie)
+      name: Cena jutro
       yaxis_id: price
       type: line
       curve: smooth
@@ -113,6 +115,8 @@
         });
       show:
         extremas: true
+        in_header: false
+        legend_value: false
     - entity: sensor.rce_pse_srednia_cena_dzisiaj
       name: Średnia dzienna
       yaxis_id: price
