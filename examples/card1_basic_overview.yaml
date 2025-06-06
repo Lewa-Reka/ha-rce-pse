@@ -48,8 +48,6 @@
       name: "Obecna vs średnia"
       icon: mdi:percent
     - type: section
-      label: "Najlepsze Godziny Dziś"
-    - type: section
       label: "Najlepsze Okna Czasowe Dziś"
     - entity: sensor.rce_pse_najtansze_okno_czasowe_dzisiaj
       name: "Najtańsze okno czasowe"
