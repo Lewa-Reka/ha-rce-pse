@@ -32,9 +32,6 @@ class RCETomorrowMainSensor(RCEBaseSensor):
 
     @property
     def native_value(self) -> float | None:
-        if not self.is_tomorrow_data_available():
-            return None
-            
         current_hour = dt_util.now().hour
         
         tomorrow_price_record = self.get_tomorrow_price_at_hour(current_hour)

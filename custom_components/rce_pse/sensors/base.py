@@ -165,6 +165,9 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         ]
 
     def get_tomorrow_data(self) -> list[dict]:
+        if not self.is_tomorrow_data_available():
+            return []
+            
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return []
         
@@ -179,9 +182,6 @@ class RCEBaseSensor(CoordinatorEntity, SensorEntity):
         return now.hour >= 14
 
     def get_tomorrow_price_at_hour(self, hour: int) -> dict | None:
-        if not self.is_tomorrow_data_available():
-            return None
-            
         tomorrow_data = self.get_tomorrow_data()
         if not tomorrow_data:
             return None
