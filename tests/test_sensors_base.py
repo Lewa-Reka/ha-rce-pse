@@ -260,14 +260,21 @@ class TestRCEBaseSensor:
     def test_get_tomorrow_data(self, mock_coordinator, coordinator_data):
         from homeassistant.util import dt as dt_util
         from datetime import timedelta
+        from unittest.mock import patch
         
         sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
         tomorrow = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
         
-        tomorrow_data = sensor.get_tomorrow_data()
+        with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
+            tomorrow_data = sensor.get_tomorrow_data()
+            
+            assert len(tomorrow_data) == 3
+            assert all(record["business_date"] == tomorrow for record in tomorrow_data)
         
-        assert len(tomorrow_data) == 3
-        assert all(record["business_date"] == tomorrow for record in tomorrow_data)
+        with patch.object(sensor, 'is_tomorrow_data_available', return_value=False):
+            tomorrow_data = sensor.get_tomorrow_data()
+            
+            assert len(tomorrow_data) == 0
 
     def test_get_data_summary(self, mock_coordinator):
         sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
