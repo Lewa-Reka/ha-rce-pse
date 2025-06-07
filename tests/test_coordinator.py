@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import asyncio
+from datetime import timedelta
 from unittest.mock import patch, AsyncMock
 
 import pytest
 from homeassistant.helpers.update_coordinator import UpdateFailed
+from homeassistant.util import dt as dt_util
 
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
 
@@ -138,4 +141,181 @@ class TestRCEPSEDataUpdateCoordinator:
             assert "dtime" in first_record
             assert "period" in first_record
             assert "rce_pln" in first_record
-            assert "business_date" in first_record 
+            assert "business_date" in first_record
+
+    @pytest.mark.asyncio
+    async def test_caching_fresh_data(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        cached_data = {
+            "raw_data": sample_api_response["value"],
+            "last_update": "2025-05-29T12:00:00+00:00"
+        }
+        coordinator.data = cached_data
+        coordinator._last_api_fetch = dt_util.now()
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            result = await coordinator._async_update_data()
+            
+            mock_fetch.assert_not_called()
+            assert result == cached_data
+
+    @pytest.mark.asyncio
+    async def test_refresh_stale_data(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        old_data = {"raw_data": [], "last_update": "2025-05-29T10:00:00+00:00"}
+        coordinator.data = old_data
+        coordinator._last_api_fetch = dt_util.now() - timedelta(hours=2)
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            fresh_data = {
+                "raw_data": sample_api_response["value"],
+                "last_update": "2025-05-29T12:00:00+00:00"
+            }
+            mock_fetch.return_value = fresh_data
+            
+            result = await coordinator._async_update_data()
+            
+            mock_fetch.assert_called_once()
+            assert result == fresh_data
+
+    @pytest.mark.asyncio
+    async def test_timeout_error_with_existing_data(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        existing_data = {
+            "raw_data": sample_api_response["value"],
+            "last_update": "2025-05-29T10:00:00+00:00"
+        }
+        coordinator.data = existing_data
+        coordinator._last_api_fetch = dt_util.now() - timedelta(hours=2)
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            mock_fetch.side_effect = asyncio.TimeoutError("API timeout")
+            
+            result = await coordinator._async_update_data()
+            
+            assert result == existing_data
+            assert coordinator._last_api_fetch is not None
+
+    @pytest.mark.asyncio
+    async def test_timeout_error_without_existing_data(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        coordinator.data = None
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            mock_fetch.side_effect = asyncio.TimeoutError("API timeout")
+            
+            with pytest.raises(UpdateFailed, match="Timeout communicating with API"):
+                await coordinator._async_update_data()
+
+    @pytest.mark.asyncio
+    async def test_http_error_with_existing_data(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        existing_data = {
+            "raw_data": sample_api_response["value"],
+            "last_update": "2025-05-29T10:00:00+00:00"
+        }
+        coordinator.data = existing_data
+        coordinator._last_api_fetch = dt_util.now() - timedelta(hours=2)
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            mock_fetch.side_effect = Exception("HTTP error")
+            
+            result = await coordinator._async_update_data()
+            
+            assert result == existing_data
+            assert coordinator._last_api_fetch is not None
+
+    @pytest.mark.asyncio
+    async def test_http_error_without_existing_data(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        coordinator.data = None
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            mock_fetch.side_effect = Exception("HTTP error")
+            
+            with pytest.raises(UpdateFailed, match="Error communicating with API"):
+                await coordinator._async_update_data()
+
+    @pytest.mark.asyncio
+    async def test_last_api_fetch_updated_on_success(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        coordinator._last_api_fetch = None
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            fresh_data = {
+                "raw_data": sample_api_response["value"],
+                "last_update": "2025-05-29T12:00:00+00:00"
+            }
+            mock_fetch.return_value = fresh_data
+            
+            await coordinator._async_update_data()
+            
+            assert coordinator._last_api_fetch is not None
+
+    @pytest.mark.asyncio
+    async def test_last_api_fetch_updated_on_error(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        coordinator._last_api_fetch = None
+        
+        existing_data = {
+            "raw_data": sample_api_response["value"],
+            "last_update": "2025-05-29T10:00:00+00:00"
+        }
+        coordinator.data = existing_data
+        
+        with patch.object(coordinator, '_fetch_data') as mock_fetch:
+            mock_fetch.side_effect = Exception("API error")
+            
+            await coordinator._async_update_data()
+            
+            assert coordinator._last_api_fetch is not None
+
+    @pytest.mark.asyncio
+    async def test_api_error_status_handling(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        with patch.object(coordinator, 'session') as mock_session:
+            mock_response = AsyncMock()
+            mock_response.status = 500
+            
+            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+            
+            with pytest.raises(UpdateFailed, match="API returned status 500"):
+                await coordinator._fetch_data()
+
+    @pytest.mark.asyncio
+    async def test_api_invalid_response_format(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        with patch.object(coordinator, 'session') as mock_session:
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_response.json = AsyncMock(return_value={"invalid": "format"})
+            
+            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+            
+            with pytest.raises(UpdateFailed, match="Invalid API response format"):
+                await coordinator._fetch_data()
+
+    @pytest.mark.asyncio
+    async def test_api_empty_data_warning(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        with patch.object(coordinator, 'session') as mock_session:
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_response.json = AsyncMock(return_value={"value": []})
+            
+            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+            
+            result = await coordinator._fetch_data()
+            
+            assert result["raw_data"] == []
+            assert "last_update" in result 

@@ -51,10 +51,18 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                             len(data.get("raw_data", [])))
                 return data
         except asyncio.TimeoutError as exception:
+            self._last_api_fetch = now
             _LOGGER.error("Timeout communicating with PSE API: %s", exception)
+            if self.data:
+                _LOGGER.warning("Using existing data due to API timeout")
+                return self.data
             raise UpdateFailed(f"Timeout communicating with API: {exception}") from exception
         except Exception as exception:
+            self._last_api_fetch = now
             _LOGGER.error("Error communicating with PSE API: %s", exception)
+            if self.data:
+                _LOGGER.warning("Using existing data due to API error")
+                return self.data
             raise UpdateFailed(f"Error communicating with API: {exception}") from exception
 
     async def _fetch_data(self) -> dict[str, Any]:
