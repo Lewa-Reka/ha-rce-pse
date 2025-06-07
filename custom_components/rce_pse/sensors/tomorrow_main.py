@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any, TYPE_CHECKING
 
+from homeassistant.util import dt as dt_util
+
 from .base import RCEBaseSensor
 
 if TYPE_CHECKING:
@@ -33,12 +35,13 @@ class RCETomorrowMainSensor(RCEBaseSensor):
         if not self.is_tomorrow_data_available():
             return None
             
-        tomorrow_data = self.get_tomorrow_data()
-        if not tomorrow_data:
+        current_hour = dt_util.now().hour
+        
+        tomorrow_price_record = self.get_tomorrow_price_at_hour(current_hour)
+        if not tomorrow_price_record:
             return None
         
-        prices = self.calculator.get_prices_from_data(tomorrow_data)
-        return round(self.calculator.calculate_average(prices), 2)
+        return round(float(tomorrow_price_record["rce_pln"]), 2)
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
@@ -48,9 +51,12 @@ class RCETomorrowMainSensor(RCEBaseSensor):
                 "status": "Data not available yet",
                 "data_points": 0,
                 "prices": [],
+                "current_hour": dt_util.now().hour,
             }
             
+        current_hour = dt_util.now().hour
         tomorrow_data = self.get_tomorrow_data()
+        tomorrow_price_record = self.get_tomorrow_price_at_hour(current_hour)
         
         attributes = {
             "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
@@ -58,6 +64,8 @@ class RCETomorrowMainSensor(RCEBaseSensor):
             "prices": tomorrow_data,
             "available_after": "14:00 CET",
             "status": "Available",
+            "current_hour": current_hour,
+            "tomorrow_price_for_hour": tomorrow_price_record,
         }
         
         return attributes 
