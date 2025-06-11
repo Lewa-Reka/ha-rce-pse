@@ -61,6 +61,9 @@
             "rce_pse_today_price": {
                 "name": "Cena"
             },
+            "rce_pse_today_kwh_price": {
+                "name": "Cena za kWh"
+            },
             "rce_pse_next_hour_price": {
                 "name": "Cena Następnej Godziny"
             },

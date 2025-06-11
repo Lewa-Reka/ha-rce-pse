@@ -9,6 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .const import DOMAIN
 from .sensors import (
     RCETodayMainSensor,
+    RCETodayKwhPriceSensor,
     RCENextHourPriceSensor,
     RCENext2HoursPriceSensor,
     RCENext3HoursPriceSensor,
@@ -65,6 +66,7 @@ async def async_setup_entry(
     
     sensors = [
         RCETodayMainSensor(coordinator),
+        RCETodayKwhPriceSensor(coordinator),
         RCENextHourPriceSensor(coordinator),
         RCENext2HoursPriceSensor(coordinator),
         RCENext3HoursPriceSensor(coordinator),
