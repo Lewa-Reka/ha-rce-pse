@@ -160,6 +160,7 @@ These sensors automatically update based on your configured search parameters an
 
 ### Main Sensors
 - **Price** - Current electricity price
+- **Price for kWh** - Dedicated for HomeAssistant Energy dashboard
 - **Tomorrow Price** - Tomorrow's average price (available after 14:00 CET)
 
 ### Future Price Sensors
