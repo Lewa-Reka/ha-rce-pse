@@ -41,4 +41,19 @@ class RCETodayMainSensor(RCEBaseSensor):
             "prices": today_data,
         }
         
-        return attributes 
+        return attributes
+
+
+class RCETodayKwhPriceSensor(RCEBaseSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
+        super().__init__(coordinator, "today_kwh_price")
+        self._attr_native_unit_of_measurement = "PLN/kWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        current_data = self.get_current_price_data()
+        if current_data:
+            return round(float(current_data["rce_pln"]) / 1000, 6)
+        return None 

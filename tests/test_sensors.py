@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 import pytest
 from homeassistant.util import dt as dt_util
 
-from custom_components.rce_pse.sensors.today_main import RCETodayMainSensor
+from custom_components.rce_pse.sensors.today_main import RCETodayMainSensor, RCETodayKwhPriceSensor
 from custom_components.rce_pse.sensors.tomorrow_main import RCETomorrowMainSensor
 from custom_components.rce_pse.sensors.today_stats import (
     RCETodayAvgPriceSensor,
@@ -47,6 +47,31 @@ class TestTodayMainSensors:
 
     def test_today_main_price_sensor_state_no_data(self, mock_coordinator):
         sensor = RCETodayMainSensor(mock_coordinator)
+        
+        with patch.object(sensor, "get_current_price_data") as mock_current_price:
+            mock_current_price.return_value = None
+            
+            state = sensor.native_value
+            assert state is None
+
+    def test_today_kwh_price_sensor_initialization(self, mock_coordinator):
+        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+        
+        assert sensor._attr_unique_id == "rce_pse_today_kwh_price"
+        assert sensor._attr_native_unit_of_measurement == "PLN/kWh"
+        assert sensor._attr_icon == "mdi:cash"
+
+    def test_today_kwh_price_sensor_state_with_data(self, mock_coordinator):
+        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+        
+        with patch.object(sensor, "get_current_price_data") as mock_current_price:
+            mock_current_price.return_value = {"rce_pln": "350.50"}
+            
+            state = sensor.native_value
+            assert state == 0.35050
+
+    def test_today_kwh_price_sensor_state_no_data(self, mock_coordinator):
+        sensor = RCETodayKwhPriceSensor(mock_coordinator)
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = None
