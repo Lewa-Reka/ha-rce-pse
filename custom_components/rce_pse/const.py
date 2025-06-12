@@ -11,6 +11,8 @@ API_UPDATE_INTERVAL: Final[timedelta] = timedelta(minutes=30)
 API_SELECT: Final[str] = "dtime,period,rce_pln,business_date,publication_ts"
 API_FIRST: Final[int] = 200
 
+TAX_RATE: Final[float] = 0.23
+
 CONF_CHEAPEST_TIME_WINDOW_START: Final[str] = "cheapest_time_window_start"
 CONF_CHEAPEST_TIME_WINDOW_END: Final[str] = "cheapest_time_window_end"
 CONF_CHEAPEST_WINDOW_DURATION_HOURS: Final[str] = "cheapest_window_duration_hours"
