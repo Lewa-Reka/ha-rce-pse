@@ -161,7 +161,7 @@ These sensors automatically update based on your configured search parameters an
 
 ### Main Sensors
 - **Price** - Current electricity price
-- **Price for kWh** - Dedicated for HomeAssistant Energy dashboard
+- **Price for kWh** - Dedicated for HomeAssistant Energy dashboard (converts PLN/MWh to PLN/kWh, includes 23% VAT, rounded to 2 decimal places, negative prices converted to 0)
 - **Tomorrow Price** - Tomorrow's average price (available after 14:00 CET)
 
 ### Future Price Sensors
