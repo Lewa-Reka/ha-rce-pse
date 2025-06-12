@@ -59,5 +59,5 @@ class RCETodayKwhPriceSensor(RCEBaseSensor):
             price = float(current_data["rce_pln"])
             if price <= 0:
                 return 0
-            return round((price / 1000) * (1 + TAX_RATE), 2)
+            return round((price / 1000) * (1 + TAX_RATE), 6)
         return None

@@ -68,8 +68,8 @@ class TestTodayMainSensors:
             mock_current_price.return_value = {"rce_pln": "350.50"}
             
             state = sensor.native_value
-            # Expected: (350.50 / 1000) * (1 + 0.23) = 0.3505 * 1.23 = 0.431115, rounded to 2 decimals = 0.43
-            assert state == 0.43
+            # Expected: (350.50 / 1000) * (1 + 0.23) = 0.3505 * 1.23 = 0.431115, rounded to 6 decimals = 0.431115
+            assert state == 0.431115
 
     def test_today_kwh_price_sensor_state_no_data(self, mock_coordinator):
         sensor = RCETodayKwhPriceSensor(mock_coordinator)
