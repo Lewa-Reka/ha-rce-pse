@@ -248,7 +248,7 @@ Debug logs include:
 ## Data Source
 
 This integration fetches data from the official PSE API:
-- **API**: `https://v2.api.raporty.pse.pl/api`
+- **API**: `https://api.raporty.pse.pl/api` - API v2
 - **Update Interval**: 30 minutes
 - **Data Availability**: Tomorrow's prices are available after 14:00 CET
 
