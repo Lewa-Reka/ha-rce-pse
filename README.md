@@ -20,9 +20,10 @@ Instalation & Presentation: https://youtu.be/6N71uXgf9yc
 
 ### HACS (Recommended)
 
-1. Add this repository to HACS as a custom repository
-2. Install the integration through HACS
-3. Restart Home Assistant
+1. Open HACS in Home Assistant
+2. Search for **"RCE PSE"**
+3. DOWNLOAD the integration
+4. Restart Home Assistant
 
 ### Manual Installation
 
