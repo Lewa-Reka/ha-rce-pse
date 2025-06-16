@@ -132,7 +132,7 @@ class TestConstants:
 
     def test_api_url_constant(self):
         from custom_components.rce_pse.const import PSE_API_URL
-        assert PSE_API_URL == "https://v2.api.raporty.pse.pl/api/rce-pln"
+        assert PSE_API_URL == "https://api.raporty.pse.pl/api/rce-pln"
 
     def test_update_interval_constant(self):
         from custom_components.rce_pse.const import API_UPDATE_INTERVAL

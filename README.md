@@ -162,9 +162,9 @@ These sensors automatically update based on your configured search parameters an
 ## Sensors
 
 ### Main Sensors
-- **Price** - Current electricity price
+- **Price** - Current electricity price (with all daily prices as attributes)
 - **Price for kWh** - Dedicated for HomeAssistant Energy dashboard (converts PLN/MWh to PLN/kWh, includes 23% VAT, negative prices converted to 0)
-- **Tomorrow Price** - Tomorrow's average price (available after 14:00 CET)
+- **Tomorrow Price** - Tomorrow's price (available after 14:00 CET) (with all prices for the next day as attributes)
 
 ### Future Price Sensors
 - **Next Hour Price** - Price for the next hour
@@ -250,7 +250,7 @@ Debug logs include:
 ## Data Source
 
 This integration fetches data from the official PSE API:
-- **API**: `https://v2.api.raporty.pse.pl/api`
+- **API**: `https://api.raporty.pse.pl/api` - API v2
 - **Update Interval**: 30 minutes
 - **Data Availability**: Tomorrow's prices are available after 14:00 CET
 

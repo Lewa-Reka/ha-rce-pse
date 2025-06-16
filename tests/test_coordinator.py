@@ -80,7 +80,7 @@ class TestRCEPSEDataUpdateCoordinator:
             mock_session.get.assert_called_once()
             call_args = mock_session.get.call_args
             
-            assert "https://v2.api.raporty.pse.pl/api/rce-pln" in call_args[0]
+            assert "https://api.raporty.pse.pl/api/rce-pln" in call_args[0]
             assert "params" in call_args[1]
             assert "headers" in call_args[1]
             
