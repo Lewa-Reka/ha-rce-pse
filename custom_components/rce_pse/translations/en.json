@@ -204,6 +204,30 @@
             },
             "rce_pse_tomorrow_expensive_window_end_timestamp": {
                 "name": "Custom Expensive Window End Timestamp Tomorrow"
+            },
+            "rce_pse_today_max_price_hour_start_timestamp": {
+                "name": "Today Max Price Hour Start Timestamp"
+            },
+            "rce_pse_today_max_price_hour_end_timestamp": {
+                "name": "Today Max Price Hour End Timestamp"
+            },
+            "rce_pse_today_min_price_hour_start_timestamp": {
+                "name": "Today Min Price Hour Start Timestamp"
+            },
+            "rce_pse_today_min_price_hour_end_timestamp": {
+                "name": "Today Min Price Hour End Timestamp"
+            },
+            "rce_pse_tomorrow_max_price_hour_start_timestamp": {
+                "name": "Tomorrow Max Price Hour Start Timestamp"
+            },
+            "rce_pse_tomorrow_max_price_hour_end_timestamp": {
+                "name": "Tomorrow Max Price Hour End Timestamp"
+            },
+            "rce_pse_tomorrow_min_price_hour_start_timestamp": {
+                "name": "Tomorrow Min Price Hour Start Timestamp"
+            },
+            "rce_pse_tomorrow_min_price_hour_end_timestamp": {
+                "name": "Tomorrow Min Price Hour End Timestamp"
             }
         }
     }
