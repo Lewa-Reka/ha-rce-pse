@@ -179,7 +179,31 @@
                 "name": "Tomorrow Custom Most Expensive Window End"
             },
             "rce_pse_tomorrow_expensive_window_range": {
-                "name": "Tomorrow Custom Most Expensive Window"
+                "name": "Custom Expensive Window Tomorrow"
+            },
+            "rce_pse_today_cheapest_window_start_timestamp": {
+                "name": "Custom Cheapest Window Start Timestamp Today"
+            },
+            "rce_pse_today_cheapest_window_end_timestamp": {
+                "name": "Custom Cheapest Window End Timestamp Today"
+            },
+            "rce_pse_today_expensive_window_start_timestamp": {
+                "name": "Custom Expensive Window Start Timestamp Today"
+            },
+            "rce_pse_today_expensive_window_end_timestamp": {
+                "name": "Custom Expensive Window End Timestamp Today"
+            },
+            "rce_pse_tomorrow_cheapest_window_start_timestamp": {
+                "name": "Custom Cheapest Window Start Timestamp Tomorrow"
+            },
+            "rce_pse_tomorrow_cheapest_window_end_timestamp": {
+                "name": "Custom Cheapest Window End Timestamp Tomorrow"
+            },
+            "rce_pse_tomorrow_expensive_window_start_timestamp": {
+                "name": "Custom Expensive Window Start Timestamp Tomorrow"
+            },
+            "rce_pse_tomorrow_expensive_window_end_timestamp": {
+                "name": "Custom Expensive Window End Timestamp Tomorrow"
             }
         }
     }

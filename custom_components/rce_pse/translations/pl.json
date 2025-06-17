@@ -180,6 +180,30 @@
             },
             "rce_pse_tomorrow_expensive_window_range": {
                 "name": "Konfigurowalne Najdroższe Okno Jutro"
+            },
+            "rce_pse_today_cheapest_window_start_timestamp": {
+                "name": "Początek Timestamp Konfigurowalnego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_today_cheapest_window_end_timestamp": {
+                "name": "Koniec Timestamp Konfigurowalnego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_today_expensive_window_start_timestamp": {
+                "name": "Początek Timestamp Konfigurowalnego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_today_expensive_window_end_timestamp": {
+                "name": "Koniec Timestamp Konfigurowalnego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_tomorrow_cheapest_window_start_timestamp": {
+                "name": "Początek Timestamp Konfigurowalnego Najdroższego Okna Jutro"
+            },
+            "rce_pse_tomorrow_cheapest_window_end_timestamp": {
+                "name": "Koniec Timestamp Konfigurowalnego Najdroższego Okna Jutro"
+            },
+            "rce_pse_tomorrow_expensive_window_start_timestamp": {
+                "name": "Początek Timestamp Konfigurowalnego Najdroższego Okna Jutro"
+            },
+            "rce_pse_tomorrow_expensive_window_end_timestamp": {
+                "name": "Koniec Timestamp Konfigurowalnego Najdroższego Okna Jutro"
             }
         }
     }

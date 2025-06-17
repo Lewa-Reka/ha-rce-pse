@@ -51,6 +51,14 @@ from .sensors.custom_windows import (
     RCETomorrowExpensiveWindowStartSensor,
     RCETomorrowExpensiveWindowEndSensor,
     RCETomorrowExpensiveWindowRangeSensor,
+    RCETodayCheapestWindowStartTimestampSensor,
+    RCETodayCheapestWindowEndTimestampSensor,
+    RCETodayExpensiveWindowStartTimestampSensor,
+    RCETodayExpensiveWindowEndTimestampSensor,
+    RCETomorrowCheapestWindowStartTimestampSensor,
+    RCETomorrowCheapestWindowEndTimestampSensor,
+    RCETomorrowExpensiveWindowStartTimestampSensor,
+    RCETomorrowExpensiveWindowEndTimestampSensor,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -106,6 +114,14 @@ async def async_setup_entry(
         RCETomorrowExpensiveWindowStartSensor(coordinator, config_entry),
         RCETomorrowExpensiveWindowEndSensor(coordinator, config_entry),
         RCETomorrowExpensiveWindowRangeSensor(coordinator, config_entry),
+        RCETodayCheapestWindowStartTimestampSensor(coordinator, config_entry),
+        RCETodayCheapestWindowEndTimestampSensor(coordinator, config_entry),
+        RCETodayExpensiveWindowStartTimestampSensor(coordinator, config_entry),
+        RCETodayExpensiveWindowEndTimestampSensor(coordinator, config_entry),
+        RCETomorrowCheapestWindowStartTimestampSensor(coordinator, config_entry),
+        RCETomorrowCheapestWindowEndTimestampSensor(coordinator, config_entry),
+        RCETomorrowExpensiveWindowStartTimestampSensor(coordinator, config_entry),
+        RCETomorrowExpensiveWindowEndTimestampSensor(coordinator, config_entry),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE sensors to Home Assistant", len(sensors))
