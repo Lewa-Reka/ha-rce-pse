@@ -67,13 +67,10 @@ class RCETodayCheapestWindowStartSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             return window_start.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -100,12 +97,9 @@ class RCETodayCheapestWindowEndSensor(RCECustomWindowSensor):
             return None
         
         try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             return last_period_end.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -133,19 +127,13 @@ class RCETodayCheapestWindowRangeSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             
             return f"{window_start.strftime('%H:%M')} - {last_period_end.strftime('%H:%M')}"
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -172,13 +160,10 @@ class RCETodayExpensiveWindowStartSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             return window_start.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -205,12 +190,9 @@ class RCETodayExpensiveWindowEndSensor(RCECustomWindowSensor):
             return None
         
         try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             return last_period_end.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -238,19 +220,13 @@ class RCETodayExpensiveWindowRangeSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             
             return f"{window_start.strftime('%H:%M')} - {last_period_end.strftime('%H:%M')}"
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -277,13 +253,10 @@ class RCETomorrowCheapestWindowStartSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             return window_start.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -310,12 +283,9 @@ class RCETomorrowCheapestWindowEndSensor(RCECustomWindowSensor):
             return None
         
         try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             return last_period_end.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -343,19 +313,13 @@ class RCETomorrowCheapestWindowRangeSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             
             return f"{window_start.strftime('%H:%M')} - {last_period_end.strftime('%H:%M')}"
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -382,13 +346,10 @@ class RCETomorrowExpensiveWindowStartSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             return window_start.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -415,12 +376,9 @@ class RCETomorrowExpensiveWindowEndSensor(RCECustomWindowSensor):
             return None
         
         try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             return last_period_end.strftime("%H:%M")
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
@@ -448,19 +406,13 @@ class RCETomorrowExpensiveWindowRangeSensor(RCECustomWindowSensor):
             return None
         
         try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
+            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
+            window_start = first_period_end - timedelta(minutes=15)
             
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
             
             return f"{window_start.strftime('%H:%M')} - {last_period_end.strftime('%H:%M')}"
-        except (ValueError, KeyError, IndexError):
+        except (ValueError, KeyError):
             return None
 
 
