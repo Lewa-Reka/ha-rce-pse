@@ -101,10 +101,12 @@ class RCETomorrowMaxPriceHourStartTimestampSensor(RCETomorrowHoursSensor):
             return None
         
         try:
-            first_period_end = datetime.strptime(max_price_records[0]["dtime"], "%Y-%m-%d %H:%M:%S")
-            period_start = first_period_end - timedelta(minutes=15)
-            return dt_util.as_local(period_start)
-        except (ValueError, KeyError):
+            start_time_str = max_price_records[0]["period"].split(" - ")[0]
+            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+            datetime_str = f"{tomorrow_str} {start_time_str}:00"
+            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            return dt_util.as_local(start_datetime)
+        except (ValueError, KeyError, IndexError):
             return None
 
 
@@ -126,9 +128,12 @@ class RCETomorrowMaxPriceHourEndTimestampSensor(RCETomorrowHoursSensor):
             return None
         
         try:
-            last_period_end = datetime.strptime(max_price_records[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(last_period_end)
-        except (ValueError, KeyError):
+            end_time_str = max_price_records[-1]["period"].split(" - ")[1]
+            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+            datetime_str = f"{tomorrow_str} {end_time_str}:00"
+            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            return dt_util.as_local(end_datetime)
+        except (ValueError, KeyError, IndexError):
             return None
 
 
@@ -150,10 +155,12 @@ class RCETomorrowMinPriceHourStartTimestampSensor(RCETomorrowHoursSensor):
             return None
         
         try:
-            first_period_end = datetime.strptime(min_price_records[0]["dtime"], "%Y-%m-%d %H:%M:%S")
-            period_start = first_period_end - timedelta(minutes=15)
-            return dt_util.as_local(period_start)
-        except (ValueError, KeyError):
+            start_time_str = min_price_records[0]["period"].split(" - ")[0]
+            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+            datetime_str = f"{tomorrow_str} {start_time_str}:00"
+            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            return dt_util.as_local(start_datetime)
+        except (ValueError, KeyError, IndexError):
             return None
 
 
@@ -175,9 +182,12 @@ class RCETomorrowMinPriceHourEndTimestampSensor(RCETomorrowHoursSensor):
             return None
         
         try:
-            last_period_end = datetime.strptime(min_price_records[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(last_period_end)
-        except (ValueError, KeyError):
+            end_time_str = min_price_records[-1]["period"].split(" - ")[1]
+            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+            datetime_str = f"{tomorrow_str} {end_time_str}:00"
+            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+            return dt_util.as_local(end_datetime)
+        except (ValueError, KeyError, IndexError):
             return None
 
 
