@@ -182,52 +182,52 @@
                 "name": "Konfigurowalne Najdroższe Okno Jutro"
             },
             "rce_pse_today_cheapest_window_start_timestamp": {
-                "name": "Początek Timestamp Konfigurowalnego Najtańszego Okna Dzisiaj"
+                "name": "Timestamp Początek Konfigurowalnego Najtańszego Okna Dzisiaj"
             },
             "rce_pse_today_cheapest_window_end_timestamp": {
-                "name": "Koniec Timestamp Konfigurowalnego Najtańszego Okna Dzisiaj"
+                "name": "Timestamp Koniec Konfigurowalnego Najtańszego Okna Dzisiaj"
             },
             "rce_pse_today_expensive_window_start_timestamp": {
-                "name": "Początek Timestamp Konfigurowalnego Najdroższego Okna Dzisiaj"
+                "name": "Timestamp Początek Konfigurowalnego Najdroższego Okna Dzisiaj"
             },
             "rce_pse_today_expensive_window_end_timestamp": {
-                "name": "Koniec Timestamp Konfigurowalnego Najdroższego Okna Dzisiaj"
+                "name": "Timestamp Koniec Konfigurowalnego Najdroższego Okna Dzisiaj"
             },
             "rce_pse_tomorrow_cheapest_window_start_timestamp": {
-                "name": "Początek Timestamp Konfigurowalnego Najtańszego Okna Jutro"
+                "name": "Timestamp Początek Konfigurowalnego Najtańszego Okna Jutro"
             },
             "rce_pse_tomorrow_cheapest_window_end_timestamp": {
-                "name": "Koniec Timestamp Konfigurowalnego Najtańszego Okna Jutro"
+                "name": "Timestamp Koniec Konfigurowalnego Najtańszego Okna Jutro"
             },
             "rce_pse_tomorrow_expensive_window_start_timestamp": {
-                "name": "Początek Timestamp Konfigurowalnego Najdroższego Okna Jutro"
+                "name": "Timestamp Początek Konfigurowalnego Najdroższego Okna Jutro"
             },
             "rce_pse_tomorrow_expensive_window_end_timestamp": {
-                "name": "Koniec Timestamp Konfigurowalnego Najdroższego Okna Jutro"
+                "name": "Timestamp Koniec Konfigurowalnego Najdroższego Okna Jutro"
             },
             "rce_pse_today_max_price_hour_start_timestamp": {
-                "name": "Początek Timestamp Godziny Maks. Ceny Dzisiaj"
+                "name": "Timestamp Początek Godziny Maks. Ceny Dzisiaj"
             },
             "rce_pse_today_max_price_hour_end_timestamp": {
-                "name": "Koniec Timestamp Godziny Maks. Ceny Dzisiaj"
+                "name": "Timestamp Koniec Godziny Maks. Ceny Dzisiaj"
             },
             "rce_pse_today_min_price_hour_start_timestamp": {
-                "name": "Początek Timestamp Godziny Min. Ceny Dzisiaj"
+                "name": "Timestamp Początek Godziny Min. Ceny Dzisiaj"
             },
             "rce_pse_today_min_price_hour_end_timestamp": {
-                "name": "Koniec Timestamp Godziny Min. Ceny Dzisiaj"
+                "name": "Timestamp Koniec Godziny Min. Ceny Dzisiaj"
             },
             "rce_pse_tomorrow_max_price_hour_start_timestamp": {
-                "name": "Początek Timestamp Godziny Maks. Ceny Jutro"
+                "name": "Timestamp Początek Godziny Maks. Ceny Jutro"
             },
             "rce_pse_tomorrow_max_price_hour_end_timestamp": {
-                "name": "Koniec Timestamp Godziny Maks. Ceny Jutro"
+                "name": "Timestamp Koniec Godziny Maks. Ceny Jutro"
             },
             "rce_pse_tomorrow_min_price_hour_start_timestamp": {
-                "name": "Początek Timestamp Godziny Min. Ceny Jutro"
+                "name": "Timestamp Początek Godziny Min. Ceny Jutro"
             },
             "rce_pse_tomorrow_min_price_hour_end_timestamp": {
-                "name": "Koniec Timestamp Godziny Min. Ceny Jutro"
+                "name": "Timestamp Koniec Godziny Min. Ceny Jutro"
             }
         }
     }
