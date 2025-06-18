@@ -375,6 +375,8 @@ class TestTodayCustomWindowTimestampSensors:
         
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 12
+        assert timestamp.minute == 0
 
     def test_today_cheapest_window_start_timestamp_no_optimal_window(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayCheapestWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
@@ -399,6 +401,8 @@ class TestTodayCustomWindowTimestampSensors:
         
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 14
+        assert timestamp.minute == 0
 
     def test_today_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayExpensiveWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
@@ -414,6 +418,8 @@ class TestTodayCustomWindowTimestampSensors:
         
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 20
+        assert timestamp.minute == 0
 
     def test_today_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayExpensiveWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
@@ -429,6 +435,8 @@ class TestTodayCustomWindowTimestampSensors:
         
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 22
+        assert timestamp.minute == 0
 
     def test_custom_window_timestamp_invalid_datetime(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayCheapestWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
@@ -464,6 +472,8 @@ class TestTomorrowCustomWindowTimestampSensors:
             
             assert timestamp is not None
             assert isinstance(timestamp, datetime)
+            assert timestamp.hour == 13
+            assert timestamp.minute == 0
 
     def test_tomorrow_cheapest_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowCheapestWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
@@ -482,6 +492,8 @@ class TestTomorrowCustomWindowTimestampSensors:
             
             assert timestamp is not None
             assert isinstance(timestamp, datetime)
+            assert timestamp.hour == 15
+            assert timestamp.minute == 0
 
     def test_tomorrow_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
@@ -500,6 +512,8 @@ class TestTomorrowCustomWindowTimestampSensors:
             
             assert timestamp is not None
             assert isinstance(timestamp, datetime)
+            assert timestamp.hour == 19
+            assert timestamp.minute == 0
 
     def test_tomorrow_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
@@ -518,6 +532,8 @@ class TestTomorrowCustomWindowTimestampSensors:
             
             assert timestamp is not None
             assert isinstance(timestamp, datetime)
+            assert timestamp.hour == 21
+            assert timestamp.minute == 0
 
     def test_tomorrow_custom_window_timestamp_no_data(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowCheapestWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
