@@ -229,6 +229,20 @@
             "rce_pse_tomorrow_min_price_hour_end_timestamp": {
                 "name": "Timestamp Koniec Godziny Min. Ceny Jutro"
             }
+        },
+        "binary_sensor": {
+            "rce_pse_today_min_price_window_active": {
+                "name": "Aktywne Najtańsze Okno Dzisiaj"
+            },
+            "rce_pse_today_max_price_window_active": {
+                "name": "Aktywne Najdroższe Okno Dzisiaj"
+            },
+            "rce_pse_today_cheapest_window_active": {
+                "name": "Aktywne Konfigurowalne Najtańsze Okno Dzisiaj"
+            },
+            "rce_pse_today_expensive_window_active": {
+                "name": "Aktywne Konfigurowalne Najdroższe Okno Dzisiaj"
+            }
         }
     }
 }

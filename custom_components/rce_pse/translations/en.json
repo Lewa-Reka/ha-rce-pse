@@ -229,6 +229,21 @@
             "rce_pse_tomorrow_min_price_hour_end_timestamp": {
                 "name": "Tomorrow Min Price Hour End Timestamp"
             }
+        },
+        "binary_sensor": {
+            "rce_pse_today_min_price_window_active": {
+                "name": "Today Cheapest Window Active"
+            },
+            "rce_pse_today_max_price_window_active": {
+                "name": "Today Most Expensive Window Active"
+            },
+            "rce_pse_today_cheapest_window_active": {
+                "name": "Today Custom Cheapest Window Active"
+            },
+            "rce_pse_today_expensive_window_active": {
+                "name": "Today Custom Most Expensive Window Active"
+            }
         }
     }
+}
 }
