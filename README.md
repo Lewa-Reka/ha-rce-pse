@@ -219,6 +219,24 @@ Based on your configuration settings, the integration provides additional sensor
 
 All time values are provided in 24-hour format (HH:MM) and automatically update based on current market data and your configuration settings.
 
+## Binary Sensors
+
+The integration provides binary sensors that indicate when you are currently within specific price windows. These sensors are perfect for automation triggers and dashboard indicators.
+
+### Today's Price Window Binary Sensors
+
+These sensors indicate whether you are currently within the most expensive or cheapest price periods for today:
+
+- **Today Min Price Window Active** - `true` when currently within the lowest price period of the day
+- **Today Max Price Window Active** - `true` when currently within the highest price period of the day
+
+### Custom Window Binary Sensors
+
+Based on your configuration settings, these sensors indicate whether you are currently within your configured optimal time windows:
+
+- **Today Cheapest Window Active** - `true` when currently within your configured cheapest time window
+- **Today Expensive Window Active** - `true` when currently within your configured most expensive time window
+
 ## Debugging
 
 To enable debug logging for the RCE PSE integration, add the following to your Home Assistant `configuration.yaml`:
