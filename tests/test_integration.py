@@ -53,7 +53,7 @@ class TestRCEPSEIntegration:
         assert result is True
         mock_coordinator.async_close.assert_called_once()
         mock_hass.config_entries.async_unload_platforms.assert_called_once_with(
-            mock_entry, ["sensor"]
+            mock_entry, ["sensor", "binary_sensor"]
         )
         assert mock_entry.entry_id not in mock_hass.data[DOMAIN]
 
