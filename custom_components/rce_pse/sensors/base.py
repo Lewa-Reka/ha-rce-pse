@@ -18,16 +18,20 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str) -> None:
         super().__init__(coordinator, unique_id)
 
-    def get_tomorrow_price_at_hour(self, hour: int) -> dict | None:
+    def get_tomorrow_price_at_time(self, target_time: datetime) -> dict | None:
         tomorrow_data = self.get_tomorrow_data()
         if not tomorrow_data:
             return None
+        
+        target_hour = target_time.hour
+        target_minute = (target_time.minute // 15) * 15
         
         for record in tomorrow_data:
             try:
                 period_start = record["period"].split(" - ")[0]
                 record_hour = int(period_start[:2])
-                if record_hour == hour:
+                record_minute = int(period_start[3:5])
+                if record_hour == target_hour and record_minute == target_minute:
                     return record
             except (ValueError, KeyError, IndexError):
                 continue

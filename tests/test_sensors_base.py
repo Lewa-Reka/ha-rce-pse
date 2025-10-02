@@ -316,6 +316,77 @@ class TestRCEBaseSensor:
         
         assert sensor.available is False
 
+    def test_get_tomorrow_price_at_time_exact_match(self, mock_coordinator):
+        from unittest.mock import patch
+        from datetime import datetime
+        
+        sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
+        
+        tomorrow_data = [
+            {"period": "10:00 - 10:15", "rce_pln": "300.00"},
+            {"period": "10:15 - 10:30", "rce_pln": "310.00"},
+            {"period": "10:30 - 10:45", "rce_pln": "320.00"},
+            {"period": "10:45 - 11:00", "rce_pln": "330.00"},
+        ]
+        
+        with patch.object(sensor, 'get_tomorrow_data', return_value=tomorrow_data):
+            result = sensor.get_tomorrow_price_at_time(datetime(2024, 1, 1, 10, 0))
+            assert result is not None
+            assert result["rce_pln"] == "300.00"
+            
+            result = sensor.get_tomorrow_price_at_time(datetime(2024, 1, 1, 10, 15))
+            assert result is not None
+            assert result["rce_pln"] == "310.00"
+            
+            result = sensor.get_tomorrow_price_at_time(datetime(2024, 1, 1, 10, 30))
+            assert result is not None
+            assert result["rce_pln"] == "320.00"
+            
+            result = sensor.get_tomorrow_price_at_time(datetime(2024, 1, 1, 10, 45))
+            assert result is not None
+            assert result["rce_pln"] == "330.00"
+
+    def test_get_tomorrow_price_at_time_no_match(self, mock_coordinator):
+        from unittest.mock import patch
+        from datetime import datetime
+        
+        sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
+        
+        tomorrow_data = [
+            {"period": "10:00 - 10:15", "rce_pln": "300.00"},
+            {"period": "10:15 - 10:30", "rce_pln": "310.00"},
+        ]
+        
+        with patch.object(sensor, 'get_tomorrow_data', return_value=tomorrow_data):
+            result = sensor.get_tomorrow_price_at_time(datetime(2024, 1, 1, 11, 0))
+            assert result is None
+
+    def test_get_tomorrow_price_at_time_no_data(self, mock_coordinator):
+        from unittest.mock import patch
+        from datetime import datetime
+        
+        sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
+        
+        with patch.object(sensor, 'get_tomorrow_data', return_value=[]):
+            result = sensor.get_tomorrow_price_at_time(datetime(2024, 1, 1, 10, 0))
+            assert result is None
+
+    def test_get_tomorrow_price_at_time_invalid_period_format(self, mock_coordinator):
+        from unittest.mock import patch
+        from datetime import datetime
+        
+        sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
+        
+        tomorrow_data = [
+            {"period": "invalid", "rce_pln": "300.00"},
+            {"period": "10:15 - 10:30", "rce_pln": "310.00"},
+        ]
+        
+        with patch.object(sensor, 'get_tomorrow_data', return_value=tomorrow_data):
+            result = sensor.get_tomorrow_price_at_time(datetime(2024, 1, 1, 10, 15))
+            assert result is not None
+            assert result["rce_pln"] == "310.00"
+
 
 class TestRCECustomWindowSensor:
 
