@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, Mock
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from homeassistant.core import HomeAssistant
@@ -21,6 +21,12 @@ def mock_hass():
     hass.config.time_zone = "Europe/Warsaw"
     hass.data = {}
     return hass
+
+
+@pytest.fixture(autouse=True)
+def disable_frame_report_usage():
+    with patch('homeassistant.helpers.frame.report_usage'):
+        yield
 
 
 @pytest.fixture(autouse=True)
