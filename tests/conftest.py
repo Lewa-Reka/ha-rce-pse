@@ -6,17 +6,28 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 from homeassistant.core import HomeAssistant
 from homeassistant.util import dt as dt_util
+from homeassistant.helpers.frame import _hass
 
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
 
 
 @pytest.fixture
 def mock_hass():
+    if _hass.hass is None:
+        _hass.hass = Mock(spec=HomeAssistant)
+    
     hass = Mock(spec=HomeAssistant)
     hass.config = Mock()
     hass.config.time_zone = "Europe/Warsaw"
     hass.data = {}
     return hass
+
+
+@pytest.fixture(autouse=True)
+def cleanup_hass():
+    """Clean up the global hass reference after each test."""
+    yield
+    _hass.hass = None
 
 
 @pytest.fixture
