@@ -20,7 +20,7 @@
                     "expensive_time_window_start": "Starting hour for searching most expensive windows (0-23)",
                     "expensive_time_window_end": "Ending hour for searching most expensive windows (1-24)",
                     "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)",
-                    "use_hourly_prices": "Data with one price for the entire hour, useful in net-billing settlements due to the introduced chaos with 15-minute prices while simultaneously metering prosumers with hourly accuracy. In this mode, the average price for a given hour is calculated from PSE published prices for quarters. Change after checking will occur within 30 minutes maximum."
+                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE"
                 }
             }
         },
@@ -52,7 +52,7 @@
                     "expensive_time_window_start": "Starting hour for searching most expensive windows (0-23)",
                     "expensive_time_window_end": "Ending hour for searching most expensive windows (1-24)",
                     "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)",
-                    "use_hourly_prices": "Data with one price for the entire hour, useful in net-billing settlements due to the introduced chaos with 15-minute prices while simultaneously metering prosumers with hourly accuracy. In this mode, the average price for a given hour is calculated from PSE published prices for quarters. Change after checking will occur within 30 minutes maximum."
+                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE"
                 }
             }
         },
