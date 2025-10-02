@@ -16,13 +16,17 @@ jobs:
     steps:
       - name: "Checkout the repository"
         uses: actions/checkout@v4
-
+      - name: Set Vars
+        run: |
+          echo "version=$(echo '${{ github.event.release.name }}' | cut -c 2-)" >> $GITHUB_ENV
+      - name: Set Version
+        run: |
+          sed -i "s/11\.22\.33/$version/g" ${{ github.workspace }}/custom_components/rce_pse/manifest.json
       - name: "ZIP the integration directory"
         shell: bash
         run: |
           cd "${{ github.workspace }}/custom_components/rce_pse"
           zip -r ../rce_pse.zip . -x "*.git*" "*.git/*" "*.github/*"
-
       - name: "Upload the ZIP file to the release"
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
