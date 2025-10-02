@@ -89,6 +89,28 @@ class TestRCEPSEConfigFlow:
                 mock_create_entry.assert_called_once_with(title="RCE PSE", data={})
 
     @pytest.mark.asyncio
+    async def test_config_flow_user_step_with_hourly_prices_option(self, mock_hass):
+        flow = RCEConfigFlow()
+        flow.hass = mock_hass
+        flow.flow_id = "test_flow_id"
+        flow.context = {}
+        
+        mock_hass.config_entries = Mock()
+        mock_hass.config_entries.flow = Mock()
+        mock_hass.config_entries.flow.async_progress_by_handler = Mock(return_value=[])
+        mock_hass.config_entries.async_entry_for_domain_unique_id = Mock(return_value=None)
+        
+        with patch.object(flow, "_async_current_entries", return_value=[]):
+            with patch.object(flow, "async_create_entry") as mock_create_entry:
+                mock_create_entry.return_value = {"type": "create_entry"}
+                
+                user_input = {"use_hourly_prices": True}
+                result = await flow.async_step_user(user_input=user_input)
+                
+                assert result["type"] == "create_entry"
+                mock_create_entry.assert_called_once_with(title="RCE PSE", data=user_input)
+
+    @pytest.mark.asyncio
     async def test_config_flow_user_step_no_input(self, mock_hass):
         flow = RCEConfigFlow()
         flow.hass = mock_hass

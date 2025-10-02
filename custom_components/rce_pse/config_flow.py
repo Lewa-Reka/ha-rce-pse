@@ -15,9 +15,11 @@ from .const import (
     CONF_EXPENSIVE_TIME_WINDOW_START,
     CONF_EXPENSIVE_TIME_WINDOW_END,
     CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+    CONF_USE_HOURLY_PRICES,
     DEFAULT_TIME_WINDOW_START,
     DEFAULT_TIME_WINDOW_END,
     DEFAULT_WINDOW_DURATION_HOURS,
+    DEFAULT_USE_HOURLY_PRICES,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -70,6 +72,9 @@ CONFIG_SCHEMA = vol.Schema({
             step=1,
             mode=selector.NumberSelectorMode.BOX,
         )
+    ),
+    vol.Optional(CONF_USE_HOURLY_PRICES, default=DEFAULT_USE_HOURLY_PRICES): selector.BooleanSelector(
+        selector.BooleanSelectorConfig()
     ),
 })
 
@@ -207,6 +212,12 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
                     step=1,
                     mode=selector.NumberSelectorMode.BOX,
                 )
+            ),
+            vol.Optional(
+                CONF_USE_HOURLY_PRICES, 
+                default=current_data.get(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
+            ): selector.BooleanSelector(
+                selector.BooleanSelectorConfig()
             ),
         })
 
