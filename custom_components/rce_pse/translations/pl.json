@@ -10,7 +10,8 @@
                     "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
                     "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
                     "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
-                    "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)"
+                    "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)",
+                    "use_hourly_prices": "Korzystaj ze średnich cen godzinowych"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
@@ -18,7 +19,8 @@
                     "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
                     "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
                     "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
-                    "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)"
+                    "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)",
+                    "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE"
                 }
             }
         },
@@ -40,7 +42,8 @@
                     "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
                     "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
                     "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
-                    "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)"
+                    "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)",
+                    "use_hourly_prices": "Korzystaj ze średnich cen godzinowych"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
@@ -48,7 +51,8 @@
                     "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
                     "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
                     "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
-                    "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)"
+                    "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)",
+                    "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE"
                 }
             }
         },

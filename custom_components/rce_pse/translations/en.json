@@ -10,7 +10,8 @@
                     "cheapest_window_duration_hours": "Cheapest - search window duration (hours)",
                     "expensive_time_window_start": "Most expensive - time window start (hour)",
                     "expensive_time_window_end": "Most expensive - time window end (hour)",
-                    "expensive_window_duration_hours": "Most expensive - search window duration (hours)"
+                    "expensive_window_duration_hours": "Most expensive - search window duration (hours)",
+                    "use_hourly_prices": "Use hourly prices"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Starting hour for searching cheapest windows (0-23)",
@@ -18,7 +19,8 @@
                     "cheapest_window_duration_hours": "Duration of continuous cheapest time window (1-24 hours)",
                     "expensive_time_window_start": "Starting hour for searching most expensive windows (0-23)",
                     "expensive_time_window_end": "Ending hour for searching most expensive windows (1-24)",
-                    "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)"
+                    "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)",
+                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE"
                 }
             }
         },
@@ -40,7 +42,8 @@
                     "cheapest_window_duration_hours": "Cheapest - search window duration (hours)",
                     "expensive_time_window_start": "Most expensive - time window start (hour)",
                     "expensive_time_window_end": "Most expensive - time window end (hour)",
-                    "expensive_window_duration_hours": "Most expensive - search window duration (hours)"
+                    "expensive_window_duration_hours": "Most expensive - search window duration (hours)",
+                    "use_hourly_prices": "Use hourly prices"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Starting hour for searching cheapest windows (0-23)",
@@ -48,7 +51,8 @@
                     "cheapest_window_duration_hours": "Duration of continuous cheapest time window (1-24 hours)",
                     "expensive_time_window_start": "Starting hour for searching most expensive windows (0-23)",
                     "expensive_time_window_end": "Ending hour for searching most expensive windows (1-24)",
-                    "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)"
+                    "expensive_window_duration_hours": "Duration of continuous most expensive time window (1-24 hours)",
+                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE"
                 }
             }
         },

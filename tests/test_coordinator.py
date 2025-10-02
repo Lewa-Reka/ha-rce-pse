@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import asyncio
 from datetime import timedelta
-from unittest.mock import patch, AsyncMock
+from unittest.mock import patch, AsyncMock, Mock
 
 import pytest
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from homeassistant.util import dt as dt_util
 
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
+from custom_components.rce_pse.const import CONF_USE_HOURLY_PRICES
 
 
 class TestRCEPSEDataUpdateCoordinator:
@@ -318,4 +319,285 @@ class TestRCEPSEDataUpdateCoordinator:
             result = await coordinator._fetch_data()
             
             assert result["raw_data"] == []
-            assert "last_update" in result 
+            assert "last_update" in result
+
+    def test_calculate_hourly_averages_empty_data(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        result = coordinator._calculate_hourly_averages([])
+        assert result == []
+
+    def test_calculate_hourly_averages_single_record(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [{
+            "dtime": "2024-01-01 00:15:00",
+            "period": "00:00 - 00:15",
+            "rce_pln": "350.00",
+            "business_date": "2024-01-01"
+        }]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 1
+        assert result[0]["rce_pln"] == "350.00"
+
+    def test_calculate_hourly_averages_multiple_quarters_same_hour(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "320.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:45:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "340.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 01:00:00",
+                "period": "00:45 - 01:00",
+                "rce_pln": "360.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 4
+        
+        expected_average = (300.00 + 320.00 + 340.00 + 360.00) / 4
+        for record in result:
+            if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
+                assert record["rce_pln"] == "330.00"
+
+    def test_calculate_hourly_averages_different_hours(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "320.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 01:15:00",
+                "period": "01:00 - 01:15",
+                "rce_pln": "400.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 01:30:00",
+                "period": "01:15 - 01:30",
+                "rce_pln": "420.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 4
+        
+        hour_0_records = [r for r in result if "00:" in r["period"]]
+        for record in hour_0_records:
+            assert record["rce_pln"] == "310.00"
+        hour_1_records = [r for r in result if "01:" in r["period"]]
+        for record in hour_1_records:
+            assert record["rce_pln"] == "410.00"
+
+    def test_calculate_hourly_averages_different_dates(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "320.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-02 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "400.00",
+                "business_date": "2024-01-02"
+            },
+            {
+                "dtime": "2024-01-02 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "420.00",
+                "business_date": "2024-01-02"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 4
+        
+        jan_1_records = [r for r in result if "2024-01-01" in r["dtime"]]
+        for record in jan_1_records:
+            assert record["rce_pln"] == "310.00"
+        jan_2_records = [r for r in result if "2024-01-02" in r["dtime"]]
+        for record in jan_2_records:
+            assert record["rce_pln"] == "410.00"
+
+    def test_calculate_hourly_averages_invalid_data_handling(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "invalid_date",
+                "period": "00:15 - 00:30",
+                "rce_pln": "320.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "invalid_price",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 2
+        for record in result:
+            assert record["rce_pln"] == "300.00"
+
+    def test_get_config_value_with_options(self, mock_hass):
+        mock_config_entry = Mock()
+        mock_config_entry.options = {CONF_USE_HOURLY_PRICES: True}
+        mock_config_entry.data = {CONF_USE_HOURLY_PRICES: False}
+        
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+        
+        value = coordinator._get_config_value(CONF_USE_HOURLY_PRICES, False)
+        assert value is True
+
+    def test_get_config_value_with_data_fallback(self, mock_hass):
+        mock_config_entry = Mock()
+        mock_config_entry.options = None
+        mock_config_entry.data = {CONF_USE_HOURLY_PRICES: True}
+        
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+        
+        value = coordinator._get_config_value(CONF_USE_HOURLY_PRICES, False)
+        assert value is True
+
+    def test_get_config_value_with_default(self, mock_hass):
+        mock_config_entry = Mock()
+        mock_config_entry.options = None
+        mock_config_entry.data = {}
+        
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+        
+        value = coordinator._get_config_value(CONF_USE_HOURLY_PRICES, False)
+        assert value is False
+
+    def test_get_config_value_without_config_entry(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass, None)
+        
+        value = coordinator._get_config_value(CONF_USE_HOURLY_PRICES, False)
+        assert value is False
+
+    @pytest.mark.asyncio
+    async def test_fetch_data_with_hourly_prices_enabled(self, mock_hass):
+        mock_config_entry = Mock()
+        mock_config_entry.options = {CONF_USE_HOURLY_PRICES: True}
+        mock_config_entry.data = {}
+        
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+        
+        sample_data = {
+            "value": [
+                {
+                    "dtime": "2024-01-01 00:15:00",
+                    "period": "00:00 - 00:15",
+                    "rce_pln": "300.00",
+                    "business_date": "2024-01-01"
+                },
+                {
+                    "dtime": "2024-01-01 00:30:00",
+                    "period": "00:15 - 00:30",
+                    "rce_pln": "320.00",
+                    "business_date": "2024-01-01"
+                }
+            ]
+        }
+        
+        with patch.object(coordinator, 'session') as mock_session:
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_response.json = AsyncMock(return_value=sample_data)
+            
+            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+            
+            result = await coordinator._fetch_data()
+            
+            assert len(result["raw_data"]) == 2
+            for record in result["raw_data"]:
+                assert record["rce_pln"] == "310.00"
+
+    @pytest.mark.asyncio
+    async def test_fetch_data_with_hourly_prices_disabled(self, mock_hass):
+        mock_config_entry = Mock()
+        mock_config_entry.options = {CONF_USE_HOURLY_PRICES: False}
+        mock_config_entry.data = {}
+        
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+        
+        sample_data = {
+            "value": [
+                {
+                    "dtime": "2024-01-01 00:15:00",
+                    "period": "00:00 - 00:15",
+                    "rce_pln": "300.00",
+                    "business_date": "2024-01-01"
+                },
+                {
+                    "dtime": "2024-01-01 00:30:00",
+                    "period": "00:15 - 00:30",
+                    "rce_pln": "320.00",
+                    "business_date": "2024-01-01"
+                }
+            ]
+        }
+        
+        with patch.object(coordinator, 'session') as mock_session:
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_response.json = AsyncMock(return_value=sample_data)
+            
+            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+            
+            result = await coordinator._fetch_data()
+            
+            assert len(result["raw_data"]) == 2
+            assert result["raw_data"][0]["rce_pln"] == "300.00"
+            assert result["raw_data"][1]["rce_pln"] == "320.00" 

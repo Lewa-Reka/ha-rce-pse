@@ -28,7 +28,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.debug("Setting up RCE PSE config entry: %s", entry.entry_id)
     hass.data.setdefault(DOMAIN, {})
     
-    coordinator = RCEPSEDataUpdateCoordinator(hass)
+    coordinator = RCEPSEDataUpdateCoordinator(hass, entry)
     _LOGGER.debug("Created data coordinator for RCE PSE")
     
     await coordinator.async_config_entry_first_refresh()
