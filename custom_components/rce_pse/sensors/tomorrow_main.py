@@ -32,9 +32,9 @@ class RCETomorrowMainSensor(RCEBaseSensor):
 
     @property
     def native_value(self) -> float | None:
-        current_hour = dt_util.now().hour
+        now = dt_util.now()
         
-        tomorrow_price_record = self.get_tomorrow_price_at_hour(current_hour)
+        tomorrow_price_record = self.get_tomorrow_price_at_time(now)
         if not tomorrow_price_record:
             return None
         
@@ -43,17 +43,21 @@ class RCETomorrowMainSensor(RCEBaseSensor):
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         if not self.is_tomorrow_data_available():
+            now = dt_util.now()
             return {
                 "available_after": "14:00 CET",
                 "status": "Data not available yet",
                 "data_points": 0,
                 "prices": [],
-                "current_hour": dt_util.now().hour,
+                "current_hour": now.hour,
+                "current_minute": now.minute,
+                "current_time": now.isoformat(),
             }
             
-        current_hour = dt_util.now().hour
+        now = dt_util.now()
+        current_hour = now.hour
         tomorrow_data = self.get_tomorrow_data()
-        tomorrow_price_record = self.get_tomorrow_price_at_hour(current_hour)
+        tomorrow_price_record = self.get_tomorrow_price_at_time(now)
         
         attributes = {
             "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
@@ -62,6 +66,8 @@ class RCETomorrowMainSensor(RCEBaseSensor):
             "available_after": "14:00 CET",
             "status": "Available",
             "current_hour": current_hour,
+            "current_minute": now.minute,
+            "current_time": now.isoformat(),
             "tomorrow_price_for_hour": tomorrow_price_record,
         }
         

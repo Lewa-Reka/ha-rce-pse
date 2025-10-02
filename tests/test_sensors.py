@@ -415,20 +415,22 @@ class TestTomorrowMainSensor:
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 10
-                with patch.object(sensor, 'get_tomorrow_price_at_hour') as mock_get_price:
+                mock_now.return_value.minute = 0
+                with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
                     mock_get_price.return_value = {"rce_pln": "350.00"}
                     
                     price = sensor.native_value
                     assert price == 350.00
-                    mock_get_price.assert_called_once_with(10)
+                    mock_get_price.assert_called_once_with(mock_now.return_value)
 
                 mock_now.return_value.hour = 11
-                with patch.object(sensor, 'get_tomorrow_price_at_hour') as mock_get_price:
+                mock_now.return_value.minute = 0
+                with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
                     mock_get_price.return_value = {"rce_pln": "375.50"}
                     
                     price = sensor.native_value
                     assert price == 375.50
-                    mock_get_price.assert_called_once_with(11)
+                    mock_get_price.assert_called_once_with(mock_now.return_value)
 
     def test_tomorrow_price_no_data_for_hour(self, mock_coordinator):
         sensor = RCETomorrowMainSensor(mock_coordinator)
@@ -436,7 +438,8 @@ class TestTomorrowMainSensor:
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 13
-                with patch.object(sensor, 'get_tomorrow_price_at_hour', return_value=None):
+                mock_now.return_value.minute = 0
+                with patch.object(sensor, 'get_tomorrow_price_at_time', return_value=None):
                     
                     price = sensor.native_value
                     assert price is None
@@ -460,8 +463,9 @@ class TestTomorrowMainSensor:
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 11
+                mock_now.return_value.minute = 0
                 
-                with patch.object(sensor, 'get_tomorrow_price_at_hour') as mock_get_price:
+                with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
                     mock_get_price.return_value = {"rce_pln": "400.00"}
                     
                     price = sensor.native_value
@@ -480,8 +484,10 @@ class TestTomorrowMainSensor:
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 10
+                mock_now.return_value.minute = 0
+                mock_now.return_value.isoformat.return_value = "2024-01-01T10:00:00+00:00"
                 with patch.object(sensor, 'get_tomorrow_data', return_value=tomorrow_data):
-                    with patch.object(sensor, 'get_tomorrow_price_at_hour') as mock_get_price:
+                    with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
                         mock_get_price.return_value = {"rce_pln": "350.00", "period": "10:00 - 10:15"}
                         
                         attrs = sensor.extra_state_attributes
@@ -489,6 +495,8 @@ class TestTomorrowMainSensor:
                         assert attrs is not None
                         assert attrs["status"] == "Available"
                         assert attrs["current_hour"] == 10
+                        assert attrs["current_minute"] == 0
+                        assert attrs["current_time"] == "2024-01-01T10:00:00+00:00"
                         assert attrs["data_points"] == 2
                         assert attrs["available_after"] == "14:00 CET"
                         assert "tomorrow_price_for_hour" in attrs
@@ -500,12 +508,16 @@ class TestTomorrowMainSensor:
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=False):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 10
+                mock_now.return_value.minute = 30
+                mock_now.return_value.isoformat.return_value = "2024-01-01T10:30:00+00:00"
                 
                 attrs = sensor.extra_state_attributes
                 
                 assert attrs is not None
                 assert attrs["status"] == "Data not available yet"
                 assert attrs["current_hour"] == 10
+                assert attrs["current_minute"] == 30
+                assert attrs["current_time"] == "2024-01-01T10:30:00+00:00"
                 assert attrs["data_points"] == 0
                 assert attrs["prices"] == []
                 assert attrs["available_after"] == "14:00 CET"
@@ -516,8 +528,9 @@ class TestTomorrowMainSensor:
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 10
+                mock_now.return_value.minute = 0
                 
-                with patch.object(sensor, 'get_tomorrow_price_at_hour') as mock_get_price:
+                with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
                     mock_get_price.return_value = {"rce_pln": "350.456789"}
                     
                     price = sensor.native_value
@@ -527,4 +540,46 @@ class TestTomorrowMainSensor:
         sensor = RCETomorrowMainSensor(mock_coordinator)
         
         assert sensor.scan_interval == timedelta(minutes=1)
-        assert sensor.should_poll is True 
+        assert sensor.should_poll is True
+
+    def test_tomorrow_price_updates_every_15_minutes(self, mock_coordinator):
+        sensor = RCETomorrowMainSensor(mock_coordinator)
+        
+        tomorrow_data = [
+            {"period": "10:00 - 10:15", "rce_pln": "300.00"},
+            {"period": "10:15 - 10:30", "rce_pln": "310.00"},
+            {"period": "10:30 - 10:45", "rce_pln": "320.00"},
+            {"period": "10:45 - 11:00", "rce_pln": "330.00"},
+        ]
+        
+        with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
+            with patch('homeassistant.util.dt.now') as mock_now:
+                with patch.object(sensor, 'get_tomorrow_data', return_value=tomorrow_data):
+                    mock_now.return_value.hour = 10
+                    mock_now.return_value.minute = 5
+                    with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
+                        mock_get_price.return_value = {"rce_pln": "300.00"}
+                        price = sensor.native_value
+                        assert price == 300.00
+                        mock_get_price.assert_called_once_with(mock_now.return_value)
+                    
+                    mock_now.return_value.minute = 18
+                    with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
+                        mock_get_price.return_value = {"rce_pln": "310.00"}
+                        price = sensor.native_value
+                        assert price == 310.00
+                        mock_get_price.assert_called_once_with(mock_now.return_value)
+                    
+                    mock_now.return_value.minute = 35
+                    with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
+                        mock_get_price.return_value = {"rce_pln": "320.00"}
+                        price = sensor.native_value
+                        assert price == 320.00
+                        mock_get_price.assert_called_once_with(mock_now.return_value)
+                    
+                    mock_now.return_value.minute = 50
+                    with patch.object(sensor, 'get_tomorrow_price_at_time') as mock_get_price:
+                        mock_get_price.return_value = {"rce_pln": "330.00"}
+                        price = sensor.native_value
+                        assert price == 330.00
+                        mock_get_price.assert_called_once_with(mock_now.return_value) 
