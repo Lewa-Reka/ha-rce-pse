@@ -80,6 +80,7 @@ Both cards can be easily customized to match your dashboard theme and specific n
 - **Smart scheduling** - Find best times for energy-intensive activities
 - **Peak avoidance** - Identify and avoid high-cost electricity periods
 - **Time range display** - Easy-to-read time ranges (e.g., "23:00 - 01:00")
+- **Hourly price averaging** - Optional hourly price calculation for net-billing settlements
 - **Automatic updates** - Data refreshed every 30 minutes from official PSE API
 
 ## Configuration
@@ -121,6 +122,20 @@ These settings control how the integration finds the most expensive electricity 
 - **Duration (hours)** (1-24): Length of the most expensive continuous time window to find
   - *Default*: 2 hours
   - *Example*: Set to 1 to find 1-hour blocks of most expensive electricity
+
+#### Hourly Prices Option
+
+This advanced option is useful for net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. When enabled, the integration calculates average prices for each hour from the published quarter-hour prices.
+
+- **Use Hourly Prices** (true/false): Enable hourly price averaging
+  - *Default*: false (uses original 15-minute prices)
+  - *When enabled*: Calculates average price for each hour from 15-minute intervals
+  - *Use case*: Net-billing settlements according to Art. 4b sec. 11 of the Ustawa o OZE
+
+**How it works:**
+- When disabled: Uses original 15-minute price data from PSE API
+- When enabled: Calculates hourly averages and applies the same price to all 15-minute intervals within each hour
+- Example: If hour 0 has prices [300, 320, 340, 360] PLN, all four 15-minute intervals will show 330 PLN (average)
 
 ### Reconfiguring Settings
 
