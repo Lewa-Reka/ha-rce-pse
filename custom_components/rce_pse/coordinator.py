@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from collections import defaultdict
+from datetime import datetime, timedelta
 from typing import Any
 
 import aiohttp
@@ -10,14 +12,14 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from .const import API_FIRST, API_SELECT, API_UPDATE_INTERVAL, DOMAIN, PSE_API_URL
+from .const import API_FIRST, API_SELECT, API_UPDATE_INTERVAL, DOMAIN, PSE_API_URL, CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
 
-    def __init__(self, hass: HomeAssistant) -> None:
+    def __init__(self, hass: HomeAssistant, config_entry=None) -> None:
         super().__init__(
             hass,
             _LOGGER,
@@ -26,6 +28,18 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         )
         self.session = None
         self._last_api_fetch = None
+        self.config_entry = config_entry
+
+    def _get_config_value(self, key: str, default: any) -> any:
+        if not self.config_entry:
+            return default
+            
+        if self.config_entry.options and key in self.config_entry.options:
+            return self.config_entry.options[key]
+        elif self.config_entry.data and key in self.config_entry.data:
+            return self.config_entry.data.get(key, default)
+        
+        return default
 
     async def _async_update_data(self) -> dict[str, Any]:
         now = dt_util.now()
@@ -103,14 +117,77 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 if record_count == 0:
                     _LOGGER.warning("PSE API returned no data records")
                 
+                raw_data = data["value"]
+                
+                use_hourly_prices = self._get_config_value(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
+                
+                if use_hourly_prices:
+                    _LOGGER.debug("Hourly prices option enabled, calculating hourly averages")
+                    processed_data = self._calculate_hourly_averages(raw_data)
+                else:
+                    _LOGGER.debug("Hourly prices option disabled, using original 15-minute data")
+                    processed_data = raw_data
+                
                 return {
-                    "raw_data": data["value"],
+                    "raw_data": processed_data,
                     "last_update": dt_util.now().isoformat(),
                 }
                 
         except aiohttp.ClientError as exception:
             _LOGGER.error("HTTP client error fetching PSE data: %s", exception)
             raise UpdateFailed(f"Error fetching data: {exception}") from exception
+
+    def _calculate_hourly_averages(self, raw_data: list[dict]) -> list[dict]:
+        if not raw_data:
+            return raw_data
+        
+        hourly_groups = defaultdict(list)
+        
+        for record in raw_data:
+            try:
+                dtime = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                period_start = dtime - timedelta(minutes=15)
+                date_hour_key = f"{period_start.strftime('%Y-%m-%d')}_{period_start.hour:02d}"
+                hourly_groups[date_hour_key].append(record)
+            except (ValueError, KeyError) as e:
+                _LOGGER.warning("Failed to parse record dtime: %s, error: %s", record.get("dtime"), e)
+                continue
+        
+        processed_data = []
+        
+        for date_hour_key, records in hourly_groups.items():
+            if not records:
+                continue
+                
+            prices = []
+            for record in records:
+                try:
+                    price = float(record["rce_pln"])
+                    prices.append(price)
+                except (ValueError, KeyError) as e:
+                    _LOGGER.warning("Failed to parse price from record: %s, error: %s", record.get("rce_pln"), e)
+                    continue
+            
+            if not prices:
+                continue
+                
+            average_price = sum(prices) / len(prices)
+            _LOGGER.debug("Calculated hourly average for %s: %.2f PLN (from %d records)", 
+                         date_hour_key, average_price, len(prices))
+            
+            for record in records:
+                try:
+                    new_record = record.copy()
+                    new_record["rce_pln"] = f"{average_price:.2f}"
+                    processed_data.append(new_record)
+                except (ValueError, KeyError) as e:
+                    _LOGGER.warning("Failed to process record: %s, error: %s", record, e)
+                    continue
+        
+        _LOGGER.debug("Processed %d records with hourly averages (original: %d)", 
+                     len(processed_data), len(raw_data))
+        
+        return processed_data
 
     async def async_close(self) -> None:
         _LOGGER.debug("Closing PSE API session")
