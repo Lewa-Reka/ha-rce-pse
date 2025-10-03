@@ -50,7 +50,7 @@ This card provides advanced charting capabilities with professional-looking grap
 
 ![ApexCharts Analysis Card](examples/images/card2_apexcharts.png)
 
-**Configuration file**: [`examples/card2_apexcharts_analysis.yaml`](examples/card2_apexcharts_analysis.yaml)
+**Configuration file**: [`PL: examples/pl/card2_apexcharts_analysis.yaml`](examples/pl/card2_apexcharts_analysis.yaml) [`EN: examples/en/card2_apexcharts_analysis.yaml`](examples/en/card2_apexcharts_analysis.yaml)
 
 
 **Requirements:**
@@ -62,7 +62,7 @@ This card provides a comprehensive overview of current energy prices using stand
 
 ![Basic Overview Card](examples/images/card1_basic.png)
 
-**Configuration file**: [`examples/card1_basic_overview.yaml`](examples/card1_basic_overview.yaml)
+**Configuration file**: [`PL: examples/pl/card1_basic_overview.yaml`](examples/pl/card1_basic_overview.yaml) [`EN: examples/en/card1_basic_overview.yaml`](examples/en/card1_basic_overview.yaml)
 
 
 Both cards can be easily customized to match your dashboard theme and specific needs. Simply copy the YAML configuration from the respective files and paste them into your Home Assistant dashboard in edit mode.
