@@ -105,9 +105,16 @@ class TestRCEPSEDataUpdateCoordinator:
             
             result = await coordinator._fetch_data()
             
-            assert result["raw_data"] == sample_api_response["value"]
             assert "last_update" in result
             assert len(result["raw_data"]) == 7
+            
+            for i, record in enumerate(result["raw_data"]):
+                original_record = sample_api_response["value"][i]
+                assert record["rce_pln"] == original_record["rce_pln"]
+                assert record["rce_pln_neg_to_zero"] == original_record["rce_pln"]
+                assert record["dtime"] == original_record["dtime"]
+                assert record["period"] == original_record["period"]
+                assert record["business_date"] == original_record["business_date"]
 
     @pytest.mark.asyncio
     async def test_successful_close_session(self, mock_hass):
@@ -600,4 +607,320 @@ class TestRCEPSEDataUpdateCoordinator:
             
             assert len(result["raw_data"]) == 2
             assert result["raw_data"][0]["rce_pln"] == "300.00"
-            assert result["raw_data"][1]["rce_pln"] == "320.00" 
+            assert result["raw_data"][1]["rce_pln"] == "320.00"
+
+    def test_calculate_hourly_averages_with_negative_values(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "-50.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:45:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "200.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 01:00:00",
+                "period": "00:45 - 01:00",
+                "rce_pln": "100.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 4
+        
+        expected_normal_average = (300.00 + (-50.00) + 200.00 + 100.00) / 4
+        expected_neg_to_zero_average = (300.00 + 0.00 + 200.00 + 100.00) / 4
+        
+        for record in result:
+            if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
+                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
+                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+
+    def test_calculate_hourly_averages_all_negative_values(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "-100.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "-200.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:45:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "-50.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 01:00:00",
+                "period": "00:45 - 01:00",
+                "rce_pln": "-150.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 4
+        
+        expected_normal_average = (-100.00 + (-200.00) + (-50.00) + (-150.00)) / 4
+        expected_neg_to_zero_average = (0.00 + 0.00 + 0.00 + 0.00) / 4
+        
+        for record in result:
+            if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
+                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
+                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+
+    def test_calculate_hourly_averages_mixed_positive_negative_values(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "500.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "-100.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:45:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 01:00:00",
+                "period": "00:45 - 01:00",
+                "rce_pln": "-50.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 4
+        
+        expected_normal_average = (500.00 + (-100.00) + 300.00 + (-50.00)) / 4
+        expected_neg_to_zero_average = (500.00 + 0.00 + 300.00 + 0.00) / 4
+        
+        for record in result:
+            if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
+                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
+                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+
+    def test_calculate_hourly_averages_zero_values(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "0.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "-50.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:45:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "100.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._calculate_hourly_averages(data)
+        assert len(result) == 3
+        
+        expected_normal_average = (0.00 + (-50.00) + 100.00) / 3
+        expected_neg_to_zero_average = (0.00 + 0.00 + 100.00) / 3
+        
+        for record in result:
+            if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"]:
+                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
+                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+
+    def test_add_neg_to_zero_key_empty_data(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        result = coordinator._add_neg_to_zero_key([])
+        assert result == []
+
+    def test_add_neg_to_zero_key_single_record_positive(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [{
+            "dtime": "2024-01-01 00:15:00",
+            "period": "00:00 - 00:15",
+            "rce_pln": "350.00",
+            "business_date": "2024-01-01"
+        }]
+        
+        result = coordinator._add_neg_to_zero_key(data)
+        assert len(result) == 1
+        assert result[0]["rce_pln"] == "350.00"
+        assert result[0]["rce_pln_neg_to_zero"] == "350.00"
+
+    def test_add_neg_to_zero_key_single_record_negative(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [{
+            "dtime": "2024-01-01 00:15:00",
+            "period": "00:00 - 00:15",
+            "rce_pln": "-50.00",
+            "business_date": "2024-01-01"
+        }]
+        
+        result = coordinator._add_neg_to_zero_key(data)
+        assert len(result) == 1
+        assert result[0]["rce_pln"] == "-50.00"
+        assert result[0]["rce_pln_neg_to_zero"] == "0.00"
+
+    def test_add_neg_to_zero_key_mixed_values(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "-100.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:45:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "0.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 01:00:00",
+                "period": "00:45 - 01:00",
+                "rce_pln": "-50.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._add_neg_to_zero_key(data)
+        assert len(result) == 4
+        
+        assert result[0]["rce_pln"] == "300.00"
+        assert result[0]["rce_pln_neg_to_zero"] == "300.00"
+        
+        assert result[1]["rce_pln"] == "-100.00"
+        assert result[1]["rce_pln_neg_to_zero"] == "0.00"
+        
+        assert result[2]["rce_pln"] == "0.00"
+        assert result[2]["rce_pln_neg_to_zero"] == "0.00"
+        
+        assert result[3]["rce_pln"] == "-50.00"
+        assert result[3]["rce_pln_neg_to_zero"] == "0.00"
+
+    def test_add_neg_to_zero_key_invalid_data_handling(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        
+        data = [
+            {
+                "dtime": "2024-01-01 00:15:00",
+                "period": "00:00 - 00:15",
+                "rce_pln": "300.00",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:30:00",
+                "period": "00:15 - 00:30",
+                "rce_pln": "invalid_price",
+                "business_date": "2024-01-01"
+            },
+            {
+                "dtime": "2024-01-01 00:45:00",
+                "period": "00:30 - 00:45",
+                "rce_pln": "-50.00",
+                "business_date": "2024-01-01"
+            }
+        ]
+        
+        result = coordinator._add_neg_to_zero_key(data)
+        assert len(result) == 3
+        
+        assert result[0]["rce_pln"] == "300.00"
+        assert result[0]["rce_pln_neg_to_zero"] == "300.00"
+        
+        assert result[1]["rce_pln"] == "invalid_price"
+        assert "rce_pln_neg_to_zero" not in result[1]
+        
+        assert result[2]["rce_pln"] == "-50.00"
+        assert result[2]["rce_pln_neg_to_zero"] == "0.00"
+
+    @pytest.mark.asyncio
+    async def test_fetch_data_with_hourly_prices_disabled_adds_neg_to_zero(self, mock_hass):
+        mock_config_entry = Mock()
+        mock_config_entry.options = {CONF_USE_HOURLY_PRICES: False}
+        mock_config_entry.data = {}
+        
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+        
+        sample_data = {
+            "value": [
+                {
+                    "dtime": "2024-01-01 00:15:00",
+                    "period": "00:00 - 00:15",
+                    "rce_pln": "300.00",
+                    "business_date": "2024-01-01"
+                },
+                {
+                    "dtime": "2024-01-01 00:30:00",
+                    "period": "00:15 - 00:30",
+                    "rce_pln": "-50.00",
+                    "business_date": "2024-01-01"
+                }
+            ]
+        }
+        
+        with patch.object(coordinator, 'session') as mock_session:
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_response.json = AsyncMock(return_value=sample_data)
+            
+            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+            
+            result = await coordinator._fetch_data()
+            
+            assert len(result["raw_data"]) == 2
+            assert result["raw_data"][0]["rce_pln"] == "300.00"
+            assert result["raw_data"][0]["rce_pln_neg_to_zero"] == "300.00"
+            assert result["raw_data"][1]["rce_pln"] == "-50.00"
+            assert result["raw_data"][1]["rce_pln_neg_to_zero"] == "0.00" 
