@@ -126,7 +126,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                     processed_data = self._calculate_hourly_averages(raw_data)
                 else:
                     _LOGGER.debug("Hourly prices option disabled, using original 15-minute data")
-                    processed_data = raw_data
+                    processed_data = self._add_neg_to_zero_key(raw_data)
                 
                 return {
                     "raw_data": processed_data,
@@ -172,13 +172,20 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 continue
                 
             average_price = sum(prices) / len(prices)
+            
+            prices_neg_to_zero = [max(0, price) for price in prices]
+            average_price_neg_to_zero = sum(prices_neg_to_zero) / len(prices_neg_to_zero)
+            
             _LOGGER.debug("Calculated hourly average for %s: %.2f PLN (from %d records)", 
                          date_hour_key, average_price, len(prices))
+            _LOGGER.debug("Calculated hourly average (neg to zero) for %s: %.2f PLN", 
+                         date_hour_key, average_price_neg_to_zero)
             
             for record in records:
                 try:
                     new_record = record.copy()
                     new_record["rce_pln"] = f"{average_price:.2f}"
+                    new_record["rce_pln_neg_to_zero"] = f"{average_price_neg_to_zero:.2f}"
                     processed_data.append(new_record)
                 except (ValueError, KeyError) as e:
                     _LOGGER.warning("Failed to process record: %s, error: %s", record, e)
@@ -186,6 +193,27 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         
         _LOGGER.debug("Processed %d records with hourly averages (original: %d)", 
                      len(processed_data), len(raw_data))
+        
+        return processed_data
+
+    def _add_neg_to_zero_key(self, raw_data: list[dict]) -> list[dict]:
+        if not raw_data:
+            return raw_data
+        
+        processed_data = []
+        
+        for record in raw_data:
+            try:
+                new_record = record.copy()
+                price = float(record["rce_pln"])
+                neg_to_zero_price = max(0, price)
+                new_record["rce_pln_neg_to_zero"] = f"{neg_to_zero_price:.2f}"
+                processed_data.append(new_record)
+            except (ValueError, KeyError) as e:
+                _LOGGER.warning("Failed to process record for neg_to_zero: %s, error: %s", record, e)
+                processed_data.append(record)
+        
+        _LOGGER.debug("Added rce_pln_neg_to_zero key to %d records", len(processed_data))
         
         return processed_data
 
