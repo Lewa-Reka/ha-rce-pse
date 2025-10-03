@@ -65,10 +65,9 @@ class TestTodayMainSensors:
         sensor = RCETodayKwhPriceSensor(mock_coordinator)
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
-            mock_current_price.return_value = {"rce_pln": "350.50"}
+            mock_current_price.return_value = {"rce_pln_neg_to_zero": "350.50"}
             
             state = sensor.native_value
-            # Expected: (350.50 / 1000) * (1 + 0.23) = 0.3505 * 1.23 = 0.431115, rounded to 6 decimals = 0.431115
             assert state == 0.431115
 
     def test_today_kwh_price_sensor_state_no_data(self, mock_coordinator):
@@ -84,10 +83,21 @@ class TestTodayMainSensors:
         sensor = RCETodayKwhPriceSensor(mock_coordinator)
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
-            mock_current_price.return_value = {"rce_pln": "-50.25"}
+            mock_current_price.return_value = {"rce_pln_neg_to_zero": "0.00"}
             
             state = sensor.native_value
-            # For negative prices, sensor should return 0
+            assert state == 0
+
+    def test_today_kwh_price_sensor_negative_to_zero_conversion(self, mock_coordinator):
+        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+        
+        with patch.object(sensor, "get_current_price_data") as mock_current_price:
+            mock_current_price.return_value = {
+                "rce_pln": "-50.25", 
+                "rce_pln_neg_to_zero": "0.00" 
+            }
+            
+            state = sensor.native_value
             assert state == 0
 
 

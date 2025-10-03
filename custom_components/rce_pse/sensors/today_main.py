@@ -56,7 +56,7 @@ class RCETodayKwhPriceSensor(RCEBaseSensor):
     def native_value(self) -> float | None:
         current_data = self.get_current_price_data()
         if current_data:
-            price = float(current_data["rce_pln"])
+            price = float(current_data["rce_pln_neg_to_zero"])
             if price <= 0:
                 return 0
             return round((price / 1000) * (1 + TAX_RATE), 6)
