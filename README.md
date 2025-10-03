@@ -7,7 +7,6 @@
 ![GitHub License](https://img.shields.io/github/license/lewa-reka/ha-rce-pse?style=for-the-badge)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lewa-reka/ha-rce-pse?style=for-the-badge)
 ![Maintenance](https://img.shields.io/maintenance/yes/2025?style=for-the-badge)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/lewa-reka/ha-rce-pse/total?style=for-the-badge)
 
 
 ## Rynkowa Cena Energii
