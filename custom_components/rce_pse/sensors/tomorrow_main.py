@@ -57,12 +57,17 @@ class RCETomorrowMainSensor(RCEBaseSensor):
         now = dt_util.now()
         current_hour = now.hour
         tomorrow_data = self.get_tomorrow_data()
+        excluded_keys = {"rce_pln_neg_to_zero", "publication_ts"}
+        sanitized_tomorrow_data = [
+            {k: v for k, v in record.items() if k not in excluded_keys}
+            for record in tomorrow_data
+        ]
         tomorrow_price_record = self.get_tomorrow_price_at_time(now)
         
         attributes = {
             "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
             "data_points": len(tomorrow_data),
-            "prices": tomorrow_data,
+            "prices": sanitized_tomorrow_data,
             "available_after": "14:00 CET",
             "status": "Available",
             "current_hour": current_hour,

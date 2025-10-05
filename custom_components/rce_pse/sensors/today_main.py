@@ -35,11 +35,16 @@ class RCETodayMainSensor(RCEBaseSensor):
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         today_data = self.get_today_data()
+        excluded_keys = {"rce_pln_neg_to_zero", "publication_ts"}
+        sanitized_today_data = [
+            {k: v for k, v in record.items() if k not in excluded_keys}
+            for record in today_data
+        ]
         
         attributes = {
             "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
             "data_points": len(today_data),
-            "prices": today_data,
+            "prices": sanitized_today_data,
         }
         
         return attributes

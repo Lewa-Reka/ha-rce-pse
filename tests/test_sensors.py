@@ -308,9 +308,9 @@ class TestSensorAttributes:
         
         with patch.object(sensor, "get_today_data") as mock_today_data:
             mock_today_data.return_value = [
-                {"rce_pln": "300.00"},
-                {"rce_pln": "350.00"},
-                {"rce_pln": "400.00"},
+                {"rce_pln": "300.00", "rce_pln_neg_to_zero": "0.00", "publication_ts": "2024-01-01T10:00:00Z"},
+                {"rce_pln": "350.00", "publication_ts": "2024-01-01T10:15:00Z"},
+                {"rce_pln": "400.00", "rce_pln_neg_to_zero": "0.00"},
             ]
             
             attrs = sensor.extra_state_attributes
@@ -320,6 +320,9 @@ class TestSensorAttributes:
             assert "last_update" in attrs
             assert "prices" in attrs
             assert attrs["data_points"] == 3
+            for rec in attrs["prices"]:
+                assert "rce_pln_neg_to_zero" not in rec
+                assert "publication_ts" not in rec
 
     def test_sensor_device_info_consistency(self, mock_coordinator):
         sensors = [
@@ -487,8 +490,8 @@ class TestTomorrowMainSensor:
         sensor = RCETomorrowMainSensor(mock_coordinator)
         
         tomorrow_data = [
-            {"period": "10:00 - 10:15", "rce_pln": "350.00"},
-            {"period": "11:00 - 11:15", "rce_pln": "375.50"},
+            {"period": "10:00 - 10:15", "rce_pln": "350.00", "rce_pln_neg_to_zero": "0.00", "publication_ts": "2024-01-01T10:00:00Z"},
+            {"period": "11:00 - 11:15", "rce_pln": "375.50", "publication_ts": "2024-01-01T11:00:00Z"},
         ]
         
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
@@ -511,6 +514,9 @@ class TestTomorrowMainSensor:
                         assert attrs["available_after"] == "14:00 CET"
                         assert "tomorrow_price_for_hour" in attrs
                         assert attrs["tomorrow_price_for_hour"]["rce_pln"] == "350.00"
+                        for rec in attrs["prices"]:
+                            assert "rce_pln_neg_to_zero" not in rec
+                            assert "publication_ts" not in rec
 
     def test_tomorrow_price_extra_state_attributes_data_not_available(self, mock_coordinator):
         sensor = RCETomorrowMainSensor(mock_coordinator)
