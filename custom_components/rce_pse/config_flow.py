@@ -15,10 +15,16 @@ from .const import (
     CONF_EXPENSIVE_TIME_WINDOW_START,
     CONF_EXPENSIVE_TIME_WINDOW_END,
     CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+    CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+    CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+    CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     CONF_USE_HOURLY_PRICES,
     DEFAULT_TIME_WINDOW_START,
     DEFAULT_TIME_WINDOW_END,
     DEFAULT_WINDOW_DURATION_HOURS,
+    DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START,
+    DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
+    DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     DEFAULT_USE_HOURLY_PRICES,
 )
 
@@ -73,6 +79,30 @@ CONFIG_SCHEMA = vol.Schema({
             mode=selector.NumberSelectorMode.BOX,
         )
     ),
+    vol.Required(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, default=DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=0,
+            max=23,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
+    ),
+    vol.Required(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, default=DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=1,
+            max=24,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
+    ),
+    vol.Required(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, default=DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=1,
+            max=24,
+            step=1,
+            mode=selector.NumberSelectorMode.BOX,
+        )
+    ),
     vol.Optional(CONF_USE_HOURLY_PRICES, default=DEFAULT_USE_HOURLY_PRICES): selector.BooleanSelector(
         selector.BooleanSelectorConfig()
     ),
@@ -105,10 +135,14 @@ class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             cheapest_end = user_input.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
             expensive_start = user_input.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
             expensive_end = user_input.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+            second_expensive_start = user_input.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
+            second_expensive_end = user_input.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
             
             if cheapest_start >= cheapest_end:
                 errors["base"] = "invalid_time_window"
             elif expensive_start >= expensive_end:
+                errors["base"] = "invalid_time_window"
+            elif second_expensive_start >= second_expensive_end:
                 errors["base"] = "invalid_time_window"
             else:
                 _LOGGER.debug("Creating RCE PSE config entry with options: %s", user_input)
@@ -136,10 +170,14 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
             cheapest_end = user_input.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
             expensive_start = user_input.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
             expensive_end = user_input.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+            second_expensive_start = user_input.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
+            second_expensive_end = user_input.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
             
             if cheapest_start >= cheapest_end:
                 errors["base"] = "invalid_time_window"
             elif expensive_start >= expensive_end:
+                errors["base"] = "invalid_time_window"
+            elif second_expensive_start >= second_expensive_end:
                 errors["base"] = "invalid_time_window"
             else:
                 _LOGGER.debug("Updating RCE PSE options: %s", user_input)
@@ -205,6 +243,39 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
             vol.Required(
                 CONF_EXPENSIVE_WINDOW_DURATION_HOURS, 
                 default=current_data.get(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, 
+                default=current_data.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=23,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, 
+                default=current_data.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, 
+                default=current_data.get(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
             ): selector.NumberSelector(
                 selector.NumberSelectorConfig(
                     min=1,

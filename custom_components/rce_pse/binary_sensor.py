@@ -12,6 +12,7 @@ from .binary_sensors import (
     RCETodayMaxPriceWindowBinarySensor,
     RCETodayCheapestWindowBinarySensor,
     RCETodayExpensiveWindowBinarySensor,
+    RCETodaySecondExpensiveWindowBinarySensor,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ async def async_setup_entry(
         RCETodayMaxPriceWindowBinarySensor(coordinator),
         RCETodayCheapestWindowBinarySensor(coordinator, config_entry),
         RCETodayExpensiveWindowBinarySensor(coordinator, config_entry),
+        RCETodaySecondExpensiveWindowBinarySensor(coordinator, config_entry),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE binary sensors to Home Assistant", len(binary_sensors))

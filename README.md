@@ -122,6 +122,22 @@ These settings control how the integration finds the most expensive electricity 
   - *Default*: 2 hours
   - *Example*: Set to 1 to find 1-hour blocks of most expensive electricity
 
+#### Second Expensive Hours Search Settings
+
+These settings control how the integration finds the second most expensive electricity periods in a different time window (useful for identifying multiple peak periods):
+
+- **Start Hour** (0-23): Beginning of the time window to search for second expensive hours
+  - *Default*: 6 (6 AM)
+  - *Example*: Set to 8 to search from 8 AM onwards
+
+- **End Hour** (1-24): End of the time window to search for second expensive hours
+  - *Default*: 10 (10 AM)  
+  - *Example*: Set to 12 to search until 12 PM
+
+- **Duration (hours)** (1-24): Length of the second expensive continuous time window to find
+  - *Default*: 2 hours
+  - *Example*: Set to 1 to find 1-hour blocks of second expensive electricity
+
 #### Hourly Prices Option
 
 This advanced option is useful for net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. When enabled, the integration calculates average prices for each hour from the published quarter-hour prices.
@@ -162,6 +178,11 @@ The integration will automatically reload with your new settings.
 - Most Expensive Hours: Start=17, End=21, Duration=1  
 - Identify the single most expensive hour during evening peak
 
+**Example 4: Multiple Peak Identification**
+- Second Expensive Hours: Start=6, End=10, Duration=2
+- Find 2-hour morning peak period separate from main evening peak
+- Useful for identifying both morning and evening electricity price peaks
+
 ### Additional Sensors
 
 When you configure custom time windows, the integration provides additional sensors:
@@ -169,10 +190,12 @@ When you configure custom time windows, the integration provides additional sens
 **For Today:**
 - Cheapest Window Start/End/Range
 - Most Expensive Window Start/End/Range
+- Second Expensive Window Start/End/Range
 
 **For Tomorrow:**
 - Cheapest Window Start/End/Range  
 - Most Expensive Window Start/End/Range
+- Second Expensive Window Start/End/Range
 
 These sensors automatically update based on your configured search parameters and provide precise time ranges in HH:MM format.
 
@@ -252,6 +275,7 @@ Based on your configuration settings, these sensors indicate whether you are cur
 
 - **Today Cheapest Window Active** - `true` when currently within your configured cheapest time window
 - **Today Expensive Window Active** - `true` when currently within your configured most expensive time window
+- **Today Second Expensive Window Active** - `true` when currently within your configured second expensive time window
 
 ## Debugging
 
