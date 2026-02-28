@@ -6,6 +6,7 @@ from .price_windows import (
 from .custom_windows import (
     RCETodayCheapestWindowBinarySensor,
     RCETodayExpensiveWindowBinarySensor,
+    RCETodaySecondExpensiveWindowBinarySensor,
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "RCETodayMaxPriceWindowBinarySensor",
     "RCETodayCheapestWindowBinarySensor",
     "RCETodayExpensiveWindowBinarySensor",
+    "RCETodaySecondExpensiveWindowBinarySensor",
 ] 

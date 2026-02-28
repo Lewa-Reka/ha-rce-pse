@@ -29,6 +29,10 @@ from custom_components.rce_pse.sensors.custom_windows import (
     RCETomorrowCheapestWindowEndTimestampSensor,
     RCETomorrowExpensiveWindowStartTimestampSensor,
     RCETomorrowExpensiveWindowEndTimestampSensor,
+    RCETodaySecondExpensiveWindowStartTimestampSensor,
+    RCETodaySecondExpensiveWindowEndTimestampSensor,
+    RCETomorrowSecondExpensiveWindowStartTimestampSensor,
+    RCETomorrowSecondExpensiveWindowEndTimestampSensor,
 )
 
 
@@ -42,6 +46,9 @@ def mock_config_entry():
         "expensive_time_window_start": 6,
         "expensive_time_window_end": 22,
         "expensive_window_duration_hours": 2,
+        "second_expensive_time_window_start": 6,
+        "second_expensive_time_window_end": 10,
+        "second_expensive_window_duration_hours": 2,
     }
     config_entry.options = {}
     return config_entry
@@ -582,3 +589,71 @@ class TestTimestampSensorErrorHandling:
                 
                 timestamp = sensor.native_value
                 assert timestamp is None 
+
+class TestSecondExpensiveWindowTimestampSensors:
+
+    def test_today_second_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodaySecondExpensiveWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
+        
+        assert sensor._attr_unique_id == "rce_pse_today_second_expensive_window_start_timestamp"
+        assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
+        assert sensor._attr_icon == "mdi:clock-start"
+
+    def test_today_second_expensive_window_start_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
+        sensor = RCETodaySecondExpensiveWindowStartTimestampSensor(mock_coordinator_extended, mock_config_entry)
+        
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+
+    def test_today_second_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodaySecondExpensiveWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
+        
+        assert sensor._attr_unique_id == "rce_pse_today_second_expensive_window_end_timestamp"
+        assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
+        assert sensor._attr_icon == "mdi:clock-end"
+
+    def test_today_second_expensive_window_end_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
+        sensor = RCETodaySecondExpensiveWindowEndTimestampSensor(mock_coordinator_extended, mock_config_entry)
+        
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+
+    def test_tomorrow_second_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETomorrowSecondExpensiveWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
+        
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_second_expensive_window_start_timestamp"
+        assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
+        assert sensor._attr_icon == "mdi:clock-start"
+
+    def test_tomorrow_second_expensive_window_start_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
+        sensor = RCETomorrowSecondExpensiveWindowStartTimestampSensor(mock_coordinator_extended, mock_config_entry)
+        
+        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
+            mock_available.return_value = True
+            
+            timestamp = sensor.native_value
+            
+            assert timestamp is not None
+            assert isinstance(timestamp, datetime)
+
+    def test_tomorrow_second_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETomorrowSecondExpensiveWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
+        
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_second_expensive_window_end_timestamp"
+        assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
+        assert sensor._attr_icon == "mdi:clock-end"
+
+    def test_tomorrow_second_expensive_window_end_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
+        sensor = RCETomorrowSecondExpensiveWindowEndTimestampSensor(mock_coordinator_extended, mock_config_entry)
+        
+        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
+            mock_available.return_value = True
+            
+            timestamp = sensor.native_value
+            
+            assert timestamp is not None
+            assert isinstance(timestamp, datetime)

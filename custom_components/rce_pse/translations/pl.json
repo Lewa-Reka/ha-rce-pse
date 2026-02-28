@@ -11,6 +11,9 @@
                     "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
                     "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
                     "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)",
+                    "second_expensive_time_window_start": "Drugie najdroższe - początek przeszukiwania (godzina)",
+                    "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
+                    "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
                     "use_hourly_prices": "Korzystaj ze średnich cen godzinowych"
                 },
                 "data_description": {
@@ -20,6 +23,9 @@
                     "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
                     "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
                     "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)",
+                    "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego najdroższego okna (0-23)",
+                    "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
+                    "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
                     "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE"
                 }
             }
@@ -43,6 +49,9 @@
                     "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
                     "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
                     "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)",
+                    "second_expensive_time_window_start": "Drugie najdroższe - początek przeszukiwania (godzina)",
+                    "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
+                    "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
                     "use_hourly_prices": "Korzystaj ze średnich cen godzinowych"
                 },
                 "data_description": {
@@ -52,6 +61,9 @@
                     "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
                     "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
                     "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)",
+                    "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego najdroższego okna (0-23)",
+                    "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
+                    "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
                     "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE"
                 }
             }
@@ -232,6 +244,36 @@
             },
             "rce_pse_tomorrow_min_price_hour_end_timestamp": {
                 "name": "Timestamp Koniec Godziny Min. Ceny Jutro"
+            },
+            "rce_pse_today_second_expensive_window_start": {
+                "name": "Początek Drugiego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_today_second_expensive_window_end": {
+                "name": "Koniec Drugiego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_today_second_expensive_window_range": {
+                "name": "Drugie Najdroższe Okno Dzisiaj"
+            },
+            "rce_pse_today_second_expensive_window_start_timestamp": {
+                "name": "Timestamp Początek Drugiego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_today_second_expensive_window_end_timestamp": {
+                "name": "Timestamp Koniec Drugiego Najdroższego Okna Dzisiaj"
+            },
+            "rce_pse_tomorrow_second_expensive_window_start": {
+                "name": "Początek Drugiego Najdroższego Okna Jutro"
+            },
+            "rce_pse_tomorrow_second_expensive_window_end": {
+                "name": "Koniec Drugiego Najdroższego Okna Jutro"
+            },
+            "rce_pse_tomorrow_second_expensive_window_range": {
+                "name": "Drugie Najdroższe Okno Jutro"
+            },
+            "rce_pse_tomorrow_second_expensive_window_start_timestamp": {
+                "name": "Timestamp Początek Drugiego Najdroższego Okna Jutro"
+            },
+            "rce_pse_tomorrow_second_expensive_window_end_timestamp": {
+                "name": "Timestamp Koniec Drugiego Najdroższego Okna Jutro"
             }
         },
         "binary_sensor": {
@@ -246,6 +288,9 @@
             },
             "rce_pse_today_expensive_window_active": {
                 "name": "Aktywne Konfigurowalne Najdroższe Okno Dzisiaj"
+            },
+            "rce_pse_today_second_expensive_window_active": {
+                "name": "Aktywne Drugie Najdroższe Okno Dzisiaj"
             }
         }
     }
