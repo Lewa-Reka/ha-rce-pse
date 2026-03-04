@@ -371,10 +371,15 @@ class TestSecondExpensiveWindowBinarySensor:
                 }
             ]
             
-            with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
-                mock_in_window.return_value = True
+            with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
+                mock_find_window.return_value = [
+                    {"dtime": "2024-01-15 07:15:00"}
+                ]
                 
-                assert sensor.is_on is True
+                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+                    mock_in_window.return_value = True
+                    
+                    assert sensor.is_on is True
 
     def test_today_second_expensive_window_not_active_when_outside_window(self, mock_coordinator):
         mock_config_entry = Mock()
@@ -396,7 +401,12 @@ class TestSecondExpensiveWindowBinarySensor:
                 }
             ]
             
-            with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
-                mock_in_window.return_value = False
+            with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
+                mock_find_window.return_value = [
+                    {"dtime": "2024-01-15 07:15:00"}
+                ]
                 
-                assert sensor.is_on is False
+                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+                    mock_in_window.return_value = False
+                    
+                    assert sensor.is_on is False
