@@ -150,14 +150,8 @@ async def async_setup_entry(
         RCETomorrowExpensiveWindowEndTimestampSensor(coordinator, config_entry),
         RCETodaySecondExpensiveWindowStartSensor(coordinator, config_entry),
         RCETodaySecondExpensiveWindowEndSensor(coordinator, config_entry),
-        RCETodaySecondExpensiveWindowRangeSensor(coordinator, config_entry),
-        RCETodaySecondExpensiveWindowStartTimestampSensor(coordinator, config_entry),
-        RCETodaySecondExpensiveWindowEndTimestampSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowStartSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowEndSensor(coordinator, config_entry),
-        RCETomorrowSecondExpensiveWindowRangeSensor(coordinator, config_entry),
-        RCETomorrowSecondExpensiveWindowStartTimestampSensor(coordinator, config_entry),
-        RCETomorrowSecondExpensiveWindowEndTimestampSensor(coordinator, config_entry),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE sensors to Home Assistant", len(sensors))

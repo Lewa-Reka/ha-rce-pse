@@ -251,29 +251,11 @@
             "rce_pse_today_second_expensive_window_end": {
                 "name": "Koniec Drugiego Najdroższego Okna Dzisiaj"
             },
-            "rce_pse_today_second_expensive_window_range": {
-                "name": "Drugie Najdroższe Okno Dzisiaj"
-            },
-            "rce_pse_today_second_expensive_window_start_timestamp": {
-                "name": "Timestamp Początek Drugiego Najdroższego Okna Dzisiaj"
-            },
-            "rce_pse_today_second_expensive_window_end_timestamp": {
-                "name": "Timestamp Koniec Drugiego Najdroższego Okna Dzisiaj"
-            },
             "rce_pse_tomorrow_second_expensive_window_start": {
                 "name": "Początek Drugiego Najdroższego Okna Jutro"
             },
             "rce_pse_tomorrow_second_expensive_window_end": {
                 "name": "Koniec Drugiego Najdroższego Okna Jutro"
-            },
-            "rce_pse_tomorrow_second_expensive_window_range": {
-                "name": "Drugie Najdroższe Okno Jutro"
-            },
-            "rce_pse_tomorrow_second_expensive_window_start_timestamp": {
-                "name": "Timestamp Początek Drugiego Najdroższego Okna Jutro"
-            },
-            "rce_pse_tomorrow_second_expensive_window_end_timestamp": {
-                "name": "Timestamp Koniec Drugiego Najdroższego Okna Jutro"
             }
         },
         "binary_sensor": {
