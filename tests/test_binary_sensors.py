@@ -13,6 +13,7 @@ from custom_components.rce_pse.binary_sensors.price_windows import (
 from custom_components.rce_pse.binary_sensors.custom_windows import (
     RCETodayCheapestWindowBinarySensor,
     RCETodayExpensiveWindowBinarySensor,
+    RCETodaySecondExpensiveWindowBinarySensor,
 )
 
 
@@ -340,3 +341,72 @@ class TestBinarySensorAvailability:
         sensor = RCETodayMinPriceWindowBinarySensor(mock_coordinator)
         
         assert sensor.available is False 
+
+class TestSecondExpensiveWindowBinarySensor:
+
+    def test_today_second_expensive_window_binary_sensor_initialization(self, mock_coordinator):
+        mock_config_entry = Mock()
+        sensor = RCETodaySecondExpensiveWindowBinarySensor(mock_coordinator, mock_config_entry)
+        
+        assert sensor._attr_unique_id == "rce_pse_today_second_expensive_window_active"
+        assert sensor._attr_icon == "mdi:clock-alert"
+
+    def test_today_second_expensive_window_active_when_in_window(self, mock_coordinator):
+        mock_config_entry = Mock()
+        mock_config_entry.data = {
+            "second_expensive_time_window_start": 6,
+            "second_expensive_time_window_end": 10,
+            "second_expensive_window_duration_hours": 2,
+        }
+        mock_config_entry.options = {}
+        
+        sensor = RCETodaySecondExpensiveWindowBinarySensor(mock_coordinator, mock_config_entry)
+        
+        with patch.object(sensor, "get_today_data") as mock_today_data:
+            mock_today_data.return_value = [
+                {
+                    "period": "07:00 - 07:15",
+                    "rce_pln": "450.00",
+                    "dtime": "2024-01-15 07:15:00"
+                }
+            ]
+            
+            with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
+                mock_find_window.return_value = [
+                    {"dtime": "2024-01-15 07:15:00"}
+                ]
+                
+                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+                    mock_in_window.return_value = True
+                    
+                    assert sensor.is_on is True
+
+    def test_today_second_expensive_window_not_active_when_outside_window(self, mock_coordinator):
+        mock_config_entry = Mock()
+        mock_config_entry.data = {
+            "second_expensive_time_window_start": 6,
+            "second_expensive_time_window_end": 10,
+            "second_expensive_window_duration_hours": 2,
+        }
+        mock_config_entry.options = {}
+        
+        sensor = RCETodaySecondExpensiveWindowBinarySensor(mock_coordinator, mock_config_entry)
+        
+        with patch.object(sensor, "get_today_data") as mock_today_data:
+            mock_today_data.return_value = [
+                {
+                    "period": "07:00 - 07:15",
+                    "rce_pln": "450.00",
+                    "dtime": "2024-01-15 07:15:00"
+                }
+            ]
+            
+            with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
+                mock_find_window.return_value = [
+                    {"dtime": "2024-01-15 07:15:00"}
+                ]
+                
+                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+                    mock_in_window.return_value = False
+                    
+                    assert sensor.is_on is False
