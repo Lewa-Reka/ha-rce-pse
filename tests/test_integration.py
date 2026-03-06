@@ -111,6 +111,39 @@ class TestRCEPSEConfigFlow:
                 mock_create_entry.assert_called_once_with(title="RCE PSE", data=user_input)
 
     @pytest.mark.asyncio
+    async def test_config_flow_user_step_with_low_price_threshold(self, mock_hass):
+        flow = RCEConfigFlow()
+        flow.hass = mock_hass
+        flow.flow_id = "test_flow_id"
+        flow.context = {}
+        mock_hass.config_entries = Mock()
+        mock_hass.config_entries.flow = Mock()
+        mock_hass.config_entries.flow.async_progress_by_handler = Mock(return_value=[])
+        mock_hass.config_entries.async_entry_for_domain_unique_id = Mock(return_value=None)
+        with patch.object(flow, "_async_current_entries", return_value=[]):
+            with patch.object(flow, "async_set_unique_id"):
+                with patch.object(flow, "_abort_if_unique_id_configured"):
+                    with patch.object(flow, "async_create_entry") as mock_create_entry:
+                        mock_create_entry.return_value = {"type": "create_entry"}
+                        user_input = {
+                            "cheapest_time_window_start": 0,
+                            "cheapest_time_window_end": 24,
+                            "cheapest_window_duration_hours": 2,
+                            "expensive_time_window_start": 0,
+                            "expensive_time_window_end": 24,
+                            "expensive_window_duration_hours": 2,
+                            "second_expensive_time_window_start": 6,
+                            "second_expensive_time_window_end": 10,
+                            "second_expensive_window_duration_hours": 2,
+                            "low_price_threshold": 50.0,
+                        }
+                        result = await flow.async_step_user(user_input=user_input)
+                        assert result["type"] == "create_entry"
+                        mock_create_entry.assert_called_once()
+                        call_data = mock_create_entry.call_args[1]["data"]
+                        assert call_data.get("low_price_threshold") == 50.0
+
+    @pytest.mark.asyncio
     async def test_config_flow_user_step_no_input(self, mock_hass):
         flow = RCEConfigFlow()
         flow.hass = mock_hass

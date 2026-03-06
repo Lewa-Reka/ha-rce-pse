@@ -14,7 +14,8 @@
                     "second_expensive_time_window_start": "Drugie najdroższe - początek przeszukiwania (godzina)",
                     "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
                     "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
-                    "use_hourly_prices": "Korzystaj ze średnich cen godzinowych"
+                    "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
+                    "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
@@ -26,7 +27,8 @@
                     "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego najdroższego okna (0-23)",
                     "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
                     "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
-                    "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE"
+                    "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
+                    "low_price_threshold": "Używany przez sensory okien niskiej ceny."
                 }
             }
         },
@@ -52,7 +54,8 @@
                     "second_expensive_time_window_start": "Drugie najdroższe - początek przeszukiwania (godzina)",
                     "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
                     "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
-                    "use_hourly_prices": "Korzystaj ze średnich cen godzinowych"
+                    "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
+                    "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
@@ -64,7 +67,8 @@
                     "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego najdroższego okna (0-23)",
                     "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
                     "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
-                    "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE"
+                    "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
+                    "low_price_threshold": "Używane przez sensory okien niskiej ceny."
                 }
             }
         },
@@ -256,6 +260,18 @@
             },
             "rce_pse_tomorrow_second_expensive_window_end": {
                 "name": "Koniec Drugiego Najdroższego Okna Jutro"
+            },
+            "rce_pse_today_low_price_threshold_window_start": {
+                "name": "Cena Poniżej Progu Początek Dzisiaj"
+            },
+            "rce_pse_today_low_price_threshold_window_end": {
+                "name": "Cena Poniżej Progu Koniec Dzisiaj"
+            },
+            "rce_pse_tomorrow_low_price_threshold_window_start": {
+                "name": "Cena Poniżej Progu Początek Jutro"
+            },
+            "rce_pse_tomorrow_low_price_threshold_window_end": {
+                "name": "Cena Poniżej Progu Koniec Jutro"
             }
         },
         "binary_sensor": {
@@ -273,6 +289,9 @@
             },
             "rce_pse_today_second_expensive_window_active": {
                 "name": "Aktywne Drugie Najdroższe Okno Dzisiaj"
+            },
+            "rce_pse_today_low_price_threshold_window_active": {
+                "name": "Cena Poniżej Progu"
             }
         }
     }

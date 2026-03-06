@@ -152,6 +152,14 @@ This advanced option is useful for net-billing settlements due to prosumer meter
 - When enabled: Calculates hourly averages and applies the same price to all 15-minute intervals within each hour
 - Example: If hour 0 has prices [300, 320, 340, 360] PLN, all four 15-minute intervals will show 330 PLN (average)
 
+#### Low Sell Price Threshold
+
+This option defines the price threshold (in PLN/MWh) used to detect "low price" windows for the dedicated sensors. Periods where the price is at or below this threshold form the first continuous low-price window for today and tomorrow.
+
+- **Low sell price threshold** (PLN/MWh): Range -2000 to 2000 (negative values allowed, e.g. for negative market prices)
+  - *Default*: 0
+  - *Use case*: Sensors "Below threshold start/end (today/tomorrow)" show the first continuous period with price ≤ threshold; binary sensor "Below threshold now" is `on` when current time is inside that period today. If there is no such period in a day, the sensors report state "unknown" (integration remains available).
+
 ### Reconfiguring Settings
 
 You can modify these settings at any time:
@@ -256,6 +264,17 @@ Based on your configuration settings, the integration provides additional sensor
 - **Tomorrow Expensive Window End** - End time of most expensive configured window
 - **Tomorrow Expensive Window Range** - Time range of most expensive window
 
+#### Low Price Threshold Windows
+
+Based on the configured low sell price threshold, the integration provides timestamp sensors for the first continuous period each day where the price is at or below the threshold:
+
+- **Price Below Threshold Start Today** – Start of the first period today with price at or below the threshold
+- **Price Below Threshold End Today** – End of that period today
+- **Price Below Threshold Start Tomorrow** – Start of the first such period tomorrow (available after 14:00 CET)
+- **Price Below Threshold End Tomorrow** – End of that period tomorrow
+
+When there is no such period in a given day, these sensors show state "unknown" while the integration remains available.
+
 All time values are provided in 24-hour format (HH:MM) and automatically update based on current market data and your configuration settings.
 
 ## Binary Sensors
@@ -276,6 +295,7 @@ Based on your configuration settings, these sensors indicate whether you are cur
 - **Today Cheapest Window Active** - `true` when currently within your configured cheapest time window
 - **Today Expensive Window Active** - `true` when currently within your configured most expensive time window
 - **Today Second Expensive Window Active** - `true` when currently within your configured second expensive time window
+- **Price Below Threshold** – `true` when current time is within the first period today where price is at or below the configured low sell price threshold
 
 ## Debugging
 
