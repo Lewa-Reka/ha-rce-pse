@@ -14,7 +14,8 @@
                     "second_expensive_time_window_start": "Second expensive - time window start (hour)",
                     "second_expensive_time_window_end": "Second expensive - time window end (hour)",
                     "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)",
-                    "use_hourly_prices": "Use hourly prices"
+                    "use_hourly_prices": "Use hourly prices",
+                    "low_price_threshold": "Low sell price threshold (PLN/MWh)"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Starting hour for searching cheapest windows (0-23)",
@@ -26,7 +27,8 @@
                     "second_expensive_time_window_start": "Starting hour for searching second expensive windows (0-23)",
                     "second_expensive_time_window_end": "Ending hour for searching second expensive windows (1-24)",
                     "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)",
-                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE"
+                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
+                    "low_price_threshold": "Used by low price window sensors."
                 }
             }
         },
@@ -52,7 +54,8 @@
                     "second_expensive_time_window_start": "Second expensive - time window start (hour)",
                     "second_expensive_time_window_end": "Second expensive - time window end (hour)",
                     "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)",
-                    "use_hourly_prices": "Use hourly prices"
+                    "use_hourly_prices": "Use hourly prices",
+                    "low_price_threshold": "Low sell price threshold (PLN/MWh)"
                 },
                 "data_description": {
                     "cheapest_time_window_start": "Starting hour for searching cheapest windows (0-23)",
@@ -64,7 +67,8 @@
                     "second_expensive_time_window_start": "Starting hour for searching second expensive windows (0-23)",
                     "second_expensive_time_window_end": "Ending hour for searching second expensive windows (1-24)",
                     "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)",
-                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE"
+                    "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
+                    "low_price_threshold": "Used by low price window sensors."
                 }
             }
         },
@@ -256,6 +260,18 @@
             },
             "rce_pse_tomorrow_second_expensive_window_end": {
                 "name": "Tomorrow Second Expensive Window End"
+            },
+            "rce_pse_today_low_price_threshold_window_start": {
+                "name": "Price Below Threshold Start Today"
+            },
+            "rce_pse_today_low_price_threshold_window_end": {
+                "name": "Price Below Threshold End Today"
+            },
+            "rce_pse_tomorrow_low_price_threshold_window_start": {
+                "name": "Price Below Threshold Start Tomorrow"
+            },
+            "rce_pse_tomorrow_low_price_threshold_window_end": {
+                "name": "Price Below Threshold End Tomorrow"
             }
         },
         "binary_sensor": {
@@ -273,6 +289,9 @@
             },
             "rce_pse_today_second_expensive_window_active": {
                 "name": "Today Second Expensive Window Active"
+            },
+            "rce_pse_today_low_price_threshold_window_active": {
+                "name": "Price Below Threshold"
             }
         }
     }
