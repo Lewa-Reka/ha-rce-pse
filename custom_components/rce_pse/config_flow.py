@@ -19,6 +19,7 @@ from .const import (
     CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
     CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     CONF_USE_HOURLY_PRICES,
+    CONF_LOW_PRICE_THRESHOLD,
     DEFAULT_TIME_WINDOW_START,
     DEFAULT_TIME_WINDOW_END,
     DEFAULT_WINDOW_DURATION_HOURS,
@@ -26,6 +27,7 @@ from .const import (
     DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
     DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     DEFAULT_USE_HOURLY_PRICES,
+    DEFAULT_LOW_PRICE_THRESHOLD,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -105,6 +107,15 @@ CONFIG_SCHEMA = vol.Schema({
     ),
     vol.Optional(CONF_USE_HOURLY_PRICES, default=DEFAULT_USE_HOURLY_PRICES): selector.BooleanSelector(
         selector.BooleanSelectorConfig()
+    ),
+    vol.Optional(CONF_LOW_PRICE_THRESHOLD, default=DEFAULT_LOW_PRICE_THRESHOLD): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=-2000,
+            max=2000,
+            step=0.01,
+            mode=selector.NumberSelectorMode.BOX,
+            unit_of_measurement="PLN/MWh",
+        )
     ),
 })
 
@@ -289,6 +300,18 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
                 default=current_data.get(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
             ): selector.BooleanSelector(
                 selector.BooleanSelectorConfig()
+            ),
+            vol.Optional(
+                CONF_LOW_PRICE_THRESHOLD,
+                default=current_data.get(CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=-2000,
+                    max=2000,
+                    step=0.01,
+                    mode=selector.NumberSelectorMode.BOX,
+                    unit_of_measurement="PLN/MWh",
+                )
             ),
         })
 
