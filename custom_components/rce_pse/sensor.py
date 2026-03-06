@@ -75,14 +75,8 @@ from .sensors.custom_windows import (
     RCETomorrowExpensiveWindowEndTimestampSensor,
     RCETodaySecondExpensiveWindowStartSensor,
     RCETodaySecondExpensiveWindowEndSensor,
-    RCETodaySecondExpensiveWindowRangeSensor,
-    RCETodaySecondExpensiveWindowStartTimestampSensor,
-    RCETodaySecondExpensiveWindowEndTimestampSensor,
     RCETomorrowSecondExpensiveWindowStartSensor,
     RCETomorrowSecondExpensiveWindowEndSensor,
-    RCETomorrowSecondExpensiveWindowRangeSensor,
-    RCETomorrowSecondExpensiveWindowStartTimestampSensor,
-    RCETomorrowSecondExpensiveWindowEndTimestampSensor,
 )
 
 _LOGGER = logging.getLogger(__name__)
