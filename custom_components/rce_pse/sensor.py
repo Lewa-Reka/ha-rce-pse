@@ -46,6 +46,12 @@ from .sensors import (
     RCETomorrowMedianPriceSensor,
     RCETomorrowTodayAvgComparisonSensor,
 )
+from .sensors.low_price_threshold_windows import (
+    RCETodayLowPriceThresholdWindowStartSensor,
+    RCETodayLowPriceThresholdWindowEndSensor,
+    RCETomorrowLowPriceThresholdWindowStartSensor,
+    RCETomorrowLowPriceThresholdWindowEndSensor,
+)
 from .sensors.custom_windows import (
     RCETodayCheapestWindowStartSensor,
     RCETodayCheapestWindowEndSensor,
@@ -152,6 +158,10 @@ async def async_setup_entry(
         RCETodaySecondExpensiveWindowEndSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowStartSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowEndSensor(coordinator, config_entry),
+        RCETodayLowPriceThresholdWindowStartSensor(coordinator, config_entry),
+        RCETodayLowPriceThresholdWindowEndSensor(coordinator, config_entry),
+        RCETomorrowLowPriceThresholdWindowStartSensor(coordinator, config_entry),
+        RCETomorrowLowPriceThresholdWindowEndSensor(coordinator, config_entry),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE sensors to Home Assistant", len(sensors))
