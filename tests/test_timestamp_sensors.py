@@ -34,6 +34,12 @@ from custom_components.rce_pse.sensors.custom_windows import (
     RCETomorrowSecondExpensiveWindowStartSensor,
     RCETomorrowSecondExpensiveWindowEndSensor,
 )
+from custom_components.rce_pse.sensors.low_price_threshold_windows import (
+    RCETodayLowPriceThresholdWindowStartSensor,
+    RCETodayLowPriceThresholdWindowEndSensor,
+    RCETomorrowLowPriceThresholdWindowStartSensor,
+    RCETomorrowLowPriceThresholdWindowEndSensor,
+)
 
 
 @pytest.fixture
@@ -49,6 +55,7 @@ def mock_config_entry():
         "second_expensive_time_window_start": 6,
         "second_expensive_time_window_end": 10,
         "second_expensive_window_duration_hours": 2,
+        "low_price_threshold": 0.0,
     }
     config_entry.options = {}
     return config_entry
@@ -657,3 +664,49 @@ class TestSecondExpensiveWindowTimestampSensors:
             
             assert timestamp is not None
             assert isinstance(timestamp, datetime)
+
+
+class TestLowPriceThresholdWindowTimestampSensors:
+
+    def test_today_low_price_threshold_window_start_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        assert sensor._attr_unique_id == "rce_pse_today_low_price_threshold_window_start"
+        assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
+        assert sensor._attr_icon == "mdi:clock-start"
+
+    def test_today_low_price_threshold_window_start_with_window(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_today_data") as mock_today:
+            mock_today.return_value = [{"period": "02:00 - 02:15", "rce_pln": "0.0"}]
+            with patch.object(sensor.calculator, "find_first_window_below_threshold") as mock_find:
+                mock_find.return_value = [{"period": "02:00 - 02:15", "rce_pln": "0.0"}]
+                timestamp = sensor.native_value
+                assert timestamp is not None
+                assert isinstance(timestamp, datetime)
+                assert timestamp.hour == 2
+                assert timestamp.minute == 0
+
+    def test_today_low_price_threshold_window_start_no_window(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_today_data") as mock_today:
+            mock_today.return_value = [{"period": "10:00 - 10:15", "rce_pln": "300.0"}]
+            with patch.object(sensor.calculator, "find_first_window_below_threshold") as mock_find:
+                mock_find.return_value = []
+                assert sensor.native_value is None
+
+    def test_today_low_price_threshold_window_end_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayLowPriceThresholdWindowEndSensor(mock_coordinator, mock_config_entry)
+        assert sensor._attr_unique_id == "rce_pse_today_low_price_threshold_window_end"
+        assert sensor._attr_icon == "mdi:clock-end"
+
+    def test_tomorrow_low_price_threshold_window_start_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETomorrowLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_low_price_threshold_window_start"
+        with patch.object(sensor, "is_tomorrow_data_available", return_value=True):
+            assert sensor.available is True
+
+    def test_tomorrow_low_price_threshold_window_start_no_data_returns_none(self, mock_coordinator, mock_config_entry):
+        sensor = RCETomorrowLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_tomorrow_data", return_value=[]):
+            with patch.object(sensor, "is_tomorrow_data_available", return_value=True):
+                assert sensor.native_value is None
