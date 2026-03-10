@@ -77,6 +77,12 @@ from .sensors.custom_windows import (
     RCETomorrowSecondExpensiveWindowRangeSensor,
     RCETomorrowSecondExpensiveWindowStartTimestampSensor,
     RCETomorrowSecondExpensiveWindowEndTimestampSensor,
+    RCETodayCheapestWindowAvgPriceSensor,
+    RCETodayExpensiveWindowAvgPriceSensor,
+    RCETodaySecondExpensiveWindowAvgPriceSensor,
+    RCETomorrowCheapestWindowAvgPriceSensor,
+    RCETomorrowExpensiveWindowAvgPriceSensor,
+    RCETomorrowSecondExpensiveWindowAvgPriceSensor,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -158,6 +164,12 @@ async def async_setup_entry(
         RCETomorrowSecondExpensiveWindowRangeSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowStartTimestampSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowEndTimestampSensor(coordinator, config_entry),
+        RCETodayCheapestWindowAvgPriceSensor(coordinator, config_entry),
+        RCETodayExpensiveWindowAvgPriceSensor(coordinator, config_entry),
+        RCETodaySecondExpensiveWindowAvgPriceSensor(coordinator, config_entry),
+        RCETomorrowCheapestWindowAvgPriceSensor(coordinator, config_entry),
+        RCETomorrowExpensiveWindowAvgPriceSensor(coordinator, config_entry),
+        RCETomorrowSecondExpensiveWindowAvgPriceSensor(coordinator, config_entry),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE sensors to Home Assistant", len(sensors))
