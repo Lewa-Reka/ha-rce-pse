@@ -834,3 +834,173 @@ class RCETomorrowSecondExpensiveWindowEndSensor(RCECustomWindowSensor):
             return dt_util.as_local(end_datetime)
         except (ValueError, KeyError, IndexError):
             return None
+
+# Average Price Window Sensors
+
+
+class RCETodayCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
+        super().__init__(coordinator, config_entry, "today_cheapest_window_avg_price")
+        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        today_data = self.get_today_data()
+        if not today_data:
+            return None
+
+        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
+
+        optimal_window = self.calculator.find_optimal_window(
+            today_data, start_hour, end_hour, duration, is_max=False
+        )
+
+        if not optimal_window:
+            return None
+
+        prices = self.calculator.get_prices_from_data(optimal_window)
+        return round(self.calculator.calculate_average(prices), 2)
+
+
+class RCETodayExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
+        super().__init__(coordinator, config_entry, "today_expensive_window_avg_price")
+        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        today_data = self.get_today_data()
+        if not today_data:
+            return None
+
+        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
+
+        optimal_window = self.calculator.find_optimal_window(
+            today_data, start_hour, end_hour, duration, is_max=True
+        )
+
+        if not optimal_window:
+            return None
+
+        prices = self.calculator.get_prices_from_data(optimal_window)
+        return round(self.calculator.calculate_average(prices), 2)
+
+
+class RCETodaySecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
+        super().__init__(coordinator, config_entry, "today_second_expensive_window_avg_price")
+        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        today_data = self.get_today_data()
+        if not today_data:
+            return None
+
+        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
+        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
+        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
+
+        optimal_window = self.calculator.find_optimal_window(
+            today_data, start_hour, end_hour, duration, is_max=True
+        )
+
+        if not optimal_window:
+            return None
+
+        prices = self.calculator.get_prices_from_data(optimal_window)
+        return round(self.calculator.calculate_average(prices), 2)
+
+
+class RCETomorrowCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
+        super().__init__(coordinator, config_entry, "tomorrow_cheapest_window_avg_price")
+        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        tomorrow_data = self.get_tomorrow_data()
+        if not tomorrow_data:
+            return None
+
+        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
+
+        optimal_window = self.calculator.find_optimal_window(
+            tomorrow_data, start_hour, end_hour, duration, is_max=False
+        )
+
+        if not optimal_window:
+            return None
+
+        prices = self.calculator.get_prices_from_data(optimal_window)
+        return round(self.calculator.calculate_average(prices), 2)
+
+
+class RCETomorrowExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
+        super().__init__(coordinator, config_entry, "tomorrow_expensive_window_avg_price")
+        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        tomorrow_data = self.get_tomorrow_data()
+        if not tomorrow_data:
+            return None
+
+        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
+
+        optimal_window = self.calculator.find_optimal_window(
+            tomorrow_data, start_hour, end_hour, duration, is_max=True
+        )
+
+        if not optimal_window:
+            return None
+
+        prices = self.calculator.get_prices_from_data(optimal_window)
+        return round(self.calculator.calculate_average(prices), 2)
+
+
+class RCETomorrowSecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
+        super().__init__(coordinator, config_entry, "tomorrow_second_expensive_window_avg_price")
+        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_icon = "mdi:cash"
+
+    @property
+    def native_value(self) -> float | None:
+        tomorrow_data = self.get_tomorrow_data()
+        if not tomorrow_data:
+            return None
+
+        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
+        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
+        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
+
+        optimal_window = self.calculator.find_optimal_window(
+            tomorrow_data, start_hour, end_hour, duration, is_max=True
+        )
+
+        if not optimal_window:
+            return None
+
+        prices = self.calculator.get_prices_from_data(optimal_window)
+        return round(self.calculator.calculate_average(prices), 2)

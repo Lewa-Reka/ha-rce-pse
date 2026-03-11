@@ -77,6 +77,12 @@ from .sensors.custom_windows import (
     RCETodaySecondExpensiveWindowEndSensor,
     RCETomorrowSecondExpensiveWindowStartSensor,
     RCETomorrowSecondExpensiveWindowEndSensor,
+    RCETodayCheapestWindowAvgPriceSensor,
+    RCETodayExpensiveWindowAvgPriceSensor,
+    RCETodaySecondExpensiveWindowAvgPriceSensor,
+    RCETomorrowCheapestWindowAvgPriceSensor,
+    RCETomorrowExpensiveWindowAvgPriceSensor,
+    RCETomorrowSecondExpensiveWindowAvgPriceSensor,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -152,6 +158,12 @@ async def async_setup_entry(
         RCETodaySecondExpensiveWindowEndSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowStartSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowEndSensor(coordinator, config_entry),
+        RCETodayCheapestWindowAvgPriceSensor(coordinator, config_entry),
+        RCETodayExpensiveWindowAvgPriceSensor(coordinator, config_entry),
+        RCETodaySecondExpensiveWindowAvgPriceSensor(coordinator, config_entry),
+        RCETomorrowCheapestWindowAvgPriceSensor(coordinator, config_entry),
+        RCETomorrowExpensiveWindowAvgPriceSensor(coordinator, config_entry),
+        RCETomorrowSecondExpensiveWindowAvgPriceSensor(coordinator, config_entry),
         RCETodayLowPriceThresholdWindowStartSensor(coordinator, config_entry),
         RCETodayLowPriceThresholdWindowEndSensor(coordinator, config_entry),
         RCETomorrowLowPriceThresholdWindowStartSensor(coordinator, config_entry),

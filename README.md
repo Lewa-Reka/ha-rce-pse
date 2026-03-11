@@ -196,14 +196,14 @@ The integration will automatically reload with your new settings.
 When you configure custom time windows, the integration provides additional sensors:
 
 **For Today:**
-- Cheapest Window Start/End/Range
-- Most Expensive Window Start/End/Range
-- Second Expensive Window Start/End/Range
+- Cheapest Window Start/End/Range/Average Price
+- Most Expensive Window Start/End/Range/Average Price
+- Second Expensive Window Start/End/Range/Average Price
 
 **For Tomorrow:**
-- Cheapest Window Start/End/Range  
-- Most Expensive Window Start/End/Range
-- Second Expensive Window Start/End/Range
+- Cheapest Window Start/End/Range/Average Price
+- Most Expensive Window Start/End/Range/Average Price
+- Second Expensive Window Start/End/Range/Average Price
 
 These sensors automatically update based on your configured search parameters and provide precise time ranges in HH:MM format.
 
@@ -252,17 +252,27 @@ Based on your configuration settings, the integration provides additional sensor
 - **Today Cheapest Window Start** - Start time of cheapest configured window
 - **Today Cheapest Window End** - End time of cheapest configured window  
 - **Today Cheapest Window Range** - Time range of cheapest window (e.g., "23:00 - 01:00")
+- **Today Cheapest Window Average Price** - Average price within the cheapest window (PLN/MWh)
 - **Today Expensive Window Start** - Start time of most expensive configured window
 - **Today Expensive Window End** - End time of most expensive configured window
 - **Today Expensive Window Range** - Time range of most expensive window
+- **Today Expensive Window Average Price** - Average price within the most expensive window (PLN/MWh)
+- **Today Second Expensive Window Start** - Start time of second expensive configured window
+- **Today Second Expensive Window End** - End time of second expensive configured window
+- **Today Second Expensive Window Average Price** - Average price within the second expensive window (PLN/MWh)
 
 #### Tomorrow's Custom Windows (available after 14:00 CET)
 - **Tomorrow Cheapest Window Start** - Start time of cheapest configured window
 - **Tomorrow Cheapest Window End** - End time of cheapest configured window
 - **Tomorrow Cheapest Window Range** - Time range of cheapest window
+- **Tomorrow Cheapest Window Average Price** - Average price within the cheapest window (PLN/MWh)
 - **Tomorrow Expensive Window Start** - Start time of most expensive configured window  
 - **Tomorrow Expensive Window End** - End time of most expensive configured window
 - **Tomorrow Expensive Window Range** - Time range of most expensive window
+- **Tomorrow Expensive Window Average Price** - Average price within the most expensive window (PLN/MWh)
+- **Tomorrow Second Expensive Window Start** - Start time of second expensive configured window
+- **Tomorrow Second Expensive Window End** - End time of second expensive configured window
+- **Tomorrow Second Expensive Window Average Price** - Average price within the second expensive window (PLN/MWh)
 
 #### Low Price Threshold Windows
 
