@@ -47,6 +47,10 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# MegaLinter
+megalinter-reports/
+mega-linter.log
+
 # Translations
 *.mo
 *.pot
