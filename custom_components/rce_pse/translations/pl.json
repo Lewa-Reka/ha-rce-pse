@@ -189,6 +189,24 @@
             "rce_pse_tomorrow_second_expensive_window_end": {
                 "name": "Koniec Drugiego Najdroższego Okna Jutro"
             },
+            "rce_pse_today_cheapest_window_avg_price": {
+                "name": "Średnia cena najtańszego okna dzisiaj"
+            },
+            "rce_pse_today_expensive_window_avg_price": {
+                "name": "Średnia cena najdroższego okna dzisiaj"
+            },
+            "rce_pse_today_second_expensive_window_avg_price": {
+                "name": "Średnia cena drugiego najdroższego okna dzisiaj"
+            },
+            "rce_pse_tomorrow_cheapest_window_avg_price": {
+                "name": "Średnia cena najtańszego okna jutro"
+            },
+            "rce_pse_tomorrow_expensive_window_avg_price": {
+                "name": "Średnia cena najdroższego okna jutro"
+            },
+            "rce_pse_tomorrow_second_expensive_window_avg_price": {
+                "name": "Średnia cena drugiego najdroższego okna jutro"
+            },
             "rce_pse_today_low_price_threshold_window_start": {
                 "name": "Cena Poniżej Progu Początek Dzisiaj"
             },

@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from custom_components.rce_pse.sensors.custom_windows import (
+from custom_components.rce_pse.sensors.window_avg_price import (
     RCETodayCheapestWindowAvgPriceSensor,
     RCETodayExpensiveWindowAvgPriceSensor,
     RCETodaySecondExpensiveWindowAvgPriceSensor,

@@ -189,6 +189,24 @@
             "rce_pse_tomorrow_second_expensive_window_end": {
                 "name": "Tomorrow Second Expensive Window End"
             },
+            "rce_pse_today_cheapest_window_avg_price": {
+                "name": "Today Cheapest Window Average Price"
+            },
+            "rce_pse_today_expensive_window_avg_price": {
+                "name": "Today Most Expensive Window Average Price"
+            },
+            "rce_pse_today_second_expensive_window_avg_price": {
+                "name": "Today Second Expensive Window Average Price"
+            },
+            "rce_pse_tomorrow_cheapest_window_avg_price": {
+                "name": "Tomorrow Cheapest Window Average Price"
+            },
+            "rce_pse_tomorrow_expensive_window_avg_price": {
+                "name": "Tomorrow Most Expensive Window Average Price"
+            },
+            "rce_pse_tomorrow_second_expensive_window_avg_price": {
+                "name": "Tomorrow Second Expensive Window Average Price"
+            },
             "rce_pse_today_low_price_threshold_window_start": {
                 "name": "Price Below Threshold Start Today"
             },
