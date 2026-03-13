@@ -53,6 +53,8 @@ from .sensors.custom_windows import (
     RCETodaySecondExpensiveWindowEndSensor,
     RCETomorrowSecondExpensiveWindowStartSensor,
     RCETomorrowSecondExpensiveWindowEndSensor,
+)
+from .sensors.window_avg_price import (
     RCETodayCheapestWindowAvgPriceSensor,
     RCETodayExpensiveWindowAvgPriceSensor,
     RCETodaySecondExpensiveWindowAvgPriceSensor,
