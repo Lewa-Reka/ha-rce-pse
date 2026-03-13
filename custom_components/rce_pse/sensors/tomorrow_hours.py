@@ -18,10 +18,6 @@ class RCETomorrowHoursSensor(RCEBaseSensor):
         super().__init__(coordinator, unique_id)
         self._attr_icon = "mdi:clock"
 
-    @property
-    def available(self) -> bool:
-        return super().available and self.is_tomorrow_data_available()
-
 
 class RCETomorrowMaxPriceHourStartTimestampSensor(RCETomorrowHoursSensor):
 

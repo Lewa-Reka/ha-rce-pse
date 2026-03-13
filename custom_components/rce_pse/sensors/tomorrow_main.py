@@ -19,10 +19,6 @@ class RCETomorrowMainSensor(RCEBaseSensor):
         self._attr_icon = "mdi:cash"
 
     @property
-    def available(self) -> bool:
-        return super().available and self.is_tomorrow_data_available()
-
-    @property
     def should_poll(self) -> bool:
         return True
 

@@ -15,10 +15,6 @@ class RCETomorrowStatsSensor(RCEBaseSensor):
         self._attr_native_unit_of_measurement = unit
         self._attr_icon = icon
 
-    @property
-    def available(self) -> bool:
-        return super().available and self.is_tomorrow_data_available()
-
 
 class RCETomorrowAvgPriceSensor(RCETomorrowStatsSensor):
 
