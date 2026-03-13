@@ -87,10 +87,6 @@ class RCETomorrowLowPriceThresholdWindowStartSensor(RCELowPriceThresholdWindowSe
         self._attr_icon = "mdi:clock-start"
 
     @property
-    def available(self) -> bool:
-        return super().available and self.is_tomorrow_data_available()
-
-    @property
     def native_value(self) -> datetime | None:
         tomorrow_data = self.get_tomorrow_data()
         if not tomorrow_data:
@@ -115,10 +111,6 @@ class RCETomorrowLowPriceThresholdWindowEndSensor(RCELowPriceThresholdWindowSens
         super().__init__(coordinator, config_entry, "tomorrow_low_price_threshold_window_end")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-end"
-
-    @property
-    def available(self) -> bool:
-        return super().available and self.is_tomorrow_data_available()
 
     @property
     def native_value(self) -> datetime | None:

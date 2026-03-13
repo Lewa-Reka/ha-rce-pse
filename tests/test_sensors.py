@@ -342,16 +342,13 @@ class TestTomorrowMainSensor:
         assert sensor._attr_native_unit_of_measurement == "PLN/MWh"
         assert sensor._attr_icon == "mdi:cash"
 
-    def test_tomorrow_main_sensor_availability(self, mock_coordinator):
+    def test_tomorrow_main_sensor_unknown_when_no_data(self, mock_coordinator):
         sensor = RCETomorrowMainSensor(mock_coordinator)
-        
-
-        with patch.object(sensor, 'is_tomorrow_data_available', return_value=False):
-            with patch('custom_components.rce_pse.sensors.base.RCEBaseSensor.available', new_callable=lambda: property(lambda self: True)):
-                assert not sensor.available
-        
-        with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
-            with patch('custom_components.rce_pse.sensors.base.RCEBaseSensor.available', new_callable=lambda: property(lambda self: True)):
+        with patch('custom_components.rce_pse.sensors.base.RCEBaseSensor.available', new_callable=lambda: property(lambda self: True)):
+            with patch.object(sensor, 'is_tomorrow_data_available', return_value=False):
+                assert sensor.available
+                assert sensor.native_value is None
+            with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
                 assert sensor.available
 
     def test_tomorrow_price_returns_current_hour_price(self, mock_coordinator):

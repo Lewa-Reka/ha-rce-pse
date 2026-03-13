@@ -268,15 +268,12 @@ class TestTomorrowMaxPriceTimestampSensors:
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
-    def test_tomorrow_max_price_hour_start_timestamp_availability(self, mock_coordinator):
+    def test_tomorrow_max_price_hour_start_timestamp_unknown_when_no_data(self, mock_coordinator):
         sensor = RCETomorrowMaxPriceHourStartTimestampSensor(mock_coordinator)
-        
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = False
-            assert not sensor.available
-            
-            mock_available.return_value = True
-            assert sensor.available
+        with patch('custom_components.rce_pse.sensors.base.RCEBaseSensor.available', new_callable=lambda: property(lambda self: True)):
+            with patch.object(sensor, "get_tomorrow_data", return_value=[]):
+                assert sensor.available
+                assert sensor.native_value is None
 
     def test_tomorrow_max_price_hour_start_timestamp_with_data(self, mock_coordinator_extended):
         sensor = RCETomorrowMaxPriceHourStartTimestampSensor(mock_coordinator_extended)
@@ -702,8 +699,7 @@ class TestLowPriceThresholdWindowTimestampSensors:
     def test_tomorrow_low_price_threshold_window_start_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
         assert sensor._attr_unique_id == "rce_pse_tomorrow_low_price_threshold_window_start"
-        with patch.object(sensor, "is_tomorrow_data_available", return_value=True):
-            assert sensor.available is True
+        assert sensor.available is True
 
     def test_tomorrow_low_price_threshold_window_start_no_data_returns_none(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
