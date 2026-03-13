@@ -271,7 +271,7 @@ Based on the configured low sell price threshold, the integration provides times
 
 When there is no such period in a given day, these sensors show state "unknown" while the integration remains available.
 
-Time window sensors return timestamps. To display only the time (e.g. HH:MM) in dashboards or automations, use a template with `as_timestamp()` and `timestamp_custom('%H:%M')`. See [docs/sensor-migration-timestamp-only.md](docs/v2-sensors-changes.md) for migration details from previous versions.
+Time window sensors return timestamps. To display only the time (e.g. HH:MM) in dashboards or automations, use a template with `as_timestamp()` and `timestamp_custom('%H:%M')`. See [docs/v2-sensors-changes.md](docs/v2-sensors-changes.md) for migration details from previous versions.
 
 ## Binary Sensors
 
