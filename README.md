@@ -78,7 +78,7 @@ Both cards can be easily customized to match your dashboard theme and specific n
 - **Optimal time windows** - Configurable search for cheapest and most expensive periods
 - **Smart scheduling** - Find best times for energy-intensive activities
 - **Peak avoidance** - Identify and avoid high-cost electricity periods
-- **Time range display** - Easy-to-read time ranges (e.g., "23:00 - 01:00")
+- **Time window timestamps** - Start/end timestamps for cheapest and most expensive periods (format with templates if you need time-only display)
 - **Hourly price averaging** - Optional hourly price calculation for net-billing settlements
 - **Automatic updates** - Data refreshed every 30 minutes from official PSE API
 
@@ -205,7 +205,7 @@ When you configure custom time windows, the integration provides additional sens
 - Most Expensive Window Start/End/Range/Average Price
 - Second Expensive Window Start/End/Range/Average Price
 
-These sensors automatically update based on your configured search parameters and provide precise time ranges in HH:MM format.
+These sensors automatically update based on your configured search parameters. Time window start/end sensors return timestamps; use template filters (e.g. `timestamp_custom('%H:%M')`) if you need a time-only display.
 
 ## Sensors
 
@@ -234,44 +234,30 @@ These sensors automatically update based on your configured search parameters an
 - **Tomorrow Median Price** - Median price for tomorrow
 - **Tomorrow vs Today Average** - Percentage difference between tomorrow and today average
 
-### Price Hours & Time Ranges
-- **Today Max Price Hour Start/End** - When the highest price period starts/ends today
-- **Today Min Price Hour Start/End** - When the lowest price period starts/ends today
-- **Today Max Price Range** - Time range of highest price period (e.g., "17:00 - 18:00")
-- **Today Min Price Range** - Time range of lowest price period (e.g., "02:00 - 03:00")
-- **Tomorrow Max Price Hour Start/End** - When the highest price period starts/ends tomorrow
-- **Tomorrow Min Price Hour Start/End** - When the lowest price period starts/ends tomorrow
-- **Tomorrow Max Price Range** - Time range of highest price period tomorrow
-- **Tomorrow Min Price Range** - Time range of lowest price period tomorrow
+### Price Hours (timestamps)
+- **Today Max Price Hour Start/End** - When the highest price period starts/ends today (timestamp)
+- **Today Min Price Hour Start/End** - When the lowest price period starts/ends today (timestamp)
+- **Tomorrow Max Price Hour Start/End** - When the highest price period starts/ends tomorrow (timestamp)
+- **Tomorrow Min Price Hour Start/End** - When the lowest price period starts/ends tomorrow (timestamp)
 
 ### Custom Time Window Sensors
 
 Based on your configuration settings, the integration provides additional sensors for optimal time windows:
 
 #### Today's Custom Windows
-- **Today Cheapest Window Start** - Start time of cheapest configured window
-- **Today Cheapest Window End** - End time of cheapest configured window  
-- **Today Cheapest Window Range** - Time range of cheapest window (e.g., "23:00 - 01:00")
+- **Today Cheapest Window Start/End** - Start and end of cheapest configured window (timestamp)
 - **Today Cheapest Window Average Price** - Average price within the cheapest window (PLN/MWh)
-- **Today Expensive Window Start** - Start time of most expensive configured window
-- **Today Expensive Window End** - End time of most expensive configured window
-- **Today Expensive Window Range** - Time range of most expensive window
+- **Today Expensive Window Start/End** - Start and end of most expensive configured window (timestamp)
 - **Today Expensive Window Average Price** - Average price within the most expensive window (PLN/MWh)
-- **Today Second Expensive Window Start** - Start time of second expensive configured window
-- **Today Second Expensive Window End** - End time of second expensive configured window
+- **Today Second Expensive Window Start/End** - Start and end of second expensive configured window (timestamp)
 - **Today Second Expensive Window Average Price** - Average price within the second expensive window (PLN/MWh)
 
 #### Tomorrow's Custom Windows (available after 14:00 CET)
-- **Tomorrow Cheapest Window Start** - Start time of cheapest configured window
-- **Tomorrow Cheapest Window End** - End time of cheapest configured window
-- **Tomorrow Cheapest Window Range** - Time range of cheapest window
+- **Tomorrow Cheapest Window Start/End** - Start and end of cheapest configured window (timestamp)
 - **Tomorrow Cheapest Window Average Price** - Average price within the cheapest window (PLN/MWh)
-- **Tomorrow Expensive Window Start** - Start time of most expensive configured window  
-- **Tomorrow Expensive Window End** - End time of most expensive configured window
-- **Tomorrow Expensive Window Range** - Time range of most expensive window
+- **Tomorrow Expensive Window Start/End** - Start and end of most expensive configured window (timestamp)
 - **Tomorrow Expensive Window Average Price** - Average price within the most expensive window (PLN/MWh)
-- **Tomorrow Second Expensive Window Start** - Start time of second expensive configured window
-- **Tomorrow Second Expensive Window End** - End time of second expensive configured window
+- **Tomorrow Second Expensive Window Start/End** - Start and end of second expensive configured window (timestamp)
 - **Tomorrow Second Expensive Window Average Price** - Average price within the second expensive window (PLN/MWh)
 
 #### Low Price Threshold Windows
@@ -285,7 +271,7 @@ Based on the configured low sell price threshold, the integration provides times
 
 When there is no such period in a given day, these sensors show state "unknown" while the integration remains available.
 
-All time values are provided in 24-hour format (HH:MM) and automatically update based on current market data and your configuration settings.
+Time window sensors return timestamps. To display only the time (e.g. HH:MM) in dashboards or automations, use a template with `as_timestamp()` and `timestamp_custom('%H:%M')`. See [docs/sensor-migration-timestamp-only.md](docs/v2-sensors-changes.md) for migration details from previous versions.
 
 ## Binary Sensors
 
