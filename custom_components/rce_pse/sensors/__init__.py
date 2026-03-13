@@ -14,16 +14,10 @@ from .today_stats import (
     RCETodayCurrentVsAverageSensor,
 )
 from .today_hours import (
-    RCETodayMaxPriceHourStartSensor,
-    RCETodayMaxPriceHourEndSensor,
-    RCETodayMinPriceHourStartSensor,
-    RCETodayMinPriceHourEndSensor,
     RCETodayMaxPriceHourStartTimestampSensor,
     RCETodayMaxPriceHourEndTimestampSensor,
     RCETodayMinPriceHourStartTimestampSensor,
     RCETodayMinPriceHourEndTimestampSensor,
-    RCETodayMinPriceRangeSensor,
-    RCETodayMaxPriceRangeSensor,
 )
 from .tomorrow_main import RCETomorrowMainSensor
 from .tomorrow_stats import (
@@ -34,16 +28,10 @@ from .tomorrow_stats import (
     RCETomorrowTodayAvgComparisonSensor
 )
 from .tomorrow_hours import (
-    RCETomorrowMaxPriceHourStartSensor,
-    RCETomorrowMaxPriceHourEndSensor,
-    RCETomorrowMinPriceHourStartSensor,
-    RCETomorrowMinPriceHourEndSensor,
     RCETomorrowMaxPriceHourStartTimestampSensor,
     RCETomorrowMaxPriceHourEndTimestampSensor,
     RCETomorrowMinPriceHourStartTimestampSensor,
     RCETomorrowMinPriceHourEndTimestampSensor,
-    RCETomorrowMinPriceRangeSensor,
-    RCETomorrowMaxPriceRangeSensor,
 )
 
 __all__ = [
@@ -57,32 +45,20 @@ __all__ = [
     "RCETodayAvgPriceSensor",
     "RCETodayMaxPriceSensor",
     "RCETodayMinPriceSensor",
-    "RCETodayMaxPriceHourStartSensor",
-    "RCETodayMaxPriceHourEndSensor",
-    "RCETodayMinPriceHourStartSensor",
-    "RCETodayMinPriceHourEndSensor",
     "RCETodayMaxPriceHourStartTimestampSensor",
     "RCETodayMaxPriceHourEndTimestampSensor",
     "RCETodayMinPriceHourStartTimestampSensor",
     "RCETodayMinPriceHourEndTimestampSensor",
-    "RCETodayMinPriceRangeSensor",
-    "RCETodayMaxPriceRangeSensor",
     "RCETodayMedianPriceSensor",
     "RCETodayCurrentVsAverageSensor",
     "RCETomorrowMainSensor",
     "RCETomorrowAvgPriceSensor",
     "RCETomorrowMaxPriceSensor",
     "RCETomorrowMinPriceSensor",
-    "RCETomorrowMaxPriceHourStartSensor",
-    "RCETomorrowMaxPriceHourEndSensor",
-    "RCETomorrowMinPriceHourStartSensor",
-    "RCETomorrowMinPriceHourEndSensor",
     "RCETomorrowMaxPriceHourStartTimestampSensor",
     "RCETomorrowMaxPriceHourEndTimestampSensor",
     "RCETomorrowMinPriceHourStartTimestampSensor",
     "RCETomorrowMinPriceHourEndTimestampSensor",
-    "RCETomorrowMinPriceRangeSensor",
-    "RCETomorrowMaxPriceRangeSensor",
     "RCETomorrowMedianPriceSensor",
     "RCETomorrowTodayAvgComparisonSensor",
 ] 
