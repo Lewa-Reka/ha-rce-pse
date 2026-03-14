@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: "Checkout the repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set Vars
         run: |
           echo "version=$(echo '${{ github.event.release.name }}' | cut -c 2-)" >> $GITHUB_ENV
