@@ -12,7 +12,9 @@ This repository is a **Home Assistant custom integration** for monitoring Polish
 - Install test dependencies: `pip install -r requirements-test.txt`
 - Run tests: `pytest tests/ -v`
 
-CI runs HACS validation, hassfest, and MegaLinter (see `.github/workflows/validation.yml` and `.github/workflows/mega-linter.yml`). Dependabot (`.github/dependabot.yml`) opens PRs for pip and GitHub Actions updates. Agents may run these locally if needed; full setup is in the workflow files. To run MegaLinter locally: `npx mega-linter-runner --flavor python` (requires Node.js) or use the MegaLinter Docker image.
+CI runs HACS validation, hassfest, and MegaLinter (see `.github/workflows/validation.yml` and `.github/workflows/mega-linter.yml`). Dependabot (`.github/dependabot.yml`) opens PRs for pip and GitHub Actions updates.
+
+Agents may run these locally if needed; full setup is in the workflow files. To run MegaLinter locally: `npx mega-linter-runner --flavor python` (Node.js required) or use the MegaLinter Docker image.
 
 ## Code style and conventions
 
