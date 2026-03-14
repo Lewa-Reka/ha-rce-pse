@@ -259,6 +259,90 @@ class TestTodayPriceSensors:
                     state = sensor.native_value
                     assert state is None
 
+    def test_period_slots_multiplier_1_when_hourly_disabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = False
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        assert sensor._period_slots_multiplier() == 1
+
+    def test_period_slots_multiplier_4_when_hourly_enabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = True
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        assert sensor._period_slots_multiplier() == 4
+
+    def test_next_period_uses_future_period_with_15min_when_hourly_disabled(
+        self, mock_coordinator, coordinator_data
+    ):
+        mock_coordinator._get_config_value.return_value = False
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 10, 7, 0)
+            raw = list(coordinator_data["raw_data"])
+            raw.append({
+                "dtime": "2025-03-14 10:30:00",
+                "period": "10:15 - 10:30",
+                "rce_pln": "388.50",
+                "business_date": "2025-03-14",
+                "publication_ts": "2025-03-14T23:00:00Z",
+            })
+            mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+            value = sensor.get_price_at_future_period(1)
+            assert value == 388.5
+
+    def test_next_period_uses_hour_when_hourly_enabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = True
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        raw = [{
+            "dtime": "2025-03-14 11:15:00",
+            "period": "11:00 - 11:15",
+            "rce_pln": "450.00",
+            "business_date": "2025-03-14",
+            "publication_ts": "2025-03-14T23:00:00Z",
+        }]
+        mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 10, 0, 0)
+            value = sensor.get_price_at_future_period(1)
+            assert value == 450.0
+
+    def test_previous_period_uses_past_period_with_15min_when_hourly_disabled(
+        self, mock_coordinator, coordinator_data
+    ):
+        mock_coordinator._get_config_value.return_value = False
+        sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 10, 22, 0)
+            raw = list(coordinator_data["raw_data"])
+            raw.append({
+                "dtime": "2025-03-14 10:15:00",
+                "period": "10:00 - 10:15",
+                "rce_pln": "362.00",
+                "business_date": "2025-03-14",
+                "publication_ts": "2025-03-14T23:00:00Z",
+            })
+            mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+            value = sensor.get_price_at_past_period(1)
+            assert value == 362.0
+
+    def test_previous_period_uses_hour_when_hourly_enabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = True
+        sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
+        raw = [{
+            "dtime": "2025-03-14 11:30:00",
+            "period": "11:15 - 11:30",
+            "rce_pln": "450.00",
+            "business_date": "2025-03-14",
+            "publication_ts": "2025-03-14T23:00:00Z",
+        }]
+        mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 12, 30, 0)
+            value = sensor.get_price_at_past_period(1)
+            assert value == 450.0
+
 
 class TestSensorAttributes:
 

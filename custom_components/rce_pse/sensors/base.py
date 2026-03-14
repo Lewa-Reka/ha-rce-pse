@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.util import dt as dt_util
 
+from ..const import CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES
 from ..shared_base import RCEBaseCommonEntity
 
 if TYPE_CHECKING:
@@ -16,6 +17,12 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str) -> None:
         super().__init__(coordinator, unique_id)
+
+    def _period_slots_multiplier(self) -> int:
+        use_hourly = self.coordinator._get_config_value(
+            CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES
+        )
+        return 4 if use_hourly else 1
 
     def get_tomorrow_price_at_time(self, target_time: datetime) -> dict | None:
         tomorrow_data = self.get_tomorrow_data()
@@ -60,26 +67,25 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
 
-        target_time = dt_util.now() + timedelta(minutes=15 * periods_ahead)
+        slots = periods_ahead * self._period_slots_multiplier()
+        target_time = dt_util.now().replace(tzinfo=None) + timedelta(minutes=15 * slots)
 
         for record in self.coordinator.data["raw_data"]:
             try:
                 period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
                 period_start = period_end - timedelta(minutes=15)
-
-                if period_start <= target_time.replace(tzinfo=None) <= period_end:
+                if period_start <= target_time <= period_end:
                     return float(record["rce_pln"])
-
             except (ValueError, KeyError):
                 continue
-
         return None
 
     def get_price_at_past_period(self, periods_back: int) -> float | None:
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
 
-        target_time = dt_util.now() - timedelta(minutes=15 * periods_back)
+        slots = periods_back * self._period_slots_multiplier()
+        target_time = dt_util.now().replace(tzinfo=None) - timedelta(minutes=15 * slots)
         closest_record = None
         closest_diff = None
 
@@ -87,17 +93,15 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
             try:
                 period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
                 period_start = period_end - timedelta(minutes=15)
-
-                if period_start <= target_time.replace(tzinfo=None) <= period_end:
+                if period_start <= target_time <= period_end:
                     return float(record["rce_pln"])
-                elif period_end <= target_time.replace(tzinfo=None):
-                    diff = abs((target_time.replace(tzinfo=None) - period_end).total_seconds())
+                if period_end <= target_time:
+                    diff = abs((target_time - period_end).total_seconds())
                     if closest_diff is None or diff < closest_diff:
                         closest_diff = diff
                         closest_record = record
             except (ValueError, KeyError):
                 continue
-
         return float(closest_record["rce_pln"]) if closest_record else None
 
     def get_data_summary(self, data: list[dict]) -> dict[str, Any]:

@@ -70,8 +70,8 @@ Both cards can be easily customized to match your dashboard theme and specific n
 ## Features
 
 - **Real-time price monitoring** - Current electricity price with 15-minute precision
-- **Historical data** - Previous period (15 min) pricing information
-- **Future price forecasting** - Next period (15 min) price ahead
+- **Historical data** - Previous period pricing (length depends on configuration: 15 min or 1 h)
+- **Future price forecasting** - Next period price (15 min or 1 h, see option "Use hourly prices")
 - **Daily statistics** - Comprehensive price analysis (average, min, max, median)
 - **Tomorrow's data** - Next day pricing available after 14:00 CET
 - **Price comparison** - Today vs tomorrow percentage differences
@@ -215,8 +215,8 @@ These sensors automatically update based on your configured search parameters. T
 - **Tomorrow Price** - Tomorrow's price (available after 14:00 CET) (with all prices for the next day as attributes)
 
 ### Period Price Sensors
-- **Next Period Price** - Price for the next 15-minute period
-- **Previous Period Price** - Price from the previous 15-minute period
+- **Next Period Price** - Price for the next period (15-minute slot, or 1 hour when "Use hourly prices" is enabled)
+- **Previous Period Price** - Price from the previous period (15-minute slot, or 1 hour when "Use hourly prices" is enabled)
 
 ### Today's Statistics
 - **Today Average Price** - Average price for today

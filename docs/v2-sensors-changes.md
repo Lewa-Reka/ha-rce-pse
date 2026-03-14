@@ -106,7 +106,7 @@ Automations and scripts can keep using the same entity IDs; only the UI label ch
 
 ## Period price sensors (renamed and removed)
 
-Sensors for "next hour", "previous hour", and "price in 2/3 hours" have been replaced by period-based sensors. A period is one 15-minute PSE slot (not necessarily one hour).
+Sensors for "next hour", "previous hour", and "price in 2/3 hours" have been replaced by period-based sensors. The period length depends on the integration option **Use hourly prices** (CONF_USE_HOURLY_PRICES): when disabled (default), one period is one 15-minute PSE slot; when enabled, one period is one hour (hourly average price).
 
 ### Removed sensors
 
@@ -125,7 +125,7 @@ Update automations, scripts, and dashboards: remove references to these entity I
 | `sensor.rce_pse_previous_hour_price` | `sensor.rce_pse_previous_period_price` | Previous Hour Price  | Previous Period Price   | Cena Poprzedniej Godziny| Cena Poprzedni Okres |
 
 - **Entity ID:** Update automations, scripts, and dashboards from the old entity IDs to `sensor.rce_pse_next_period_price` and `sensor.rce_pse_previous_period_price`.
-- **Semantics:** "Next period" is the next 15-minute slot; "previous period" is the previous 15-minute slot. Values and units (PLN/MWh) are unchanged.
+- **Semantics:** "Next period" and "previous period" use a period length of **15 minutes** when the option "Use hourly prices" is off (default), and **1 hour** when it is on. Values and units (PLN/MWh) are unchanged.
 
 ## Prosumer selling price sensor (renamed, entity_id and unit changed)
 

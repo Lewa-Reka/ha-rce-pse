@@ -114,6 +114,10 @@ def mock_coordinator(mock_hass, coordinator_data):
     coordinator.last_update_success_time = dt_util.now()
     coordinator.async_add_listener = Mock()
     coordinator.async_remove_listener = Mock()
+    coordinator.config_entry = Mock()
+    coordinator.config_entry.options = {}
+    coordinator.config_entry.data = {}
+    coordinator._get_config_value = Mock(return_value=False)
     return coordinator
 
 
