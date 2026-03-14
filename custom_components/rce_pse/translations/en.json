@@ -171,6 +171,40 @@
       "rce_pse_tomorrow_min_price_hour_end_timestamp": {
         "name": "Lowest Price End Tomorrow"
       },
+      "rce_pse_today_peak_hours": {
+        "name": "Peak Hours Today",
+        "state_attributes": {
+          "recommended_usage": {
+            "name": "Recommended usage"
+          },
+          "normal_usage": {
+            "name": "Normal usage"
+          },
+          "recommended_saving": {
+            "name": "Recommended saving"
+          },
+          "required_restriction": {
+            "name": "Required restriction"
+          }
+        }
+      },
+      "rce_pse_tomorrow_peak_hours": {
+        "name": "Peak Hours Tomorrow",
+        "state_attributes": {
+          "recommended_usage": {
+            "name": "Recommended usage"
+          },
+          "normal_usage": {
+            "name": "Normal usage"
+          },
+          "recommended_saving": {
+            "name": "Recommended saving"
+          },
+          "required_restriction": {
+            "name": "Required restriction"
+          }
+        }
+      },
       "rce_pse_today_second_expensive_window_start": {
         "name": "Second Expensive Window Start Today"
       },

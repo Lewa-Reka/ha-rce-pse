@@ -32,6 +32,22 @@
 
 Wszystkie zwracają **timestamp** (datetime). Aby pokazać tylko godzinę (np. HH:MM), użyj szablonu: `as_timestamp(...) | timestamp_custom('%H:%M')`. Szczegóły: [Migracja do v2.0.0](MIGRACJA-V2.md).
 
+## Godziny Szczytu (PDGSZ)
+
+Dane z raportu PSE „Godziny Szczytu” (API PDGSZ) – kiedy zalecane jest użytkowanie energii, a kiedy oszczędzanie.
+
+- **Godziny Szczytu Dzisiaj** – wartość: liczba przedziałów godzinowych; atrybuty z listami przedziałów w formacie „HH:00–HH:00”. Nazwy tych czterech atrybutów są tłumaczone w interfejsie (PL/EN).
+- **Godziny Szczytu Jutro** – to samo dla następnego dnia (dostępne po 14:00 CET).
+
+Cztery atrybuty (listy przedziałów):
+
+- **Zalecane użytkowanie** – korzystny czas na używanie energii.
+- **Normalne użytkowanie** – użytkowanie bez szczególnych zaleceń.
+- **Zalecane oszczędzanie** – godziny szczytu, zalecane ograniczenie poboru.
+- **Wymagane ograniczanie** – sytuacja trudna, wymagane ograniczenie.
+
+Źródło: [raport PDGSZ na stronie PSE](https://raporty.pse.pl/), API `pdgsz`. Zobacz [Źródło danych](ZRODLO-DANYCH.md).
+
 ## Sensory konfigurowalnych okien czasowych
 
 Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md).

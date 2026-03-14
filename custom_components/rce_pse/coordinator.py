@@ -12,7 +12,16 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from .const import API_FIRST, API_SELECT, API_UPDATE_INTERVAL, DOMAIN, PSE_API_URL, CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES
+from .const import (
+    API_FIRST,
+    API_SELECT,
+    API_UPDATE_INTERVAL,
+    CONF_USE_HOURLY_PRICES,
+    DEFAULT_USE_HOURLY_PRICES,
+    DOMAIN,
+    PSE_API_URL,
+    PSE_PDGSZ_API_URL,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -131,14 +140,50 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                     _LOGGER.debug("Hourly prices option disabled, using original 15-minute data")
                     processed_data = self._add_neg_to_zero_key(raw_data)
                 
+                try:
+                    pdgsz_data = await self._fetch_pdgsz(session, today)
+                except Exception as pdgsz_exception:
+                    _LOGGER.warning("PDGSZ fetch failed, using empty list: %s", pdgsz_exception)
+                    pdgsz_data = []
+                
                 return {
                     "raw_data": processed_data,
+                    "pdgsz_data": pdgsz_data,
                     "last_update": dt_util.now().isoformat(),
                 }
                 
         except aiohttp.ClientError as exception:
             _LOGGER.error("HTTP client error fetching PSE data: %s", exception)
             raise UpdateFailed(f"Error fetching data: {exception}") from exception
+
+    async def _fetch_pdgsz(self, session: aiohttp.ClientSession, today: str) -> list[dict]:
+        params = {
+            "$filter": f"business_date ge '{today}'",
+            "$first": 200,
+        }
+        headers = {"Accept": "application/json"}
+        seen: dict[tuple[str, str], dict] = {}
+        url: str | None = PSE_PDGSZ_API_URL
+        while url:
+            async with session.get(url, params=params if url == PSE_PDGSZ_API_URL else None, headers=headers) as response:
+                if response.status != 200:
+                    _LOGGER.warning("PDGSZ API returned status %d", response.status)
+                    break
+                data = await response.json()
+                if "value" not in data:
+                    break
+                for record in data["value"]:
+                    if not record.get("is_active"):
+                        continue
+                    bd = record.get("business_date")
+                    dtime = record.get("dtime")
+                    if bd is not None and dtime is not None:
+                        seen[(bd, dtime)] = record
+                url = data.get("nextLink")
+                params = None
+        result = sorted(seen.values(), key=lambda r: (r.get("business_date", ""), r.get("dtime", "")))
+        _LOGGER.debug("PDGSZ fetched %d active hourly records", len(result))
+        return result
 
     def _calculate_hourly_averages(self, raw_data: list[dict]) -> list[dict]:
         if not raw_data:
