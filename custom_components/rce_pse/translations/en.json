@@ -81,20 +81,14 @@
       "rce_pse_today_price": {
         "name": "Price"
       },
-      "rce_pse_today_kwh_price": {
-        "name": "Price per kWh"
+      "rce_pse_today_prosumer_selling_price": {
+        "name": "Prosumer Selling Price"
       },
-      "rce_pse_next_hour_price": {
-        "name": "Next Hour Price"
+      "rce_pse_next_period_price": {
+        "name": "Next Period Price"
       },
-      "rce_pse_next_2_hours_price": {
-        "name": "Price in 2 Hours"
-      },
-      "rce_pse_next_3_hours_price": {
-        "name": "Price in 3 Hours"
-      },
-      "rce_pse_previous_hour_price": {
-        "name": "Previous Hour Price"
+      "rce_pse_previous_period_price": {
+        "name": "Previous Period Price"
       },
       "rce_pse_today_avg_price": {
         "name": "Today Average Price"

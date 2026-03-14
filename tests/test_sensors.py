@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from custom_components.rce_pse.sensors.today_main import RCETodayMainSensor, RCETodayKwhPriceSensor
+from custom_components.rce_pse.sensors.today_main import RCETodayMainSensor, RCETodayProsumerSellingPriceSensor
 from custom_components.rce_pse.sensors.tomorrow_main import RCETomorrowMainSensor
 from custom_components.rce_pse.sensors.today_stats import (
     RCETodayAvgPriceSensor,
@@ -15,10 +15,8 @@ from custom_components.rce_pse.sensors.today_stats import (
     RCETodayCurrentVsAverageSensor,
 )
 from custom_components.rce_pse.sensors.today_prices import (
-    RCENextHourPriceSensor,
-    RCENext2HoursPriceSensor,
-    RCENext3HoursPriceSensor,
-    RCEPreviousHourPriceSensor,
+    RCENextPeriodPriceSensor,
+    RCEPreviousPeriodPriceSensor,
 )
 class TestTodayMainSensors:
 
@@ -47,24 +45,24 @@ class TestTodayMainSensors:
             state = sensor.native_value
             assert state is None
 
-    def test_today_kwh_price_sensor_initialization(self, mock_coordinator):
-        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+    def test_today_prosumer_selling_price_sensor_initialization(self, mock_coordinator):
+        sensor = RCETodayProsumerSellingPriceSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_today_kwh_price"
-        assert sensor._attr_native_unit_of_measurement == "PLN/kWh"
+        assert sensor._attr_unique_id == "rce_pse_today_prosumer_selling_price"
+        assert sensor._attr_native_unit_of_measurement == "PLN/MWh"
         assert sensor._attr_icon == "mdi:cash"
 
-    def test_today_kwh_price_sensor_state_with_data(self, mock_coordinator):
-        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+    def test_today_prosumer_selling_price_sensor_state_with_data(self, mock_coordinator):
+        sensor = RCETodayProsumerSellingPriceSensor(mock_coordinator)
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = {"rce_pln_neg_to_zero": "350.50"}
             
             state = sensor.native_value
-            assert state == 0.431115
+            assert state == 431.12
 
-    def test_today_kwh_price_sensor_state_no_data(self, mock_coordinator):
-        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+    def test_today_prosumer_selling_price_sensor_state_no_data(self, mock_coordinator):
+        sensor = RCETodayProsumerSellingPriceSensor(mock_coordinator)
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = None
@@ -72,8 +70,8 @@ class TestTodayMainSensors:
             state = sensor.native_value
             assert state is None
 
-    def test_today_kwh_price_sensor_negative_price(self, mock_coordinator):
-        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+    def test_today_prosumer_selling_price_sensor_negative_price(self, mock_coordinator):
+        sensor = RCETodayProsumerSellingPriceSensor(mock_coordinator)
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = {"rce_pln_neg_to_zero": "0.00"}
@@ -81,8 +79,8 @@ class TestTodayMainSensors:
             state = sensor.native_value
             assert state == 0
 
-    def test_today_kwh_price_sensor_negative_to_zero_conversion(self, mock_coordinator):
-        sensor = RCETodayKwhPriceSensor(mock_coordinator)
+    def test_today_prosumer_selling_price_sensor_negative_to_zero_conversion(self, mock_coordinator):
+        sensor = RCETodayProsumerSellingPriceSensor(mock_coordinator)
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = {
@@ -209,89 +207,141 @@ class TestTodayStatsSensors:
 
 class TestTodayPriceSensors:
 
-    def test_next_hour_price_sensor(self, mock_coordinator):
-        sensor = RCENextHourPriceSensor(mock_coordinator)
-        
-        assert sensor._attr_unique_id == "rce_pse_next_hour_price"
+    def test_next_period_price_sensor(self, mock_coordinator):
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+
+        assert sensor._attr_unique_id == "rce_pse_next_period_price"
         assert sensor._attr_native_unit_of_measurement == "PLN/MWh"
 
-    def test_next_hour_price_calculation(self, mock_coordinator):
-        sensor = RCENextHourPriceSensor(mock_coordinator)
-        
-        with patch.object(sensor, "get_price_at_future_hour") as mock_future_price:
+    def test_next_period_price_calculation(self, mock_coordinator):
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+
+        with patch.object(sensor, "get_price_at_future_period") as mock_future_price:
             mock_future_price.return_value = 375.50
-            
+
             state = sensor.native_value
             assert state == 375.5
             mock_future_price.assert_called_once_with(1)
 
-    def test_price_in_2_hours_sensor(self, mock_coordinator):
-        sensor = RCENext2HoursPriceSensor(mock_coordinator)
-        
-        assert sensor._attr_unique_id == "rce_pse_next_2_hours_price"
+    def test_previous_period_price_sensor(self, mock_coordinator):
+        sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
 
-    def test_price_in_2_hours_calculation(self, mock_coordinator):
-        sensor = RCENext2HoursPriceSensor(mock_coordinator)
-        
-        with patch.object(sensor, "get_price_at_future_hour") as mock_future_price:
-            mock_future_price.return_value = 325.25
-            
-            state = sensor.native_value
-            assert state == 325.25
-            mock_future_price.assert_called_once_with(2)
-
-    def test_price_in_3_hours_sensor(self, mock_coordinator):
-        sensor = RCENext3HoursPriceSensor(mock_coordinator)
-        
-        assert sensor._attr_unique_id == "rce_pse_next_3_hours_price"
-
-    def test_price_in_3_hours_calculation(self, mock_coordinator):
-        sensor = RCENext3HoursPriceSensor(mock_coordinator)
-        
-        with patch.object(sensor, "get_price_at_future_hour") as mock_future_price:
-            mock_future_price.return_value = 410.75
-            
-            state = sensor.native_value
-            assert state == 410.75
-            mock_future_price.assert_called_once_with(3)
-
-    def test_previous_hour_price_sensor(self, mock_coordinator):
-        sensor = RCEPreviousHourPriceSensor(mock_coordinator)
-        
-        assert sensor._attr_unique_id == "rce_pse_previous_hour_price"
+        assert sensor._attr_unique_id == "rce_pse_previous_period_price"
         assert sensor._attr_native_unit_of_measurement == "PLN/MWh"
 
-    def test_previous_hour_price_calculation(self, mock_coordinator):
-        sensor = RCEPreviousHourPriceSensor(mock_coordinator)
-        
-        with patch.object(sensor, "get_price_at_past_hour") as mock_past_price:
+    def test_previous_period_price_calculation(self, mock_coordinator):
+        sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
+
+        with patch.object(sensor, "get_price_at_past_period") as mock_past_price:
             mock_past_price.return_value = 295.30
-            
+
             state = sensor.native_value
             assert state == 295.30
             mock_past_price.assert_called_once_with(1)
 
-    def test_future_price_sensors_no_data(self, mock_coordinator):
+    def test_period_price_sensors_no_data(self, mock_coordinator):
         sensors = [
-            RCENextHourPriceSensor(mock_coordinator),
-            RCENext2HoursPriceSensor(mock_coordinator),
-            RCENext3HoursPriceSensor(mock_coordinator),
-            RCEPreviousHourPriceSensor(mock_coordinator),
+            RCENextPeriodPriceSensor(mock_coordinator),
+            RCEPreviousPeriodPriceSensor(mock_coordinator),
         ]
-        
+
         for sensor in sensors:
-            if isinstance(sensor, RCEPreviousHourPriceSensor):
-                with patch.object(sensor, "get_price_at_past_hour") as mock_past_price:
+            if isinstance(sensor, RCEPreviousPeriodPriceSensor):
+                with patch.object(sensor, "get_price_at_past_period") as mock_past_price:
                     mock_past_price.return_value = None
-                    
+
                     state = sensor.native_value
                     assert state is None
             else:
-                with patch.object(sensor, "get_price_at_future_hour") as mock_future_price:
+                with patch.object(sensor, "get_price_at_future_period") as mock_future_price:
                     mock_future_price.return_value = None
-                    
+
                     state = sensor.native_value
                     assert state is None
+
+    def test_period_slots_multiplier_1_when_hourly_disabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = False
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        assert sensor._period_slots_multiplier() == 1
+
+    def test_period_slots_multiplier_4_when_hourly_enabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = True
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        assert sensor._period_slots_multiplier() == 4
+
+    def test_next_period_uses_future_period_with_15min_when_hourly_disabled(
+        self, mock_coordinator, coordinator_data
+    ):
+        mock_coordinator._get_config_value.return_value = False
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 10, 7, 0)
+            raw = list(coordinator_data["raw_data"])
+            raw.append({
+                "dtime": "2025-03-14 10:30:00",
+                "period": "10:15 - 10:30",
+                "rce_pln": "388.50",
+                "business_date": "2025-03-14",
+                "publication_ts": "2025-03-14T23:00:00Z",
+            })
+            mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+            value = sensor.get_price_at_future_period(1)
+            assert value == 388.5
+
+    def test_next_period_uses_hour_when_hourly_enabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = True
+        sensor = RCENextPeriodPriceSensor(mock_coordinator)
+        raw = [{
+            "dtime": "2025-03-14 11:15:00",
+            "period": "11:00 - 11:15",
+            "rce_pln": "450.00",
+            "business_date": "2025-03-14",
+            "publication_ts": "2025-03-14T23:00:00Z",
+        }]
+        mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 10, 0, 0)
+            value = sensor.get_price_at_future_period(1)
+            assert value == 450.0
+
+    def test_previous_period_uses_past_period_with_15min_when_hourly_disabled(
+        self, mock_coordinator, coordinator_data
+    ):
+        mock_coordinator._get_config_value.return_value = False
+        sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 10, 22, 0)
+            raw = list(coordinator_data["raw_data"])
+            raw.append({
+                "dtime": "2025-03-14 10:15:00",
+                "period": "10:00 - 10:15",
+                "rce_pln": "362.00",
+                "business_date": "2025-03-14",
+                "publication_ts": "2025-03-14T23:00:00Z",
+            })
+            mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+            value = sensor.get_price_at_past_period(1)
+            assert value == 362.0
+
+    def test_previous_period_uses_hour_when_hourly_enabled(self, mock_coordinator):
+        mock_coordinator._get_config_value.return_value = True
+        sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
+        raw = [{
+            "dtime": "2025-03-14 11:30:00",
+            "period": "11:15 - 11:30",
+            "rce_pln": "450.00",
+            "business_date": "2025-03-14",
+            "publication_ts": "2025-03-14T23:00:00Z",
+        }]
+        mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+        with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
+            from datetime import datetime
+            mock_now.return_value = datetime(2025, 3, 14, 12, 30, 0)
+            value = sensor.get_price_at_past_period(1)
+            assert value == 450.0
 
 
 class TestSensorAttributes:
@@ -321,7 +371,7 @@ class TestSensorAttributes:
         sensors = [
             RCETodayMainSensor(mock_coordinator),
             RCETodayAvgPriceSensor(mock_coordinator),
-            RCENextHourPriceSensor(mock_coordinator),
+            RCENextPeriodPriceSensor(mock_coordinator),
         ]
         
         device_infos = [sensor.device_info for sensor in sensors]
