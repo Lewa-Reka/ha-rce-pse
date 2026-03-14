@@ -1,10 +1,6 @@
 {
   "pythonVersion": "3.13",
-  "reportIncompatibleVariableOverride": "none",
-  "reportIncompatibleMethodOverride": "none",
-  "reportOptionalMemberAccess": "warning",
-  "reportArgumentType": "error",
-  "reportReturnType": "warning",
-  "reportGeneralTypeIssues": "error",
-  "reportTypedDictNotRequiredAccess": "warning"
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "none",
+  "reportReturnType": "warning"
 }

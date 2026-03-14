@@ -52,7 +52,7 @@ CI runs:
 
 - **HACS:** `hacs/action` with category `integration`.
 - **Hassfest:** `home-assistant/actions/hassfest@master`.
-- **MegaLinter:** `oxsecurity/megalinter/flavors/python@v8` (Python, JSON, YAML, Markdown, GitHub Actions); config in `.mega-linter.yml`. For Python: Ruff (lint + format), Bandit (security), Mypy (type checking).
+- **MegaLinter:** `oxsecurity/megalinter/flavors/python@v8` (Python, JSON, YAML, Markdown, GitHub Actions); config in `.mega-linter.yml`. For Python: Ruff (lint + format), Bandit (security), Pyright (type checking).
 - **Dependabot:** weekly PRs for pip and GitHub Actions (`.github/dependabot.yml`).
 
 See `.github/workflows/validation.yml` and `.github/workflows/mega-linter.yml` for the exact steps.
