@@ -7,7 +7,14 @@ DOMAIN: Final[str] = "rce_pse"
 SENSOR_PREFIX: Final[str] = "RCE PSE"
 MANUFACTURER: Final[str] = "Lewa-Reka"
 PSE_API_URL: Final[str] = "https://api.raporty.pse.pl/api/rce-pln"
+PSE_PDGSZ_API_URL: Final[str] = "https://api.raporty.pse.pl/api/pdgsz"
 API_UPDATE_INTERVAL: Final[timedelta] = timedelta(minutes=30)
+PDGSZ_USAGE_FCST_TO_ATTR: Final[dict[int, str]] = {
+    0: "recommended_usage",
+    1: "normal_usage",
+    2: "recommended_saving",
+    3: "required_restriction",
+}
 API_SELECT: Final[str] = "dtime,period,rce_pln,business_date,publication_ts"
 API_FIRST: Final[int] = 200
 

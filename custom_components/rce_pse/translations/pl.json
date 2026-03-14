@@ -171,6 +171,24 @@
       "rce_pse_tomorrow_min_price_hour_end_timestamp": {
         "name": "Koniec Najniższej Ceny Jutro"
       },
+      "rce_pse_today_peak_hours": {
+        "name": "Godziny Szczytu Dzisiaj",
+        "state_attributes": {
+          "recommended_usage": { "name": "Zalecane użytkowanie" },
+          "normal_usage": { "name": "Normalne użytkowanie" },
+          "recommended_saving": { "name": "Zalecane oszczędzanie" },
+          "required_restriction": { "name": "Wymagane ograniczanie" }
+        }
+      },
+      "rce_pse_tomorrow_peak_hours": {
+        "name": "Godziny Szczytu Jutro",
+        "state_attributes": {
+          "recommended_usage": { "name": "Zalecane użytkowanie" },
+          "normal_usage": { "name": "Normalne użytkowanie" },
+          "recommended_saving": { "name": "Zalecane oszczędzanie" },
+          "required_restriction": { "name": "Wymagane ograniczanie" }
+        }
+      },
       "rce_pse_today_second_expensive_window_start": {
         "name": "Początek Drugiego Najdroższego Okna Dzisiaj"
       },

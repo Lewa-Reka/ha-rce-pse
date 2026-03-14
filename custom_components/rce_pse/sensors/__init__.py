@@ -31,6 +31,7 @@ from .tomorrow_hours import (
     RCETomorrowMinPriceHourStartTimestampSensor,
     RCETomorrowMinPriceHourEndTimestampSensor,
 )
+from .peak_hours import RCETodayPeakHoursSensor, RCETomorrowPeakHoursSensor
 
 __all__ = [
     "RCEBaseSensor",
@@ -57,4 +58,6 @@ __all__ = [
     "RCETomorrowMinPriceHourEndTimestampSensor",
     "RCETomorrowMedianPriceSensor",
     "RCETomorrowTodayAvgComparisonSensor",
+    "RCETodayPeakHoursSensor",
+    "RCETomorrowPeakHoursSensor",
 ] 
