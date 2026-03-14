@@ -158,7 +158,7 @@ This option defines the price threshold (in PLN/MWh) used to detect "low price" 
 
 - **Low sell price threshold** (PLN/MWh): Range -2000 to 2000 (negative values allowed, e.g. for negative market prices)
   - *Default*: 0
-  - *Use case*: Sensors "Below threshold start/end (today/tomorrow)" show the first continuous period with price ≤ threshold; binary sensor "Below threshold now" is `on` when current time is inside that period today. If there is no such period in a day, the sensors report state "unknown" (integration remains available).
+  - *Use case*: Sensors "Below-Threshold Window Start/End Today/Tomorrow" show the first continuous period with price ≤ threshold; binary sensor "Price Below-Threshold" is `on` when current time is inside that period today. If there is no such period in a day, the sensors report state "unknown" (integration remains available).
 
 ### Reconfiguring Settings
 
@@ -196,14 +196,14 @@ The integration will automatically reload with your new settings.
 When you configure custom time windows, the integration provides additional sensors:
 
 **For Today:**
-- Cheapest Window Start/End/Range/Average Price
-- Most Expensive Window Start/End/Range/Average Price
-- Second Expensive Window Start/End/Range/Average Price
+- Cheapest Window Start/End, Cheapest Window Avg Today
+- Expensive Window Start/End, Expensive Window Avg Today
+- Second Expensive Window Start/End, Second Expensive Window Avg Today
 
 **For Tomorrow:**
-- Cheapest Window Start/End/Range/Average Price
-- Most Expensive Window Start/End/Range/Average Price
-- Second Expensive Window Start/End/Range/Average Price
+- Cheapest Window Start/End, Cheapest Window Avg Tomorrow
+- Expensive Window Start/End, Expensive Window Avg Tomorrow
+- Second Expensive Window Start/End, Second Expensive Window Avg Tomorrow
 
 These sensors automatically update based on your configured search parameters. Time window start/end sensors return timestamps; use template filters (e.g. `timestamp_custom('%H:%M')`) if you need a time-only display.
 
@@ -234,40 +234,40 @@ These sensors automatically update based on your configured search parameters. T
 - **Tomorrow Median Price** - Median price for tomorrow
 - **Tomorrow vs Today Average** - Percentage difference between tomorrow and today average
 
-### Price Hours (timestamps)
-- **Today Max Price Hour Start/End** - When the highest price period starts/ends today (timestamp)
-- **Today Min Price Hour Start/End** - When the lowest price period starts/ends today (timestamp)
-- **Tomorrow Max Price Hour Start/End** - When the highest price period starts/ends tomorrow (timestamp)
-- **Tomorrow Min Price Hour Start/End** - When the lowest price period starts/ends tomorrow (timestamp)
+### Price Hours (timestamps, PSE-derived)
+- **Highest Price Start/End Today** - When the highest price period starts/ends today (timestamp)
+- **Lowest Price Start/End Today** - When the lowest price period starts/ends today (timestamp)
+- **Highest Price Start/End Tomorrow** - When the highest price period starts/ends tomorrow (timestamp)
+- **Lowest Price Start/End Tomorrow** - When the lowest price period starts/ends tomorrow (timestamp)
 
 ### Custom Time Window Sensors
 
 Based on your configuration settings, the integration provides additional sensors for optimal time windows:
 
 #### Today's Custom Windows
-- **Today Cheapest Window Start/End** - Start and end of cheapest configured window (timestamp)
-- **Today Cheapest Window Average Price** - Average price within the cheapest window (PLN/MWh)
-- **Today Expensive Window Start/End** - Start and end of most expensive configured window (timestamp)
-- **Today Expensive Window Average Price** - Average price within the most expensive window (PLN/MWh)
-- **Today Second Expensive Window Start/End** - Start and end of second expensive configured window (timestamp)
-- **Today Second Expensive Window Average Price** - Average price within the second expensive window (PLN/MWh)
+- **Cheapest Window Start/End Today** - Start and end of cheapest configured window (timestamp)
+- **Cheapest Window Avg Today** - Average price within the cheapest window (PLN/MWh)
+- **Expensive Window Start/End Today** - Start and end of most expensive configured window (timestamp)
+- **Expensive Window Avg Today** - Average price within the most expensive window (PLN/MWh)
+- **Second Expensive Window Start/End Today** - Start and end of second expensive configured window (timestamp)
+- **Second Expensive Window Avg Today** - Average price within the second expensive window (PLN/MWh)
 
 #### Tomorrow's Custom Windows (available after 14:00 CET)
-- **Tomorrow Cheapest Window Start/End** - Start and end of cheapest configured window (timestamp)
-- **Tomorrow Cheapest Window Average Price** - Average price within the cheapest window (PLN/MWh)
-- **Tomorrow Expensive Window Start/End** - Start and end of most expensive configured window (timestamp)
-- **Tomorrow Expensive Window Average Price** - Average price within the most expensive window (PLN/MWh)
-- **Tomorrow Second Expensive Window Start/End** - Start and end of second expensive configured window (timestamp)
-- **Tomorrow Second Expensive Window Average Price** - Average price within the second expensive window (PLN/MWh)
+- **Cheapest Window Start/End Tomorrow** - Start and end of cheapest configured window (timestamp)
+- **Cheapest Window Avg Tomorrow** - Average price within the cheapest window (PLN/MWh)
+- **Expensive Window Start/End Tomorrow** - Start and end of most expensive configured window (timestamp)
+- **Expensive Window Avg Tomorrow** - Average price within the most expensive window (PLN/MWh)
+- **Second Expensive Window Start/End Tomorrow** - Start and end of second expensive configured window (timestamp)
+- **Second Expensive Window Avg Tomorrow** - Average price within the second expensive window (PLN/MWh)
 
 #### Low Price Threshold Windows
 
 Based on the configured low sell price threshold, the integration provides timestamp sensors for the first continuous period each day where the price is at or below the threshold:
 
-- **Price Below Threshold Start Today** – Start of the first period today with price at or below the threshold
-- **Price Below Threshold End Today** – End of that period today
-- **Price Below Threshold Start Tomorrow** – Start of the first such period tomorrow (available after 14:00 CET)
-- **Price Below Threshold End Tomorrow** – End of that period tomorrow
+- **Below-Threshold Window Start Today** – Start of the first period today with price at or below the threshold
+- **Below-Threshold Window End Today** – End of that period today
+- **Below-Threshold Window Start Tomorrow** – Start of the first such period tomorrow (available after 14:00 CET)
+- **Below-Threshold Window End Tomorrow** – End of that period tomorrow
 
 When there is no such period in a given day, these sensors show state "unknown" while the integration remains available.
 
@@ -277,21 +277,21 @@ Time window sensors return timestamps. To display only the time (e.g. HH:MM) in 
 
 The integration provides binary sensors that indicate when you are currently within specific price windows. These sensors are perfect for automation triggers and dashboard indicators.
 
-### Today's Price Window Binary Sensors
+### Today's Price Window Binary Sensors (PSE-derived)
 
-These sensors indicate whether you are currently within the most expensive or cheapest price periods for today:
+These sensors indicate whether you are currently within the highest or lowest price periods for today:
 
-- **Today Min Price Window Active** - `true` when currently within the lowest price period of the day
-- **Today Max Price Window Active** - `true` when currently within the highest price period of the day
+- **Lowest Price** - `true` when currently within the lowest price period of the day
+- **Highest Price** - `true` when currently within the highest price period of the day
 
 ### Custom Window Binary Sensors
 
 Based on your configuration settings, these sensors indicate whether you are currently within your configured optimal time windows:
 
-- **Today Cheapest Window Active** - `true` when currently within your configured cheapest time window
-- **Today Expensive Window Active** - `true` when currently within your configured most expensive time window
-- **Today Second Expensive Window Active** - `true` when currently within your configured second expensive time window
-- **Price Below Threshold** – `true` when current time is within the first period today where price is at or below the configured low sell price threshold
+- **Cheapest Window** - `true` when currently within your configured cheapest time window
+- **Expensive Window** - `true` when currently within your configured most expensive time window
+- **Second Expensive Window** - `true` when currently within your configured second expensive time window
+- **Price Below-Threshold** – `true` when current time is within the first period today where price is at or below the configured low sell price threshold
 
 ## Debugging
 

@@ -130,114 +130,114 @@
         "name": "Tomorrow vs Today Average"
       },
       "rce_pse_today_cheapest_window_start_timestamp": {
-        "name": "Today Custom Cheapest Window Start"
+        "name": "Cheapest Window Start Today"
       },
       "rce_pse_today_cheapest_window_end_timestamp": {
-        "name": "Today Custom Cheapest Window End"
+        "name": "Cheapest Window End Today"
       },
       "rce_pse_today_expensive_window_start_timestamp": {
-        "name": "Today Custom Most Expensive Window Start"
+        "name": "Expensive Window Start Today"
       },
       "rce_pse_today_expensive_window_end_timestamp": {
-        "name": "Today Custom Most Expensive Window End"
+        "name": "Expensive Window End Today"
       },
       "rce_pse_tomorrow_cheapest_window_start_timestamp": {
-        "name": "Tomorrow Custom Cheapest Window Start"
+        "name": "Cheapest Window Start Tomorrow"
       },
       "rce_pse_tomorrow_cheapest_window_end_timestamp": {
-        "name": "Tomorrow Custom Cheapest Window End"
+        "name": "Cheapest Window End Tomorrow"
       },
       "rce_pse_tomorrow_expensive_window_start_timestamp": {
-        "name": "Tomorrow Custom Most Expensive Window Start"
+        "name": "Expensive Window Start Tomorrow"
       },
       "rce_pse_tomorrow_expensive_window_end_timestamp": {
-        "name": "Tomorrow Custom Most Expensive Window End"
+        "name": "Expensive Window End Tomorrow"
       },
       "rce_pse_today_max_price_hour_start_timestamp": {
-        "name": "Today Max Price Hour Start"
+        "name": "Highest Price Start Today"
       },
       "rce_pse_today_max_price_hour_end_timestamp": {
-        "name": "Today Max Price Hour End"
+        "name": "Highest Price End Today"
       },
       "rce_pse_today_min_price_hour_start_timestamp": {
-        "name": "Today Min Price Hour Start"
+        "name": "Lowest Price Start Today"
       },
       "rce_pse_today_min_price_hour_end_timestamp": {
-        "name": "Today Min Price Hour End"
+        "name": "Lowest Price End Today"
       },
       "rce_pse_tomorrow_max_price_hour_start_timestamp": {
-        "name": "Tomorrow Max Price Hour Start"
+        "name": "Highest Price Start Tomorrow"
       },
       "rce_pse_tomorrow_max_price_hour_end_timestamp": {
-        "name": "Tomorrow Max Price Hour End"
+        "name": "Highest Price End Tomorrow"
       },
       "rce_pse_tomorrow_min_price_hour_start_timestamp": {
-        "name": "Tomorrow Min Price Hour Start"
+        "name": "Lowest Price Start Tomorrow"
       },
       "rce_pse_tomorrow_min_price_hour_end_timestamp": {
-        "name": "Tomorrow Min Price Hour End"
+        "name": "Lowest Price End Tomorrow"
       },
       "rce_pse_today_second_expensive_window_start": {
-        "name": "Today Second Expensive Window Start"
+        "name": "Second Expensive Window Start Today"
       },
       "rce_pse_today_second_expensive_window_end": {
-        "name": "Today Second Expensive Window End"
+        "name": "Second Expensive Window End Today"
       },
       "rce_pse_tomorrow_second_expensive_window_start": {
-        "name": "Tomorrow Second Expensive Window Start"
+        "name": "Second Expensive Window Start Tomorrow"
       },
       "rce_pse_tomorrow_second_expensive_window_end": {
-        "name": "Tomorrow Second Expensive Window End"
+        "name": "Second Expensive Window End Tomorrow"
       },
       "rce_pse_today_cheapest_window_avg_price": {
-        "name": "Today Cheapest Window Average Price"
+        "name": "Cheapest Window Avg Today"
       },
       "rce_pse_today_expensive_window_avg_price": {
-        "name": "Today Most Expensive Window Average Price"
+        "name": "Expensive Window Avg Today"
       },
       "rce_pse_today_second_expensive_window_avg_price": {
-        "name": "Today Second Expensive Window Average Price"
+        "name": "Second Expensive Window Avg Today"
       },
       "rce_pse_tomorrow_cheapest_window_avg_price": {
-        "name": "Tomorrow Cheapest Window Average Price"
+        "name": "Cheapest Window Avg Tomorrow"
       },
       "rce_pse_tomorrow_expensive_window_avg_price": {
-        "name": "Tomorrow Most Expensive Window Average Price"
+        "name": "Expensive Window Avg Tomorrow"
       },
       "rce_pse_tomorrow_second_expensive_window_avg_price": {
-        "name": "Tomorrow Second Expensive Window Average Price"
+        "name": "Second Expensive Window Avg Tomorrow"
       },
       "rce_pse_today_low_price_threshold_window_start": {
-        "name": "Price Below Threshold Start Today"
+        "name": "Below-Threshold Window Start Today"
       },
       "rce_pse_today_low_price_threshold_window_end": {
-        "name": "Price Below Threshold End Today"
+        "name": "Below-Threshold Window End Today"
       },
       "rce_pse_tomorrow_low_price_threshold_window_start": {
-        "name": "Price Below Threshold Start Tomorrow"
+        "name": "Below-Threshold Window Start Tomorrow"
       },
       "rce_pse_tomorrow_low_price_threshold_window_end": {
-        "name": "Price Below Threshold End Tomorrow"
+        "name": "Below-Threshold Window End Tomorrow"
       }
     },
     "binary_sensor": {
       "rce_pse_today_min_price_window_active": {
-        "name": "Today Cheapest Window Active"
+        "name": "Lowest Price"
       },
       "rce_pse_today_max_price_window_active": {
-        "name": "Today Most Expensive Window Active"
+        "name": "Highest Price"
       },
       "rce_pse_today_cheapest_window_active": {
-        "name": "Today Custom Cheapest Window Active"
+        "name": "Cheapest Window"
       },
       "rce_pse_today_expensive_window_active": {
-        "name": "Today Custom Most Expensive Window Active"
+        "name": "Expensive Window"
       },
       "rce_pse_today_second_expensive_window_active": {
-        "name": "Today Second Expensive Window Active"
+        "name": "Second Expensive Window"
       },
       "rce_pse_today_low_price_threshold_window_active": {
-        "name": "Price Below Threshold"
+        "name": "Price Below-Threshold"
       }
     }
   }
