@@ -20,6 +20,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         assert coordinator.hass == mock_hass
         assert coordinator.name == "rce_pse"
+        assert coordinator.update_interval is not None
         assert coordinator.update_interval.total_seconds() == 1800
         assert coordinator.session is None
 
@@ -210,7 +211,7 @@ class TestRCEPSEDataUpdateCoordinator:
     @pytest.mark.asyncio
     async def test_timeout_error_without_existing_data(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
-        coordinator.data = None
+        object.__setattr__(coordinator, "data", None)
         
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             mock_fetch.side_effect = asyncio.TimeoutError("API timeout")
@@ -240,7 +241,7 @@ class TestRCEPSEDataUpdateCoordinator:
     @pytest.mark.asyncio
     async def test_http_error_without_existing_data(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
-        coordinator.data = None
+        object.__setattr__(coordinator, "data", None)
         
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             mock_fetch.side_effect = Exception("HTTP error")

@@ -219,7 +219,7 @@ class TestPriceCalculator:
             {"dtime": "2024-01-01 12:00:00", "rce_pln": "85.0"},
         ]
         
-        optimal_window_float = PriceCalculator.find_optimal_window(data, 10, 16, 2.0, is_max=False)
+        optimal_window_float = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
         optimal_window_int = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
         
         assert optimal_window_float == optimal_window_int

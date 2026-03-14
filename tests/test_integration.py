@@ -85,7 +85,7 @@ class TestRCEPSEConfigFlow:
                 
                 result = await flow.async_step_user(user_input={})
                 
-                assert result["type"] == "create_entry"
+                assert result.get("type") == "create_entry"
                 mock_create_entry.assert_called_once_with(title="RCE PSE", data={})
 
     @pytest.mark.asyncio
@@ -107,7 +107,7 @@ class TestRCEPSEConfigFlow:
                 user_input = {"use_hourly_prices": True}
                 result = await flow.async_step_user(user_input=user_input)
                 
-                assert result["type"] == "create_entry"
+                assert result.get("type") == "create_entry"
                 mock_create_entry.assert_called_once_with(title="RCE PSE", data=user_input)
 
     @pytest.mark.asyncio
@@ -138,7 +138,7 @@ class TestRCEPSEConfigFlow:
                             "low_price_threshold": 50.0,
                         }
                         result = await flow.async_step_user(user_input=user_input)
-                        assert result["type"] == "create_entry"
+                        assert result.get("type") == "create_entry"
                         mock_create_entry.assert_called_once()
                         call_data = mock_create_entry.call_args[1]["data"]
                         assert call_data.get("low_price_threshold") == 50.0
@@ -151,8 +151,8 @@ class TestRCEPSEConfigFlow:
         with patch.object(flow, "_async_current_entries", return_value=[]):
             result = await flow.async_step_user(user_input=None)
             
-            assert result["type"] == "form"
-            assert result["step_id"] == "user"
+            assert result.get("type") == "form"
+            assert result.get("step_id") == "user"
 
     @pytest.mark.asyncio
     async def test_config_flow_already_configured(self, mock_hass):
@@ -167,8 +167,8 @@ class TestRCEPSEConfigFlow:
             
             result = await flow.async_step_user(user_input=None)
             
-            assert result["type"] == "abort"
-            assert result["reason"] == "single_instance_allowed"
+            assert result.get("type") == "abort"
+            assert result.get("reason") == "single_instance_allowed"
 
 
 class TestConstants:

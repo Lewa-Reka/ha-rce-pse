@@ -19,7 +19,7 @@ class RCEBaseBinarySensor(RCEBaseCommonEntity, BinarySensorEntity):
     def __init__(self, coordinator, unique_id):
         super().__init__(coordinator, unique_id)
 
-    def is_current_time_in_window(self, start_time_str: str, end_time_str: str, target_date: str = None) -> bool:
+    def is_current_time_in_window(self, start_time_str: str, end_time_str: str, target_date: str | None = None) -> bool:
         if not start_time_str or not end_time_str:
             return False
         try:

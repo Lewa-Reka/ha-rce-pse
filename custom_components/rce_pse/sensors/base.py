@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.util import dt as dt_util
@@ -101,7 +101,7 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
         
         return float(closest_record["rce_pln"]) if closest_record else None
 
-    def get_data_summary(self, data: list[dict]) -> dict[str, any]:
+    def get_data_summary(self, data: list[dict]) -> dict[str, Any]:
         if not data:
             return {}
         
