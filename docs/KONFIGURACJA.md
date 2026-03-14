@@ -60,7 +60,7 @@ Opcja przydatna przy rozliczeniach net-billing (prosumenci, liczniki z rozliczen
 
 ### Próg niskiej ceny sprzedaży
 
-Próg (PLN/MWh) używany do wyznaczania "okna niskiej ceny" w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu jest pokazywany przez sensory "Początek/Koniec okna poniżej progu dzisiaj/jutro"; binary sensor "Cena poniżej progu" ma stan `on`, gdy aktualny czas jest w tym okresie (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan "unknown" (integracja działa normalnie).
+Próg (PLN/MWh) używany do wyznaczania "okna niskiej ceny" w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory "Początek/Koniec okna poniżej progu dzisiaj/jutro"; binary sensor "Cena poniżej progu" ma stan `on`, gdy aktualny czas jest w tym okresie (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan "unknown" (integracja działa normalnie).
 
 - **Próg niskiej ceny sprzedaży** (PLN/MWh): zakres -2000–2000 (dopuszczalne wartości ujemne)  
   - *Domyślnie:* 0
