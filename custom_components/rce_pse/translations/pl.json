@@ -130,52 +130,52 @@
         "name": "Jutro vs Dzisiaj Średnia"
       },
       "rce_pse_today_cheapest_window_start_timestamp": {
-        "name": "Początek Konfigurowalnego Najtańszego Okna Dzisiaj"
+        "name": "Początek Najtańszego Okna Dzisiaj"
       },
       "rce_pse_today_cheapest_window_end_timestamp": {
-        "name": "Koniec Konfigurowalnego Najtańszego Okna Dzisiaj"
+        "name": "Koniec Najtańszego Okna Dzisiaj"
       },
       "rce_pse_today_expensive_window_start_timestamp": {
-        "name": "Początek Konfigurowalnego Najdroższego Okna Dzisiaj"
+        "name": "Początek Najdroższego Okna Dzisiaj"
       },
       "rce_pse_today_expensive_window_end_timestamp": {
-        "name": "Koniec Konfigurowalnego Najdroższego Okna Dzisiaj"
+        "name": "Koniec Najdroższego Okna Dzisiaj"
       },
       "rce_pse_tomorrow_cheapest_window_start_timestamp": {
-        "name": "Początek Konfigurowalnego Najtańszego Okna Jutro"
+        "name": "Początek Najtańszego Okna Jutro"
       },
       "rce_pse_tomorrow_cheapest_window_end_timestamp": {
-        "name": "Koniec Konfigurowalnego Najtańszego Okna Jutro"
+        "name": "Koniec Najtańszego Okna Jutro"
       },
       "rce_pse_tomorrow_expensive_window_start_timestamp": {
-        "name": "Początek Konfigurowalnego Najdroższego Okna Jutro"
+        "name": "Początek Najdroższego Okna Jutro"
       },
       "rce_pse_tomorrow_expensive_window_end_timestamp": {
-        "name": "Koniec Konfigurowalnego Najdroższego Okna Jutro"
+        "name": "Koniec Najdroższego Okna Jutro"
       },
       "rce_pse_today_max_price_hour_start_timestamp": {
-        "name": "Początek Godziny Maks. Ceny Dzisiaj"
+        "name": "Początek Najwyższej Ceny Dzisiaj"
       },
       "rce_pse_today_max_price_hour_end_timestamp": {
-        "name": "Koniec Godziny Maks. Ceny Dzisiaj"
+        "name": "Koniec Najwyższej Ceny Dzisiaj"
       },
       "rce_pse_today_min_price_hour_start_timestamp": {
-        "name": "Początek Godziny Min. Ceny Dzisiaj"
+        "name": "Początek Najniższej Ceny Dzisiaj"
       },
       "rce_pse_today_min_price_hour_end_timestamp": {
-        "name": "Koniec Godziny Min. Ceny Dzisiaj"
+        "name": "Koniec Najniższej Ceny Dzisiaj"
       },
       "rce_pse_tomorrow_max_price_hour_start_timestamp": {
-        "name": "Początek Godziny Maks. Ceny Jutro"
+        "name": "Początek Najwyższej Ceny Jutro"
       },
       "rce_pse_tomorrow_max_price_hour_end_timestamp": {
-        "name": "Koniec Godziny Maks. Ceny Jutro"
+        "name": "Koniec Najwyższej Ceny Jutro"
       },
       "rce_pse_tomorrow_min_price_hour_start_timestamp": {
-        "name": "Początek Godziny Min. Ceny Jutro"
+        "name": "Początek Najniższej Ceny Jutro"
       },
       "rce_pse_tomorrow_min_price_hour_end_timestamp": {
-        "name": "Koniec Godziny Min. Ceny Jutro"
+        "name": "Koniec Najniższej Ceny Jutro"
       },
       "rce_pse_today_second_expensive_window_start": {
         "name": "Początek Drugiego Najdroższego Okna Dzisiaj"
@@ -190,51 +190,51 @@
         "name": "Koniec Drugiego Najdroższego Okna Jutro"
       },
       "rce_pse_today_cheapest_window_avg_price": {
-        "name": "Średnia cena najtańszego okna dzisiaj"
+        "name": "Średnia Najtańszego Okna Dzisiaj"
       },
       "rce_pse_today_expensive_window_avg_price": {
-        "name": "Średnia cena najdroższego okna dzisiaj"
+        "name": "Średnia Najdroższego Okna Dzisiaj"
       },
       "rce_pse_today_second_expensive_window_avg_price": {
-        "name": "Średnia cena drugiego najdroższego okna dzisiaj"
+        "name": "Średnia Drugiego Najdroższego Okna Dzisiaj"
       },
       "rce_pse_tomorrow_cheapest_window_avg_price": {
-        "name": "Średnia cena najtańszego okna jutro"
+        "name": "Średnia Najtańszego Okna Jutro"
       },
       "rce_pse_tomorrow_expensive_window_avg_price": {
-        "name": "Średnia cena najdroższego okna jutro"
+        "name": "Średnia Najdroższego Okna Jutro"
       },
       "rce_pse_tomorrow_second_expensive_window_avg_price": {
-        "name": "Średnia cena drugiego najdroższego okna jutro"
+        "name": "Średnia Drugiego Najdroższego Okna Jutro"
       },
       "rce_pse_today_low_price_threshold_window_start": {
-        "name": "Cena Poniżej Progu Początek Dzisiaj"
+        "name": "Początek Okna Poniżej Progu Dzisiaj"
       },
       "rce_pse_today_low_price_threshold_window_end": {
-        "name": "Cena Poniżej Progu Koniec Dzisiaj"
+        "name": "Koniec Okna Poniżej Progu Dzisiaj"
       },
       "rce_pse_tomorrow_low_price_threshold_window_start": {
-        "name": "Cena Poniżej Progu Początek Jutro"
+        "name": "Początek Okna Poniżej Progu Jutro"
       },
       "rce_pse_tomorrow_low_price_threshold_window_end": {
-        "name": "Cena Poniżej Progu Koniec Jutro"
+        "name": "Koniec Okna Poniżej Progu Jutro"
       }
     },
     "binary_sensor": {
       "rce_pse_today_min_price_window_active": {
-        "name": "Aktywne Najtańsze Okno Dzisiaj"
+        "name": "Najniższa Cena"
       },
       "rce_pse_today_max_price_window_active": {
-        "name": "Aktywne Najdroższe Okno Dzisiaj"
+        "name": "Najwyższa Cena"
       },
       "rce_pse_today_cheapest_window_active": {
-        "name": "Aktywne Konfigurowalne Najtańsze Okno Dzisiaj"
+        "name": "Najtańsze Okno"
       },
       "rce_pse_today_expensive_window_active": {
-        "name": "Aktywne Konfigurowalne Najdroższe Okno Dzisiaj"
+        "name": "Najdroższe Okno"
       },
       "rce_pse_today_second_expensive_window_active": {
-        "name": "Aktywne Drugie Najdroższe Okno Dzisiaj"
+        "name": "Drugie Najdroższe Okno"
       },
       "rce_pse_today_low_price_threshold_window_active": {
         "name": "Cena Poniżej Progu"

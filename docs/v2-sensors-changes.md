@@ -59,6 +59,49 @@ From this version onward, time-related sensors return only **timestamps** (datet
 | `sensor.rce_pse_tomorrow_expensive_window_start` | Tomorrow Custom Most Expensive Window Start | Początek Konfigurowalnego Najdroższego Okna Jutro   |
 | `sensor.rce_pse_tomorrow_expensive_window_end`   | Tomorrow Custom Most Expensive Window End   | Koniec Konfigurowalnego Najdroższego Okna Jutro     |
 
+## Renamed sensor display names
+
+From this version, display names of some sensors and binary sensors have been changed (entity IDs are unchanged). PSE-derived periods use "Lowest/Highest Price" (e.g. Początek Najniższej Ceny); user-configured windows use "Cheapest/Expensive Window" (e.g. Początek Najtańszego Okna). For today, names end with "Dzisiaj"/"Today"; for tomorrow, "Jutro"/"Tomorrow". Automations and scripts can keep using the same entity IDs; only the UI label changes.
+
+| entity_id | EN (old) | EN (new) | PL (old) | PL (new) |
+|-----------|----------|----------|----------|----------|
+| `sensor.rce_pse_today_min_price_hour_start_timestamp` | Today Min Price Hour Start | Lowest Price Start Today | Początek Godziny Min. Ceny Dzisiaj | Początek Najniższej Ceny Dzisiaj |
+| `sensor.rce_pse_today_min_price_hour_end_timestamp` | Today Min Price Hour End | Lowest Price End Today | Koniec Godziny Min. Ceny Dzisiaj | Koniec Najniższej Ceny Dzisiaj |
+| `sensor.rce_pse_today_max_price_hour_start_timestamp` | Today Max Price Hour Start | Highest Price Start Today | Początek Godziny Maks. Ceny Dzisiaj | Początek Najwyższej Ceny Dzisiaj |
+| `sensor.rce_pse_today_max_price_hour_end_timestamp` | Today Max Price Hour End | Highest Price End Today | Koniec Godziny Maks. Ceny Dzisiaj | Koniec Najwyższej Ceny Dzisiaj |
+| `sensor.rce_pse_tomorrow_min_price_hour_start_timestamp` | Tomorrow Min Price Hour Start | Lowest Price Start Tomorrow | Początek Godziny Min. Ceny Jutro | Początek Najniższej Ceny Jutro |
+| `sensor.rce_pse_tomorrow_min_price_hour_end_timestamp` | Tomorrow Min Price Hour End | Lowest Price End Tomorrow | Koniec Godziny Min. Ceny Jutro | Koniec Najniższej Ceny Jutro |
+| `sensor.rce_pse_tomorrow_max_price_hour_start_timestamp` | Tomorrow Max Price Hour Start | Highest Price Start Tomorrow | Początek Godziny Maks. Ceny Jutro | Początek Najwyższej Ceny Jutro |
+| `sensor.rce_pse_tomorrow_max_price_hour_end_timestamp` | Tomorrow Max Price Hour End | Highest Price End Tomorrow | Koniec Godziny Maks. Ceny Jutro | Koniec Najwyższej Ceny Jutro |
+| `binary_sensor.rce_pse_today_min_price_window_active` | Today Cheapest Window Active | Lowest Price | Aktywne Najtańsze Okno Dzisiaj | Najniższa Cena |
+| `binary_sensor.rce_pse_today_max_price_window_active` | Today Most Expensive Window Active | Highest Price | Aktywne Najdroższe Okno Dzisiaj | Najwyższa Cena |
+| `sensor.rce_pse_today_cheapest_window_start_timestamp` | Today Custom Cheapest Window Start | Cheapest Window Start Today | Początek Konfigurowalnego Najtańszego Okna Dzisiaj | Początek Najtańszego Okna Dzisiaj |
+| `sensor.rce_pse_today_cheapest_window_end_timestamp` | Today Custom Cheapest Window End | Cheapest Window End Today | Koniec Konfigurowalnego Najtańszego Okna Dzisiaj | Koniec Najtańszego Okna Dzisiaj |
+| `sensor.rce_pse_today_expensive_window_start_timestamp` | Today Custom Most Expensive Window Start | Expensive Window Start Today | Początek Konfigurowalnego Najdroższego Okna Dzisiaj | Początek Najdroższego Okna Dzisiaj |
+| `sensor.rce_pse_today_expensive_window_end_timestamp` | Today Custom Most Expensive Window End | Expensive Window End Today | Koniec Konfigurowalnego Najdroższego Okna Dzisiaj | Koniec Najdroższego Okna Dzisiaj |
+| `sensor.rce_pse_tomorrow_cheapest_window_start_timestamp` | Tomorrow Custom Cheapest Window Start | Cheapest Window Start Tomorrow | Początek Konfigurowalnego Najtańszego Okna Jutro | Początek Najtańszego Okna Jutro |
+| `sensor.rce_pse_tomorrow_cheapest_window_end_timestamp` | Tomorrow Custom Cheapest Window End | Cheapest Window End Tomorrow | Koniec Konfigurowalnego Najtańszego Okna Jutro | Koniec Najtańszego Okna Jutro |
+| `sensor.rce_pse_tomorrow_expensive_window_start_timestamp` | Tomorrow Custom Most Expensive Window Start | Expensive Window Start Tomorrow | Początek Konfigurowalnego Najdroższego Okna Jutro | Początek Najdroższego Okna Jutro |
+| `sensor.rce_pse_tomorrow_expensive_window_end_timestamp` | Tomorrow Custom Most Expensive Window End | Expensive Window End Tomorrow | Koniec Konfigurowalnego Najdroższego Okna Jutro | Koniec Najdroższego Okna Jutro |
+| `sensor.rce_pse_today_second_expensive_window_start` | Today Second Expensive Window Start | Second Expensive Window Start Today | Początek Drugiego Najdroższego Okna Dzisiaj | Początek Drugiego Najdroższego Okna Dzisiaj |
+| `sensor.rce_pse_today_second_expensive_window_end` | Today Second Expensive Window End | Second Expensive Window End Today | Koniec Drugiego Najdroższego Okna Dzisiaj | Koniec Drugiego Najdroższego Okna Dzisiaj |
+| `sensor.rce_pse_tomorrow_second_expensive_window_start` | Tomorrow Second Expensive Window Start | Second Expensive Window Start Tomorrow | Początek Drugiego Najdroższego Okna Jutro | Początek Drugiego Najdroższego Okna Jutro |
+| `sensor.rce_pse_tomorrow_second_expensive_window_end` | Tomorrow Second Expensive Window End | Second Expensive Window End Tomorrow | Koniec Drugiego Najdroższego Okna Jutro | Koniec Drugiego Najdroższego Okna Jutro |
+| `sensor.rce_pse_today_cheapest_window_avg_price` | Today Cheapest Window Average Price | Cheapest Window Avg Today | Średnia cena najtańszego okna dzisiaj | Średnia Najtańszego Okna Dzisiaj |
+| `sensor.rce_pse_today_expensive_window_avg_price` | Today Most Expensive Window Average Price | Expensive Window Avg Today | Średnia cena najdroższego okna dzisiaj | Średnia Najdroższego Okna Dzisiaj |
+| `sensor.rce_pse_today_second_expensive_window_avg_price` | Today Second Expensive Window Average Price | Second Expensive Window Avg Today | Średnia cena drugiego najdroższego okna dzisiaj | Średnia Drugiego Najdroższego Okna Dzisiaj |
+| `sensor.rce_pse_tomorrow_cheapest_window_avg_price` | Tomorrow Cheapest Window Average Price | Cheapest Window Avg Tomorrow | Średnia cena najtańszego okna jutro | Średnia Najtańszego Okna Jutro |
+| `sensor.rce_pse_tomorrow_expensive_window_avg_price` | Tomorrow Most Expensive Window Average Price | Expensive Window Avg Tomorrow | Średnia cena najdroższego okna jutro | Średnia Najdroższego Okna Jutro |
+| `sensor.rce_pse_tomorrow_second_expensive_window_avg_price` | Tomorrow Second Expensive Window Average Price | Second Expensive Window Avg Tomorrow | Średnia cena drugiego najdroższego okna jutro | Średnia Drugiego Najdroższego Okna Jutro |
+| `sensor.rce_pse_today_low_price_threshold_window_start` | Price Below Threshold Start Today | Below-Threshold Window Start Today | Cena Poniżej Progu Początek Dzisiaj | Początek Okna Poniżej Progu Dzisiaj |
+| `sensor.rce_pse_today_low_price_threshold_window_end` | Price Below Threshold End Today | Below-Threshold Window End Today | Cena Poniżej Progu Koniec Dzisiaj | Koniec Okna Poniżej Progu Dzisiaj |
+| `sensor.rce_pse_tomorrow_low_price_threshold_window_start` | Price Below Threshold Start Tomorrow | Below-Threshold Window Start Tomorrow | Cena Poniżej Progu Początek Jutro | Początek Okna Poniżej Progu Jutro |
+| `sensor.rce_pse_tomorrow_low_price_threshold_window_end` | Price Below Threshold End Tomorrow | Below-Threshold Window End Tomorrow | Cena Poniżej Progu Koniec Jutro | Koniec Okna Poniżej Progu Jutro |
+| `binary_sensor.rce_pse_today_cheapest_window_active` | Today Custom Cheapest Window Active | Cheapest Window | Aktywne Konfigurowalne Najtańsze Okno Dzisiaj | Najtańsze Okno |
+| `binary_sensor.rce_pse_today_expensive_window_active` | Today Custom Most Expensive Window Active | Expensive Window | Aktywne Konfigurowalne Najdroższe Okno Dzisiaj | Najdroższe Okno |
+| `binary_sensor.rce_pse_today_second_expensive_window_active` | Today Second Expensive Window Active | Second Expensive Window | Aktywne Drugie Najdroższe Okno Dzisiaj | Drugie Najdroższe Okno |
+| `binary_sensor.rce_pse_today_low_price_threshold_window_active` | Price Below Threshold | Price Below-Threshold | Cena Poniżej Progu | Cena Poniżej Progu |
+
 ## Migration examples
 
 ### Replacing a removed text sensor
@@ -98,3 +141,5 @@ template:
 ### Automations and scripts
 
 Update any references from the removed entity IDs to the `*_timestamp` entity IDs above. The state type changes from string to datetime (ISO format in templates). Use `as_timestamp()` and `timestamp_custom()` when you need a string time or date.
+
+For the **renamed** sensors and binary sensors above: entity IDs are unchanged, so automations and scripts do not need updates; only the display name in the UI changes.
