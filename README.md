@@ -13,7 +13,7 @@
 
 A Home Assistant integration for monitoring Polish electricity market prices (RCE - Rynkowa Cena Energii) from PSE (Polskie Sieci Elektroenergetyczne).
 
-Instalation & Presentation: https://youtu.be/6N71uXgf9yc
+Instalation & Presentation: <https://youtu.be/6N71uXgf9yc>
 
 ## Installation
 
@@ -166,7 +166,7 @@ You can modify these settings at any time:
 
 1. Go to **Configuration** > **Integrations**
 2. Find "RCE PSE" in your integrations list
-3. Click **Configure** 
+3. Click **Configure**
 4. Adjust the settings as needed
 5. Click **Submit** to apply changes
 
@@ -306,7 +306,7 @@ logger:
 
 This will enable detailed logging for:
 - Integration setup and configuration
-- API requests and responses 
+- API requests and responses
 - Data fetching and processing
 - Sensor creation and updates
 - Error handling and troubleshooting
@@ -341,7 +341,9 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+```text
+http://www.apache.org/licenses/LICENSE-2.0
+```
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -353,4 +355,6 @@ limitations under the License.
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate and ensure your code follows the project's coding standards. 
+Please make sure to update tests as appropriate and ensure your code follows the project's coding standards.
+
+CI runs tests (pytest), HACS and hassfest validation, and MegaLinter (Python: Ruff, Bandit, Mypy; plus JSON, YAML, Markdown, GitHub Actions). Dependabot opens PRs for dependency updates (pip and GitHub Actions).

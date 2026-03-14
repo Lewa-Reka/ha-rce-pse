@@ -2,13 +2,11 @@ from __future__ import annotations
 
 import pytest
 from unittest.mock import Mock, MagicMock
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import EntityDescription
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.rce_pse.const import CONF_CHEAPEST_TIME_WINDOW_START, CONF_CHEAPEST_TIME_WINDOW_END, CONF_CHEAPEST_WINDOW_DURATION_HOURS
-from custom_components.rce_pse.sensors.base import PriceCalculator, RCEBaseSensor
+from custom_components.rce_pse.price_calculator import PriceCalculator
+from custom_components.rce_pse.sensors.base import RCEBaseSensor
 from custom_components.rce_pse.sensors.custom_windows import RCECustomWindowSensor
 
 
@@ -219,7 +217,7 @@ class TestPriceCalculator:
             {"dtime": "2024-01-01 12:00:00", "rce_pln": "85.0"},
         ]
         
-        optimal_window_float = PriceCalculator.find_optimal_window(data, 10, 16, 2.0, is_max=False)
+        optimal_window_float = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
         optimal_window_int = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
         
         assert optimal_window_float == optimal_window_int
@@ -486,13 +484,13 @@ class TestRCECustomWindowSensor:
         sensor = RCECustomWindowSensor(coordinator, config_entry, "test")
         
         assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, 0) == 8
-        assert type(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, 0)) == int
-        
+        assert isinstance(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, 0), int)
+
         assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, 24) == 20
-        assert type(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, 24)) == int
-        
+        assert isinstance(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, 24), int)
+
         assert sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, 2) == 2
-        assert type(sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, 2)) == int
-        
+        assert isinstance(sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, 2), int)
+
         assert sensor.get_config_value("other_key", 0) == 5.5
-        assert type(sensor.get_config_value("other_key", 0)) == float 
+        assert isinstance(sensor.get_config_value("other_key", 0), float)

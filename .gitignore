@@ -47,6 +47,10 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# MegaLinter
+megalinter-reports/
+mega-linter.log
+
 # Translations
 *.mo
 *.pot
@@ -84,6 +88,7 @@ celerybeat-schedule
 # Environments
 .env
 .venv
+.venv-lint/
 env/
 venv/
 ENV/
@@ -99,11 +104,6 @@ venv.bak/
 
 # mkdocs documentation
 /site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
 
 # IDE
 .vscode/

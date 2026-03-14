@@ -20,6 +20,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         assert coordinator.hass == mock_hass
         assert coordinator.name == "rce_pse"
+        assert coordinator.update_interval is not None
         assert coordinator.update_interval.total_seconds() == 1800
         assert coordinator.session is None
 
@@ -76,8 +77,8 @@ class TestRCEPSEDataUpdateCoordinator:
             mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
             mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
             
-            result = await coordinator._fetch_data()
-            
+            await coordinator._fetch_data()
+
             mock_session.get.assert_called_once()
             call_args = mock_session.get.call_args
             
@@ -210,7 +211,7 @@ class TestRCEPSEDataUpdateCoordinator:
     @pytest.mark.asyncio
     async def test_timeout_error_without_existing_data(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
-        coordinator.data = None
+        object.__setattr__(coordinator, "data", None)
         
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             mock_fetch.side_effect = asyncio.TimeoutError("API timeout")
@@ -240,7 +241,7 @@ class TestRCEPSEDataUpdateCoordinator:
     @pytest.mark.asyncio
     async def test_http_error_without_existing_data(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
-        coordinator.data = None
+        object.__setattr__(coordinator, "data", None)
         
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             mock_fetch.side_effect = Exception("HTTP error")
@@ -380,8 +381,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         result = coordinator._calculate_hourly_averages(data)
         assert len(result) == 4
-        
-        expected_average = (300.00 + 320.00 + 340.00 + 360.00) / 4
+
         for record in result:
             if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
                 assert record["rce_pln"] == "330.00"

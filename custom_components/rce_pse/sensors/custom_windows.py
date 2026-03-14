@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
+from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.util import dt as dt_util
@@ -33,7 +34,7 @@ class RCECustomWindowSensor(RCEBaseSensor):
         super().__init__(coordinator, sensor_type)
         self.config_entry = config_entry
 
-    def get_config_value(self, key: str, default: any) -> any:
+    def get_config_value(self, key: str, default: Any) -> Any:
         value = None
         if self.config_entry.options and key in self.config_entry.options:
             value = self.config_entry.options[key]

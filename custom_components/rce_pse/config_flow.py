@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 import voluptuous as vol
 
 from homeassistant import config_entries
@@ -120,7 +121,7 @@ CONFIG_SCHEMA = vol.Schema({
 })
 
 
-class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
 
     VERSION = 1
     MINOR_VERSION = 1
@@ -131,7 +132,7 @@ class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return RCEOptionsFlow()
 
     async def async_step_user(
-        self, user_input: dict[str, any] | None = None
+        self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         _LOGGER.debug("Starting RCE PSE config flow")
         
@@ -172,7 +173,7 @@ class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class RCEOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_init(
-        self, user_input: dict[str, any] | None = None
+        self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         errors = {}
 

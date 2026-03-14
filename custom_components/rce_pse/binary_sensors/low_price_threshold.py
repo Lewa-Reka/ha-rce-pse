@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.util import dt as dt_util
 
@@ -16,7 +17,7 @@ class RCETodayLowPriceThresholdWindowActiveBinarySensor(RCEBaseBinarySensor):
         self.config_entry = config_entry
         self._attr_icon = "mdi:clock-check"
 
-    def get_config_value(self, key: str, default: any) -> any:
+    def get_config_value(self, key: str, default: Any) -> Any:
         value = None
         if self.config_entry.options and key in self.config_entry.options:
             value = self.config_entry.options[key]

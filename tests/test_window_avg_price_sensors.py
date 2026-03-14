@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from unittest.mock import Mock, patch
 
-import pytest
 
 from custom_components.rce_pse.sensors.window_avg_price import (
     RCETodayCheapestWindowAvgPriceSensor,

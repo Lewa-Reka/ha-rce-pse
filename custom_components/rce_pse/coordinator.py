@@ -30,7 +30,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         self._last_api_fetch = None
         self.config_entry = config_entry
 
-    def _get_config_value(self, key: str, default: any) -> any:
+    def _get_config_value(self, key: str, default: Any) -> Any:
         if not self.config_entry:
             return default
             
@@ -95,8 +95,11 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
 
         _LOGGER.debug("PSE API request URL: %s, params: %s", PSE_API_URL, params)
 
+        session = self.session
+        if session is None:
+            raise UpdateFailed("HTTP session not initialized")
         try:
-            async with self.session.get(
+            async with session.get(
                 PSE_API_URL, params=params, headers=headers
             ) as response:
                 _LOGGER.debug("PSE API response status: %d", response.status)
