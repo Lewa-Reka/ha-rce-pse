@@ -61,10 +61,12 @@ From this version onward, time-related sensors return only **timestamps** (datet
 
 ## Renamed sensor display names
 
-From this version, display names of some sensors and binary sensors have been changed (entity IDs are unchanged). PSE-derived periods use "Lowest/Highest Price" (e.g. Początek Najniższej Ceny); user-configured windows use "Cheapest/Expensive Window" (e.g. Początek Najtańszego Okna). For today, names end with "Dzisiaj"/"Today"; for tomorrow, "Jutro"/"Tomorrow". Automations and scripts can keep using the same entity IDs; only the UI label changes.
+From this version, display names of some sensors and binary sensors have been changed (entity IDs are unchanged). PSE-derived periods use "Lowest/Highest Price" (e.g. Początek Najniższej Ceny); user-configured windows use "Cheapest/Expensive Window" (e.g. Początek Najtańszego Okna). For today, names end with "Dzisiaj"/"Today"; for tomorrow, "Jutro"/"Tomorrow".
+
+Automations and scripts can keep using the same entity IDs; only the UI label changes.
 
 | entity_id | EN (old) | EN (new) | PL (old) | PL (new) |
-|-----------|----------|----------|----------|----------|
+| --------- | -------- | -------- | -------- | -------- |
 | `sensor.rce_pse_today_min_price_hour_start_timestamp` | Today Min Price Hour Start | Lowest Price Start Today | Początek Godziny Min. Ceny Dzisiaj | Początek Najniższej Ceny Dzisiaj |
 | `sensor.rce_pse_today_min_price_hour_end_timestamp` | Today Min Price Hour End | Lowest Price End Today | Koniec Godziny Min. Ceny Dzisiaj | Koniec Najniższej Ceny Dzisiaj |
 | `sensor.rce_pse_today_max_price_hour_start_timestamp` | Today Max Price Hour Start | Highest Price Start Today | Początek Godziny Maks. Ceny Dzisiaj | Początek Najwyższej Ceny Dzisiaj |
