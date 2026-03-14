@@ -40,7 +40,8 @@ When removing or renaming an entity, update both translation files: remove or re
 
 ## Documentation
 
-When you change behavior or features described in `README.md` (installation, configuration, sensors, or general behavior), update `README.md` accordingly.
+- **Project documentation (README.md and files in `docs/`) is in Polish.** Code stays in English; translation files (en.json, pl.json) remain bilingual.
+- When you change behavior, installation, configuration, sensors, or general features, update **README.md** or the appropriate file in **`docs/`** (e.g. `docs/KONFIGURACJA.md`, `docs/SENSORY.md`, `docs/MIGRACJA-V2.md`). Doc filenames use UPPERCASE (same convention as README.md, AGENTS.md).
 
 ## Key paths
 
