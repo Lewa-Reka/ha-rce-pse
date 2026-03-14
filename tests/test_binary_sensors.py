@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from unittest.mock import Mock, patch
 
-import pytest
-from homeassistant.util import dt as dt_util
 
 from custom_components.rce_pse.binary_sensors.price_windows import (
     RCETodayMinPriceWindowBinarySensor,

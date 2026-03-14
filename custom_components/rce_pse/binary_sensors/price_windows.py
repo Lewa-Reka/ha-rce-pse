@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.util import dt as dt_util
 from .base import RCEBaseBinarySensor
 
 if TYPE_CHECKING:

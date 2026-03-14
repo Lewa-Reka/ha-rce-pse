@@ -7,7 +7,6 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.util import dt as dt_util
 
 from ..shared_base import RCEBaseCommonEntity
-from ..price_calculator import PriceCalculator
 
 if TYPE_CHECKING:
     from ..coordinator import RCEPSEDataUpdateCoordinator

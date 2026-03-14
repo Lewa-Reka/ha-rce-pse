@@ -38,7 +38,6 @@ from custom_components.rce_pse.sensors.low_price_threshold_windows import (
     RCETodayLowPriceThresholdWindowStartSensor,
     RCETodayLowPriceThresholdWindowEndSensor,
     RCETomorrowLowPriceThresholdWindowStartSensor,
-    RCETomorrowLowPriceThresholdWindowEndSensor,
 )
 
 

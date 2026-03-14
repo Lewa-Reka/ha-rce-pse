@@ -77,8 +77,8 @@ class TestRCEPSEDataUpdateCoordinator:
             mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
             mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
             
-            result = await coordinator._fetch_data()
-            
+            await coordinator._fetch_data()
+
             mock_session.get.assert_called_once()
             call_args = mock_session.get.call_args
             
@@ -381,8 +381,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         result = coordinator._calculate_hourly_averages(data)
         assert len(result) == 4
-        
-        expected_average = (300.00 + 320.00 + 340.00 + 360.00) / 4
+
         for record in result:
             if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
                 assert record["rce_pln"] == "330.00"

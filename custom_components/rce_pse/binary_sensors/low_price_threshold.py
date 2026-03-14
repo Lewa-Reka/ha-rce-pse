@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.util import dt as dt_util

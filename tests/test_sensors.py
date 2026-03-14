@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from datetime import timedelta
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import pytest
-from homeassistant.util import dt as dt_util
 
 from custom_components.rce_pse.sensors.today_main import RCETodayMainSensor, RCETodayKwhPriceSensor
 from custom_components.rce_pse.sensors.tomorrow_main import RCETomorrowMainSensor
@@ -353,13 +352,7 @@ class TestTomorrowMainSensor:
 
     def test_tomorrow_price_returns_current_hour_price(self, mock_coordinator):
         sensor = RCETomorrowMainSensor(mock_coordinator)
-        
-        tomorrow_data = [
-            {"period": "10:00 - 10:15", "rce_pln": "350.00", "business_date": "2024-01-02"},
-            {"period": "11:00 - 11:15", "rce_pln": "375.50", "business_date": "2024-01-02"},
-            {"period": "12:00 - 12:15", "rce_pln": "400.25", "business_date": "2024-01-02"},
-        ]
-        
+
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 10
@@ -401,13 +394,7 @@ class TestTomorrowMainSensor:
 
     def test_tomorrow_price_returns_hourly_price_not_average(self, mock_coordinator):
         sensor = RCETomorrowMainSensor(mock_coordinator)
-        
-        tomorrow_data = [
-            {"period": "10:00 - 10:15", "rce_pln": "300.00"},
-            {"period": "11:00 - 11:15", "rce_pln": "400.00"},
-            {"period": "12:00 - 12:15", "rce_pln": "425.00"},
-        ]
-        
+
         with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
             with patch('homeassistant.util.dt.now') as mock_now:
                 mock_now.return_value.hour = 11

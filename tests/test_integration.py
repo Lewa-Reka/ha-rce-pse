@@ -4,7 +4,6 @@ from unittest.mock import Mock, patch, AsyncMock
 
 import pytest
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
 
 from custom_components.rce_pse import async_setup_entry, async_unload_entry
 from custom_components.rce_pse.config_flow import RCEConfigFlow
