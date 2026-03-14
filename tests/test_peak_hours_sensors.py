@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-import pytest
-
 from custom_components.rce_pse.sensors.peak_hours import (
     _pdgsz_records_to_ranges,
     RCETodayPeakHoursSensor,
