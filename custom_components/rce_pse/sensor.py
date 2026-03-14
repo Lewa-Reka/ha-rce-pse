@@ -8,6 +8,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .sensors import (
+    RCETodayPeakHoursSensor,
+    RCETomorrowPeakHoursSensor,
     RCETodayMainSensor,
     RCETodayProsumerSellingPriceSensor,
     RCENextPeriodPriceSensor,
@@ -118,6 +120,8 @@ async def async_setup_entry(
         RCETodayLowPriceThresholdWindowEndSensor(coordinator, config_entry),
         RCETomorrowLowPriceThresholdWindowStartSensor(coordinator, config_entry),
         RCETomorrowLowPriceThresholdWindowEndSensor(coordinator, config_entry),
+        RCETodayPeakHoursSensor(coordinator),
+        RCETomorrowPeakHoursSensor(coordinator),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE sensors to Home Assistant", len(sensors))

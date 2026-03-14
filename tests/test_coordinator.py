@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import timedelta
-from unittest.mock import patch, AsyncMock, Mock
+from unittest.mock import MagicMock, patch, AsyncMock, Mock
 
 import pytest
 from homeassistant.helpers.update_coordinator import UpdateFailed
@@ -31,6 +31,7 @@ class TestRCEPSEDataUpdateCoordinator:
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             expected_data = {
                 "raw_data": sample_api_response["value"],
+                "pdgsz_data": [],
                 "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = expected_data
@@ -39,6 +40,7 @@ class TestRCEPSEDataUpdateCoordinator:
             
             assert result is not None
             assert "raw_data" in result
+            assert "pdgsz_data" in result
             assert "last_update" in result
             assert len(result["raw_data"]) == 7
             assert result["raw_data"][0]["rce_pln"] == "350.00"
@@ -55,6 +57,7 @@ class TestRCEPSEDataUpdateCoordinator:
             with patch.object(coordinator, '_fetch_data') as mock_fetch:
                 expected_data = {
                     "raw_data": sample_api_response["value"],
+                    "pdgsz_data": [],
                     "last_update": "2025-05-29T12:00:00+00:00"
                 }
                 mock_fetch.return_value = expected_data
@@ -69,53 +72,57 @@ class TestRCEPSEDataUpdateCoordinator:
     async def test_api_request_behavior(self, mock_hass, sample_api_response):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 200
-            mock_response.json = AsyncMock(return_value=sample_api_response)
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            await coordinator._fetch_data()
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value=sample_api_response)
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                await coordinator._fetch_data()
 
-            mock_session.get.assert_called_once()
-            call_args = mock_session.get.call_args
-            
-            assert "https://api.raporty.pse.pl/api/rce-pln" in call_args[0]
-            assert "params" in call_args[1]
-            assert "headers" in call_args[1]
-            
-            params = call_args[1]["params"]
-            assert "$select" in params
-            assert "$filter" in params
-            assert "$first" in params
-            assert params["$first"] == 200
+                mock_session.get.assert_called_once()
+                call_args = mock_session.get.call_args
+                
+                assert "https://api.raporty.pse.pl/api/rce-pln" in call_args[0]
+                assert "params" in call_args[1]
+                assert "headers" in call_args[1]
+                
+                params = call_args[1]["params"]
+                assert "$select" in params
+                assert "$filter" in params
+                assert "$first" in params
+                assert params["$first"] == 200
 
     @pytest.mark.asyncio
     async def test_fetch_data_method(self, mock_hass, sample_api_response):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 200
-            mock_response.json = AsyncMock(return_value=sample_api_response)
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            result = await coordinator._fetch_data()
-            
-            assert "last_update" in result
-            assert len(result["raw_data"]) == 7
-            
-            for i, record in enumerate(result["raw_data"]):
-                original_record = sample_api_response["value"][i]
-                assert record["rce_pln"] == original_record["rce_pln"]
-                assert record["rce_pln_neg_to_zero"] == original_record["rce_pln"]
-                assert record["dtime"] == original_record["dtime"]
-                assert record["period"] == original_record["period"]
-                assert record["business_date"] == original_record["business_date"]
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value=sample_api_response)
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                result = await coordinator._fetch_data()
+                
+                assert "last_update" in result
+                assert "pdgsz_data" in result
+                assert result["pdgsz_data"] == []
+                assert len(result["raw_data"]) == 7
+                
+                for i, record in enumerate(result["raw_data"]):
+                    original_record = sample_api_response["value"][i]
+                    assert record["rce_pln"] == original_record["rce_pln"]
+                    assert record["rce_pln_neg_to_zero"] == original_record["rce_pln"]
+                    assert record["dtime"] == original_record["dtime"]
+                    assert record["period"] == original_record["period"]
+                    assert record["business_date"] == original_record["business_date"]
 
     @pytest.mark.asyncio
     async def test_successful_close_session(self, mock_hass):
@@ -136,6 +143,7 @@ class TestRCEPSEDataUpdateCoordinator:
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             expected_data = {
                 "raw_data": sample_api_response["value"],
+                "pdgsz_data": [],
                 "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = expected_data
@@ -144,6 +152,7 @@ class TestRCEPSEDataUpdateCoordinator:
             
             assert isinstance(result, dict)
             assert isinstance(result["raw_data"], list)
+            assert "pdgsz_data" in result
             assert len(result["raw_data"]) > 0
             
             first_record = result["raw_data"][0]
@@ -158,6 +167,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         cached_data = {
             "raw_data": sample_api_response["value"],
+            "pdgsz_data": [],
             "last_update": "2025-05-29T12:00:00+00:00"
         }
         coordinator.data = cached_data
@@ -180,6 +190,7 @@ class TestRCEPSEDataUpdateCoordinator:
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             fresh_data = {
                 "raw_data": sample_api_response["value"],
+                "pdgsz_data": [],
                 "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = fresh_data
@@ -195,6 +206,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         existing_data = {
             "raw_data": sample_api_response["value"],
+            "pdgsz_data": [],
             "last_update": "2025-05-29T10:00:00+00:00"
         }
         coordinator.data = existing_data
@@ -225,6 +237,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         existing_data = {
             "raw_data": sample_api_response["value"],
+            "pdgsz_data": [],
             "last_update": "2025-05-29T10:00:00+00:00"
         }
         coordinator.data = existing_data
@@ -257,6 +270,7 @@ class TestRCEPSEDataUpdateCoordinator:
         with patch.object(coordinator, '_fetch_data') as mock_fetch:
             fresh_data = {
                 "raw_data": sample_api_response["value"],
+                "pdgsz_data": [],
                 "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = fresh_data
@@ -272,6 +286,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         existing_data = {
             "raw_data": sample_api_response["value"],
+            "pdgsz_data": [],
             "last_update": "2025-05-29T10:00:00+00:00"
         }
         coordinator.data = existing_data
@@ -287,47 +302,51 @@ class TestRCEPSEDataUpdateCoordinator:
     async def test_api_error_status_handling(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 500
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            with pytest.raises(UpdateFailed, match="API returned status 500"):
-                await coordinator._fetch_data()
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 500
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                with pytest.raises(UpdateFailed, match="API returned status 500"):
+                    await coordinator._fetch_data()
 
     @pytest.mark.asyncio
     async def test_api_invalid_response_format(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 200
-            mock_response.json = AsyncMock(return_value={"invalid": "format"})
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            with pytest.raises(UpdateFailed, match="Invalid API response format"):
-                await coordinator._fetch_data()
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value={"invalid": "format"})
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                with pytest.raises(UpdateFailed, match="Invalid API response format"):
+                    await coordinator._fetch_data()
 
     @pytest.mark.asyncio
     async def test_api_empty_data_warning(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 200
-            mock_response.json = AsyncMock(return_value={"value": []})
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            result = await coordinator._fetch_data()
-            
-            assert result["raw_data"] == []
-            assert "last_update" in result
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value={"value": []})
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                result = await coordinator._fetch_data()
+                
+                assert result["raw_data"] == []
+                assert result["pdgsz_data"] == []
+                assert "last_update" in result
 
     def test_calculate_hourly_averages_empty_data(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -556,19 +575,20 @@ class TestRCEPSEDataUpdateCoordinator:
             ]
         }
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 200
-            mock_response.json = AsyncMock(return_value=sample_data)
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            result = await coordinator._fetch_data()
-            
-            assert len(result["raw_data"]) == 2
-            for record in result["raw_data"]:
-                assert record["rce_pln"] == "310.00"
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value=sample_data)
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                result = await coordinator._fetch_data()
+                
+                assert len(result["raw_data"]) == 2
+                for record in result["raw_data"]:
+                    assert record["rce_pln"] == "310.00"
 
     @pytest.mark.asyncio
     async def test_fetch_data_with_hourly_prices_disabled(self, mock_hass):
@@ -595,19 +615,20 @@ class TestRCEPSEDataUpdateCoordinator:
             ]
         }
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 200
-            mock_response.json = AsyncMock(return_value=sample_data)
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            result = await coordinator._fetch_data()
-            
-            assert len(result["raw_data"]) == 2
-            assert result["raw_data"][0]["rce_pln"] == "300.00"
-            assert result["raw_data"][1]["rce_pln"] == "320.00"
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value=sample_data)
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                result = await coordinator._fetch_data()
+                
+                assert len(result["raw_data"]) == 2
+                assert result["raw_data"][0]["rce_pln"] == "300.00"
+                assert result["raw_data"][1]["rce_pln"] == "320.00"
 
     def test_calculate_hourly_averages_with_negative_values(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -909,18 +930,76 @@ class TestRCEPSEDataUpdateCoordinator:
             ]
         }
         
-        with patch.object(coordinator, 'session') as mock_session:
-            mock_response = AsyncMock()
-            mock_response.status = 200
-            mock_response.json = AsyncMock(return_value=sample_data)
-            
-            mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
-            mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
-            
-            result = await coordinator._fetch_data()
-            
-            assert len(result["raw_data"]) == 2
-            assert result["raw_data"][0]["rce_pln"] == "300.00"
-            assert result["raw_data"][0]["rce_pln_neg_to_zero"] == "300.00"
-            assert result["raw_data"][1]["rce_pln"] == "-50.00"
-            assert result["raw_data"][1]["rce_pln_neg_to_zero"] == "0.00" 
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=[]):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value=sample_data)
+                
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                
+                result = await coordinator._fetch_data()
+                
+                assert len(result["raw_data"]) == 2
+                assert result["raw_data"][0]["rce_pln"] == "300.00"
+                assert result["raw_data"][0]["rce_pln_neg_to_zero"] == "300.00"
+                assert result["raw_data"][1]["rce_pln"] == "-50.00"
+                assert result["raw_data"][1]["rce_pln_neg_to_zero"] == "0.00"
+
+    @pytest.mark.asyncio
+    async def test_fetch_data_includes_pdgsz_data(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        pdgsz_records = [
+            {"dtime": "2025-05-29 08:00", "business_date": "2025-05-29", "usage_fcst": 0},
+            {"dtime": "2025-05-29 09:00", "business_date": "2025-05-29", "usage_fcst": 1},
+        ]
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, return_value=pdgsz_records):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value=sample_api_response)
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                result = await coordinator._fetch_data()
+                assert "pdgsz_data" in result
+                assert result["pdgsz_data"] == pdgsz_records
+
+    @pytest.mark.asyncio
+    async def test_fetch_pdgsz_failure_returns_empty_list(self, mock_hass, sample_api_response):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        with patch.object(coordinator, '_fetch_pdgsz', new_callable=AsyncMock, side_effect=Exception("PDGSZ error")):
+            with patch.object(coordinator, 'session') as mock_session:
+                mock_response = AsyncMock()
+                mock_response.status = 200
+                mock_response.json = AsyncMock(return_value=sample_api_response)
+                mock_session.get.return_value.__aenter__ = AsyncMock(return_value=mock_response)
+                mock_session.get.return_value.__aexit__ = AsyncMock(return_value=None)
+                result = await coordinator._fetch_data()
+                assert "pdgsz_data" in result
+                assert result["pdgsz_data"] == []
+
+    @pytest.mark.asyncio
+    async def test_fetch_pdgsz_filters_inactive_and_deduplicates(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        session = Mock()
+        pdgsz_response = {
+            "value": [
+                {"dtime": "2025-05-29 08:00", "business_date": "2025-05-29", "usage_fcst": 1, "is_active": False},
+                {"dtime": "2025-05-29 08:00", "business_date": "2025-05-29", "usage_fcst": 1, "is_active": True},
+                {"dtime": "2025-05-29 09:00", "business_date": "2025-05-29", "usage_fcst": 2, "is_active": True},
+            ],
+        }
+        mock_resp = AsyncMock()
+        mock_resp.status = 200
+        mock_resp.json = AsyncMock(return_value=pdgsz_response)
+        cm = MagicMock()
+        cm.__aenter__ = AsyncMock(return_value=mock_resp)
+        cm.__aexit__ = AsyncMock(return_value=None)
+        session.get = Mock(return_value=cm)
+        result = await coordinator._fetch_pdgsz(session, "2025-05-29")
+        assert len(result) == 2
+        assert all(r.get("is_active") for r in result)
+        dtimes = [r["dtime"] for r in result]
+        assert "2025-05-29 08:00" in dtimes
+        assert "2025-05-29 09:00" in dtimes
