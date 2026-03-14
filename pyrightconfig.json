@@ -1,4 +1,5 @@
 {
+  "pythonVersion": "3.13",
   "reportIncompatibleVariableOverride": "none",
   "reportIncompatibleMethodOverride": "none",
   "reportOptionalMemberAccess": "warning",

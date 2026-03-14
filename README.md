@@ -355,4 +355,4 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 Please make sure to update tests as appropriate and ensure your code follows the project's coding standards.
 
-CI runs tests (pytest), HACS and hassfest validation, and MegaLinter (Python, JSON, YAML, Markdown, GitHub Actions). Dependabot opens PRs for dependency updates (pip and GitHub Actions). 
+CI runs tests (pytest), HACS and hassfest validation, and MegaLinter (Python: Ruff, Bandit, Mypy; plus JSON, YAML, Markdown, GitHub Actions). Dependabot opens PRs for dependency updates (pip and GitHub Actions). 
