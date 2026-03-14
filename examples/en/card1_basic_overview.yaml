@@ -24,15 +24,12 @@ entities:
     name: "Current price"
     icon: mdi:cash-multiple
     secondary_info: last-updated
-  - entity: sensor.rce_pse_next_hour_price
-    name: "Next hour price"
+  - entity: sensor.rce_pse_next_period_price
+    name: "Next period price"
     icon: mdi:clock-plus-outline
-  - entity: sensor.rce_pse_next_2_hours_price
-    name: "Price in 2 hours"
-    icon: mdi:clock-fast
-  - entity: sensor.rce_pse_next_3_hours_price
-    name: "Price in 3 hours"
-    icon: mdi:clock-time-eight
+  - entity: sensor.rce_pse_previous_period_price
+    name: "Previous period price"
+    icon: mdi:clock-outline
   - type: section
     label: "Today's Statistics"
   - entity: sensor.rce_pse_today_avg_price

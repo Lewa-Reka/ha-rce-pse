@@ -70,8 +70,8 @@ Both cards can be easily customized to match your dashboard theme and specific n
 ## Features
 
 - **Real-time price monitoring** - Current electricity price with 15-minute precision
-- **Historical data** - Previous hour pricing information  
-- **Future price forecasting** - Prices for next 1-3 hours ahead
+- **Historical data** - Previous period (15 min) pricing information
+- **Future price forecasting** - Next period (15 min) price ahead
 - **Daily statistics** - Comprehensive price analysis (average, min, max, median)
 - **Tomorrow's data** - Next day pricing available after 14:00 CET
 - **Price comparison** - Today vs tomorrow percentage differences
@@ -211,14 +211,12 @@ These sensors automatically update based on your configured search parameters. T
 
 ### Main Sensors
 - **Price** - Current electricity price (with all daily prices as attributes)
-- **Price for kWh** - Dedicated for HomeAssistant Energy dashboard (converts PLN/MWh to PLN/kWh, includes 23% VAT, negative prices converted to 0)
+- **Prosumer Selling Price** - Real prosumer selling price in PLN/MWh (negative prices converted to 0, 23% VAT applied; no MWh→kWh conversion)
 - **Tomorrow Price** - Tomorrow's price (available after 14:00 CET) (with all prices for the next day as attributes)
 
-### Future Price Sensors
-- **Next Hour Price** - Price for the next hour
-- **Price in 2 Hours** - Price in 2 hours
-- **Price in 3 Hours** - Price in 3 hours
-- **Previous Hour Price** - Price from the previous hour
+### Period Price Sensors
+- **Next Period Price** - Price for the next 15-minute period
+- **Previous Period Price** - Price from the previous 15-minute period
 
 ### Today's Statistics
 - **Today Average Price** - Average price for today

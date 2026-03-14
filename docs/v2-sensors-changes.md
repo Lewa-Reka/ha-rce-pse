@@ -104,6 +104,41 @@ Automations and scripts can keep using the same entity IDs; only the UI label ch
 | `binary_sensor.rce_pse_today_second_expensive_window_active` | Today Second Expensive Window Active | Second Expensive Window | Aktywne Drugie Najdroższe Okno Dzisiaj | Drugie Najdroższe Okno |
 | `binary_sensor.rce_pse_today_low_price_threshold_window_active` | Price Below Threshold | Price Below-Threshold | Cena Poniżej Progu | Cena Poniżej Progu |
 
+## Period price sensors (renamed and removed)
+
+Sensors for "next hour", "previous hour", and "price in 2/3 hours" have been replaced by period-based sensors. A period is one 15-minute PSE slot (not necessarily one hour).
+
+### Removed sensors
+
+| entity_id                       | EN name            | PL name           |
+|---------------------------------|--------------------|-------------------|
+| `sensor.rce_pse_next_2_hours_price`  | Price in 2 Hours   | Cena za 2 Godziny |
+| `sensor.rce_pse_next_3_hours_price`  | Price in 3 Hours   | Cena za 3 Godziny |
+
+Update automations, scripts, and dashboards: remove references to these entity IDs or use the next-period sensor if you only need the immediate next period.
+
+### Renamed sensors (entity_id and display name changed)
+
+| Old entity_id                    | New entity_id                     | EN name (old)         | EN name (new)           | PL name (old)           | PL name (new)        |
+|----------------------------------|-----------------------------------|----------------------|-------------------------|-------------------------|----------------------|
+| `sensor.rce_pse_next_hour_price`    | `sensor.rce_pse_next_period_price`    | Next Hour Price      | Next Period Price       | Cena Następnej Godziny  | Cena Następny Okres  |
+| `sensor.rce_pse_previous_hour_price` | `sensor.rce_pse_previous_period_price` | Previous Hour Price  | Previous Period Price   | Cena Poprzedniej Godziny| Cena Poprzedni Okres |
+
+- **Entity ID:** Update automations, scripts, and dashboards from the old entity IDs to `sensor.rce_pse_next_period_price` and `sensor.rce_pse_previous_period_price`.
+- **Semantics:** "Next period" is the next 15-minute slot; "previous period" is the previous 15-minute slot. Values and units (PLN/MWh) are unchanged.
+
+## Prosumer selling price sensor (renamed, entity_id and unit changed)
+
+The former "Cena za kWh" / "Price per kWh" sensor has been renamed and now returns values in PLN/MWh like other price sensors.
+
+| Old entity_id | New entity_id | EN name (old) | EN name (new) | PL name (old) | PL name (new) |
+|---------------|---------------|---------------|---------------|---------------|---------------|
+| `sensor.rce_pse_today_kwh_price` | `sensor.rce_pse_today_prosumer_selling_price` | Price per kWh | Prosumer Selling Price | Cena za kWh | Cena Sprzedaży Prosument |
+
+- **Entity ID:** Update automations, scripts, and dashboards from `sensor.rce_pse_today_kwh_price` to `sensor.rce_pse_today_prosumer_selling_price`.
+- **Unit:** Changed from PLN/kWh to PLN/MWh. The sensor no longer converts MWh to kWh; it returns the price in PLN/MWh like other price sensors.
+- **Logic:** Unchanged – negative prices are still converted to zero (`rce_pln_neg_to_zero`) and the 23% VAT multiplier (1.23) is still applied.
+
 ## Migration examples
 
 ### Replacing a removed text sensor

@@ -56,38 +56,38 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
         
         return None
 
-    def get_price_at_future_hour(self, hours_ahead: int) -> float | None:
+    def get_price_at_future_period(self, periods_ahead: int) -> float | None:
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
-        
-        target_time = dt_util.now() + timedelta(hours=hours_ahead)
-        
+
+        target_time = dt_util.now() + timedelta(minutes=15 * periods_ahead)
+
         for record in self.coordinator.data["raw_data"]:
             try:
                 period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
                 period_start = period_end - timedelta(minutes=15)
-                
+
                 if period_start <= target_time.replace(tzinfo=None) <= period_end:
                     return float(record["rce_pln"])
-                    
+
             except (ValueError, KeyError):
                 continue
-        
+
         return None
 
-    def get_price_at_past_hour(self, hours_back: int) -> float | None:
+    def get_price_at_past_period(self, periods_back: int) -> float | None:
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
-        
-        target_time = dt_util.now() - timedelta(hours=hours_back)
+
+        target_time = dt_util.now() - timedelta(minutes=15 * periods_back)
         closest_record = None
         closest_diff = None
-        
+
         for record in self.coordinator.data["raw_data"]:
             try:
                 period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
                 period_start = period_end - timedelta(minutes=15)
-                
+
                 if period_start <= target_time.replace(tzinfo=None) <= period_end:
                     return float(record["rce_pln"])
                 elif period_end <= target_time.replace(tzinfo=None):
@@ -97,7 +97,7 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
                         closest_record = record
             except (ValueError, KeyError):
                 continue
-        
+
         return float(closest_record["rce_pln"]) if closest_record else None
 
     def get_data_summary(self, data: list[dict]) -> dict[str, Any]:
