@@ -139,7 +139,7 @@ class TestTodayMaxPriceTimestampSensors:
     def test_today_max_price_hour_start_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETodayMaxPriceHourStartTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_today_max_price_hour_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_max_price_hour_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -165,7 +165,7 @@ class TestTodayMaxPriceTimestampSensors:
     def test_today_max_price_hour_end_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETodayMaxPriceHourEndTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_today_max_price_hour_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_max_price_hour_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 
@@ -208,7 +208,7 @@ class TestTodayMinPriceTimestampSensors:
     def test_today_min_price_hour_start_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETodayMinPriceHourStartTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_today_min_price_hour_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_min_price_hour_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -234,7 +234,7 @@ class TestTodayMinPriceTimestampSensors:
     def test_today_min_price_hour_end_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETodayMinPriceHourEndTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_today_min_price_hour_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_min_price_hour_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 
@@ -263,7 +263,7 @@ class TestTomorrowMaxPriceTimestampSensors:
     def test_tomorrow_max_price_hour_start_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETomorrowMaxPriceHourStartTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_max_price_hour_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_max_price_hour_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -299,7 +299,7 @@ class TestTomorrowMaxPriceTimestampSensors:
     def test_tomorrow_max_price_hour_end_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETomorrowMaxPriceHourEndTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_max_price_hour_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_max_price_hour_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 
@@ -322,7 +322,7 @@ class TestTomorrowMinPriceTimestampSensors:
     def test_tomorrow_min_price_hour_start_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETomorrowMinPriceHourStartTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_min_price_hour_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_min_price_hour_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -351,7 +351,7 @@ class TestTomorrowMinPriceTimestampSensors:
     def test_tomorrow_min_price_hour_end_timestamp_sensor_initialization(self, mock_coordinator):
         sensor = RCETomorrowMinPriceHourEndTimestampSensor(mock_coordinator)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_min_price_hour_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_min_price_hour_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 
@@ -374,7 +374,7 @@ class TestTodayCustomWindowTimestampSensors:
     def test_today_cheapest_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayCheapestWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_today_cheapest_window_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_cheapest_window_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -400,7 +400,7 @@ class TestTodayCustomWindowTimestampSensors:
     def test_today_cheapest_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayCheapestWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_today_cheapest_window_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_cheapest_window_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 
@@ -417,7 +417,7 @@ class TestTodayCustomWindowTimestampSensors:
     def test_today_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayExpensiveWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_today_expensive_window_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_expensive_window_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -434,7 +434,7 @@ class TestTodayCustomWindowTimestampSensors:
     def test_today_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETodayExpensiveWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_today_expensive_window_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_today_expensive_window_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 
@@ -468,7 +468,7 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_cheapest_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowCheapestWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_cheapest_window_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_cheapest_window_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -488,7 +488,7 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_cheapest_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowCheapestWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_cheapest_window_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_cheapest_window_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 
@@ -508,7 +508,7 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_expensive_window_start_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_expensive_window_start"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-start"
 
@@ -528,7 +528,7 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
         
-        assert sensor._attr_unique_id == "rce_pse_tomorrow_expensive_window_end_timestamp"
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_expensive_window_end"
         assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
         assert sensor._attr_icon == "mdi:clock-end"
 

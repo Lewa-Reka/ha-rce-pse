@@ -22,7 +22,7 @@ class RCETodayHoursSensor(RCEBaseSensor):
 class RCETodayMaxPriceHourStartTimestampSensor(RCETodayHoursSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        super().__init__(coordinator, "today_max_price_hour_start_timestamp")
+        super().__init__(coordinator, "today_max_price_hour_start")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-start"
 
@@ -49,7 +49,7 @@ class RCETodayMaxPriceHourStartTimestampSensor(RCETodayHoursSensor):
 class RCETodayMaxPriceHourEndTimestampSensor(RCETodayHoursSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        super().__init__(coordinator, "today_max_price_hour_end_timestamp")
+        super().__init__(coordinator, "today_max_price_hour_end")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-end"
 
@@ -76,7 +76,7 @@ class RCETodayMaxPriceHourEndTimestampSensor(RCETodayHoursSensor):
 class RCETodayMinPriceHourStartTimestampSensor(RCETodayHoursSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        super().__init__(coordinator, "today_min_price_hour_start_timestamp")
+        super().__init__(coordinator, "today_min_price_hour_start")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-start"
 
@@ -103,7 +103,7 @@ class RCETodayMinPriceHourStartTimestampSensor(RCETodayHoursSensor):
 class RCETodayMinPriceHourEndTimestampSensor(RCETodayHoursSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
-        super().__init__(coordinator, "today_min_price_hour_end_timestamp")
+        super().__init__(coordinator, "today_min_price_hour_end")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-end"
 

@@ -56,7 +56,7 @@ class RCECustomWindowSensor(RCEBaseSensor):
 class RCETodayCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "today_cheapest_window_start_timestamp")
+        super().__init__(coordinator, config_entry, "today_cheapest_window_start")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-start"
 
@@ -90,7 +90,7 @@ class RCETodayCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
 class RCETodayCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "today_cheapest_window_end_timestamp")
+        super().__init__(coordinator, config_entry, "today_cheapest_window_end")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-end"
 
@@ -124,7 +124,7 @@ class RCETodayCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
 class RCETodayExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "today_expensive_window_start_timestamp")
+        super().__init__(coordinator, config_entry, "today_expensive_window_start")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-start"
 
@@ -159,7 +159,7 @@ class RCETodayExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
 class RCETodayExpensiveWindowEndTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "today_expensive_window_end_timestamp")
+        super().__init__(coordinator, config_entry, "today_expensive_window_end")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-end"
 
@@ -193,7 +193,7 @@ class RCETodayExpensiveWindowEndTimestampSensor(RCECustomWindowSensor):
 class RCETomorrowCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "tomorrow_cheapest_window_start_timestamp")
+        super().__init__(coordinator, config_entry, "tomorrow_cheapest_window_start")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-start"
 
@@ -228,7 +228,7 @@ class RCETomorrowCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
 class RCETomorrowCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "tomorrow_cheapest_window_end_timestamp")
+        super().__init__(coordinator, config_entry, "tomorrow_cheapest_window_end")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-end"
 
@@ -262,7 +262,7 @@ class RCETomorrowCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
 class RCETomorrowExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "tomorrow_expensive_window_start_timestamp")
+        super().__init__(coordinator, config_entry, "tomorrow_expensive_window_start")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-start"
 
@@ -297,7 +297,7 @@ class RCETomorrowExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
 class RCETomorrowExpensiveWindowEndTimestampSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
-        super().__init__(coordinator, config_entry, "tomorrow_expensive_window_end_timestamp")
+        super().__init__(coordinator, config_entry, "tomorrow_expensive_window_end")
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
         self._attr_icon = "mdi:clock-end"
 
