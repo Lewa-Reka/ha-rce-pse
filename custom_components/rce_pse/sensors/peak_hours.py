@@ -38,39 +38,6 @@ def _load_state_display_names(lang: str, translation_key: str) -> dict[str, str]
     return result
 
 
-def _pdgsz_records_to_ranges(records: list[dict]) -> dict[str, list[str]]:
-    attr_keys = set(PDGSZ_USAGE_FCST_TO_ATTR.values())
-    result: dict[str, list[str]] = {k: [] for k in attr_keys}
-    if not records:
-        return result
-    records_sorted = sorted(records, key=lambda r: r.get("dtime", ""))
-    i = 0
-    while i < len(records_sorted):
-        rec = records_sorted[i]
-        fcst = rec.get("usage_fcst", 1)
-        attr_key = PDGSZ_USAGE_FCST_TO_ATTR.get(fcst, "normal_usage")
-        dtime_str = rec.get("dtime", "")
-        if " " not in dtime_str:
-            i += 1
-            continue
-        start_part = dtime_str.split(" ", 1)[1]
-        try:
-            start_hour = int(start_part.split(":")[0])
-        except (ValueError, IndexError):
-            i += 1
-            continue
-        j = i + 1
-        while j < len(records_sorted) and records_sorted[j].get("usage_fcst") == fcst:
-            j += 1
-        end_hour = start_hour + (j - i)
-        if end_hour > 24:
-            end_hour = 24
-        end_part = f"{end_hour:02d}:00" if end_hour < 24 else "24:00"
-        result[attr_key].append(f"{start_part}–{end_part}")
-        i = j
-    return result
-
-
 def _pdgsz_records_to_hourly_state(records: list[dict]) -> dict[int, str]:
     result: dict[int, str] = {}
     for rec in records:
@@ -87,18 +54,22 @@ def _pdgsz_records_to_hourly_state(records: list[dict]) -> dict[int, str]:
     return result
 
 
-def _hourly_states_attributes(
-    hourly: dict[int, str],
+def _records_to_values(
+    records: list[dict],
     display_names: dict[str, str],
 ) -> list[dict[str, Any]]:
-    return [
-        {
-            "hour": f"{h:02d}:00",
-            "state": hourly.get(h),
-            "state_display": display_names.get(hourly.get(h, ""), ""),
-        }
-        for h in range(24)
-    ]
+    result: list[dict[str, Any]] = []
+    for rec in records:
+        usage_fcst = rec.get("usage_fcst", 1)
+        state = PDGSZ_USAGE_FCST_TO_ATTR.get(usage_fcst, "normal_usage")
+        result.append({
+            "dtime": rec.get("dtime"),
+            "usage_fcst": usage_fcst,
+            "business_date": rec.get("business_date"),
+            "state": state,
+            "display_state": display_names.get(state, ""),
+        })
+    return result
 
 
 class RCEPeakHoursSensorBase(RCEBaseSensor):
@@ -137,7 +108,6 @@ class RCEPeakHoursSensorBase(RCEBaseSensor):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         records = self._get_pdgsz_records()
-        hourly = _pdgsz_records_to_hourly_state(records)
         try:
             lang = self.hass.config.language
             if lang not in ("pl", "en"):
@@ -146,8 +116,7 @@ class RCEPeakHoursSensorBase(RCEBaseSensor):
         except (AttributeError, KeyError):
             display_names = {}
         return {
-            "records": records,
-            "hourly_states": _hourly_states_attributes(hourly, display_names),
+            "values": _records_to_values(records, display_names),
         }
 
     @property
@@ -171,12 +140,3 @@ class RCETomorrowPeakHoursSensor(RCEPeakHoursSensorBase):
 
     def _get_pdgsz_records(self) -> list[dict]:
         return self.get_tomorrow_pdgsz_data()
-
-    def _get_current_hour_for_state(self) -> int:
-        return 0
-
-    @property
-    def available(self) -> bool:
-        if not self.is_tomorrow_data_available():
-            return False
-        return super().available

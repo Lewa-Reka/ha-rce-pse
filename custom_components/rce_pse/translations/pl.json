@@ -172,7 +172,7 @@
         "name": "Koniec Najniższej Ceny Jutro"
       },
       "rce_pse_today_peak_hours": {
-        "name": "Godziny Szczytu Dzisiaj",
+        "name": "Kompas Energetyczny Dzisiaj",
         "state_attributes": {
           "recommended_usage": {
             "name": "Zalecane użytkowanie"
@@ -189,7 +189,7 @@
         }
       },
       "rce_pse_tomorrow_peak_hours": {
-        "name": "Godziny Szczytu Jutro",
+        "name": "Kompas Energetyczny Jutro",
         "state_attributes": {
           "recommended_usage": {
             "name": "Zalecane użytkowanie"
