@@ -37,6 +37,7 @@ def _load_state_display_names(lang: str, translation_key: str) -> dict[str, str]
     _STATE_DISPLAY_CACHE[cache_key] = result
     return result
 
+
 def _pdgsz_records_to_hourly_state(records: list[dict]) -> dict[int, str]:
     result: dict[int, str] = {}
     for rec in records:
@@ -53,18 +54,22 @@ def _pdgsz_records_to_hourly_state(records: list[dict]) -> dict[int, str]:
     return result
 
 
-def _hourly_states_attributes(
-    hourly: dict[int, str],
+def _records_to_values(
+    records: list[dict],
     display_names: dict[str, str],
 ) -> list[dict[str, Any]]:
-    return [
-        {
-            "hour": f"{h:02d}:00",
-            "state": hourly.get(h),
-            "state_display": display_names.get(hourly.get(h, ""), ""),
-        }
-        for h in range(24)
-    ]
+    result: list[dict[str, Any]] = []
+    for rec in records:
+        usage_fcst = rec.get("usage_fcst", 1)
+        state = PDGSZ_USAGE_FCST_TO_ATTR.get(usage_fcst, "normal_usage")
+        result.append({
+            "dtime": rec.get("dtime"),
+            "usage_fcst": usage_fcst,
+            "business_date": rec.get("business_date"),
+            "state": state,
+            "display_state": display_names.get(state, ""),
+        })
+    return result
 
 
 class RCEPeakHoursSensorBase(RCEBaseSensor):
@@ -103,7 +108,6 @@ class RCEPeakHoursSensorBase(RCEBaseSensor):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         records = self._get_pdgsz_records()
-        hourly = _pdgsz_records_to_hourly_state(records)
         try:
             lang = self.hass.config.language
             if lang not in ("pl", "en"):
@@ -112,8 +116,7 @@ class RCEPeakHoursSensorBase(RCEBaseSensor):
         except (AttributeError, KeyError):
             display_names = {}
         return {
-            "records": records,
-            "hourly_states": _hourly_states_attributes(hourly, display_names),
+            "values": _records_to_values(records, display_names),
         }
 
     @property
