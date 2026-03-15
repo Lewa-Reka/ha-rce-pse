@@ -19,6 +19,7 @@ def mock_hass():
     hass = Mock(spec=HomeAssistant)
     hass.config = Mock()
     hass.config.time_zone = "Europe/Warsaw"
+    hass.config.language = "en"
     hass.data = {}
     return hass
 

@@ -36,10 +36,10 @@ Wszystkie zwracają **timestamp** (datetime). Aby pokazać tylko godzinę (np. H
 
 Dane z raportu PSE „Godziny Szczytu” (API PDGSZ) – kiedy zalecane jest użytkowanie energii, a kiedy oszczędzanie.
 
-- **Godziny Szczytu Dzisiaj** – wartość: liczba przedziałów godzinowych; atrybuty z listami przedziałów w formacie „HH:00–HH:00”. Nazwy tych czterech atrybutów są tłumaczone w interfejsie (PL/EN).
-- **Godziny Szczytu Jutro** – to samo dla następnego dnia (dostępne po 14:00 CET).
+- **Godziny Szczytu Dzisiaj** – stan: wartość tekstowa dla bieżącej godziny (np. „Zalecane użytkowanie”) lub brak danych jak przy sensorach „Jutro” (np. okna najniższej ceny) – wtedy stan „unknown”. Atrybuty: **records** – surowa odpowiedź API z dnia (tylko wpisy aktywne, is_active); **hourly_states** – lista 24 wpisów `{ "hour": "HH:00", "state": "klucz", "state_display": "tekst np. Zalecane użytkowanie" }` dla każdej godziny dnia.
+- **Godziny Szczytu Jutro** – to samo dla następnego dnia (dostępne po 14:00 CET); stan odnosi się do godziny 00:00 jutro.
 
-Cztery atrybuty (listy przedziałów):
+Możliwe stany (wyświetlane jako tekst w języku interfejsu):
 
 - **Zalecane użytkowanie** – korzystny czas na używanie energii.
 - **Normalne użytkowanie** – użytkowanie bez szczególnych zaleceń.
