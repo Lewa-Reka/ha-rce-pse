@@ -17,7 +17,7 @@ Poniżej: co usunięto, co zastąpić i jak zaktualizować automatyzacje oraz sz
 
 ## Usunięte sensory
 
-### Sensory zakresów czasowych (zastąpienie: pary sensorów początek + koniec)
+### Tekstowe sensory zakresów czasowych (można je zastąpić: pary sensorów początek + koniec)
 
 | entity_id                                         | Nazwa EN                             | Nazwa PL                                 |
 | ------------------------------------------------- | ------------------------------------ | ---------------------------------------- |
@@ -40,24 +40,24 @@ Sensory o nazwach zawierających "Timestamp" zostały usunięte; używaj sensor�
 
 Poniższe entity_id zwracają **timestamp** (datetime). To one zastępują dawne sensory tekstowe i te z "Timestamp" w nazwie:
 
-| entity_id                                         | Nazwa EN                     | Nazwa PL                              |
-| ------------------------------------------------- | ---------------------------- | ------------------------------------- |
-| `sensor.rce_pse_today_max_price_hour_start`       | Highest Price Start Today    | Początek Najwyższej Ceny Dzisiaj      |
-| `sensor.rce_pse_today_max_price_hour_end`         | Highest Price End Today      | Koniec Najwyższej Ceny Dzisiaj        |
-| `sensor.rce_pse_today_min_price_hour_start`       | Lowest Price Start Today     | Początek Najniższej Ceny Dzisiaj      |
-| `sensor.rce_pse_today_min_price_hour_end`         | Lowest Price End Today       | Koniec Najniższej Ceny Dzisiaj        |
-| `sensor.rce_pse_tomorrow_max_price_hour_start`    | Highest Price Start Tomorrow | … jutro                               |
-| `sensor.rce_pse_tomorrow_max_price_hour_end`      | Highest Price End Tomorrow   | … jutro                               |
-| `sensor.rce_pse_tomorrow_min_price_hour_start`    | Lowest Price Start Tomorrow  | … jutro                               |
-| `sensor.rce_pse_tomorrow_min_price_hour_end`      | Lowest Price End Tomorrow    | … jutro                               |
-| `sensor.rce_pse_today_cheapest_window_start`      | Cheapest Window Start Today  | Początek Najtańszego Okna Dzisiaj     |
-| `sensor.rce_pse_today_cheapest_window_end`        | Cheapest Window End Today    | Koniec Najtańszego Okna Dzisiaj       |
-| `sensor.rce_pse_today_expensive_window_start`     | Expensive Window Start Today | …                                     |
-| `sensor.rce_pse_today_expensive_window_end`       | Expensive Window End Today   | …                                     |
-| `sensor.rce_pse_tomorrow_cheapest_window_start`   | … Tomorrow                   | …                                     |
-| `sensor.rce_pse_tomorrow_cheapest_window_end`     | …                            | …                                     |
-| `sensor.rce_pse_tomorrow_expensive_window_start`  | …                            | …                                     |
-| `sensor.rce_pse_tomorrow_expensive_window_end`    | …                            | …                                     |
+| entity_id                                         | Nazwa EN                        | Nazwa PL                              |
+| ------------------------------------------------- | ------------------------------- | ------------------------------------- |
+| `sensor.rce_pse_today_max_price_hour_start`       | Highest Price Start Today       | Początek Najwyższej Ceny Dzisiaj      |
+| `sensor.rce_pse_today_max_price_hour_end`         | Highest Price End Today         | Koniec Najwyższej Ceny Dzisiaj        |
+| `sensor.rce_pse_today_min_price_hour_start`       | Lowest Price Start Today        | Początek Najniższej Ceny Dzisiaj      |
+| `sensor.rce_pse_today_min_price_hour_end`         | Lowest Price End Today          | Koniec Najniższej Ceny Dzisiaj        |
+| `sensor.rce_pse_tomorrow_max_price_hour_start`    | Highest Price Start Tomorrow    | Początek Najwyższej Ceny Jutro        |
+| `sensor.rce_pse_tomorrow_max_price_hour_end`      | Highest Price End Tomorrow      | Koniec Najwyższej Ceny Jutro          |
+| `sensor.rce_pse_tomorrow_min_price_hour_start`    | Lowest Price Start Tomorrow     | Początek Najniższej Ceny Jutro        |
+| `sensor.rce_pse_tomorrow_min_price_hour_end`      | Lowest Price End Tomorrow       | Koniec Najniższej Ceny Jutro          |
+| `sensor.rce_pse_today_cheapest_window_start`      | Cheapest Window Start Today     | Początek Najtańszego Okna Dzisiaj     |
+| `sensor.rce_pse_today_cheapest_window_end`        | Cheapest Window End Today       | Koniec Najtańszego Okna Dzisiaj       |
+| `sensor.rce_pse_today_expensive_window_start`     | Expensive Window Start Today    | Początek Najdroższego Okna Dzisiaj    |
+| `sensor.rce_pse_today_expensive_window_end`       | Expensive Window End Today      | Koniec Najdroższego Okna Dzisiaj      |
+| `sensor.rce_pse_tomorrow_cheapest_window_start`   | Cheapest Window Start Tomorrow  | Początek Najtańszego Okna Jutro       |
+| `sensor.rce_pse_tomorrow_cheapest_window_end`     | Cheapest Window End Tomorrow    | Koniec Najtańszego Okna Jutro         |
+| `sensor.rce_pse_tomorrow_expensive_window_start`  | Expensive Window Start Tomorrow | Początek Najdroższego Okna Jutro      |
+| `sensor.rce_pse_tomorrow_expensive_window_end`    | Expensive Window End Tomorrow   | Koniec Najdroższego Okna Jutro        |
 
 ---
 
@@ -67,15 +67,13 @@ Dla poniższych encji zmieniły się tylko **nazwy w UI** (EN/PL). Entity_id poz
 
 | entity_id                       | EN (stara)                          | EN (nowa)                        | PL (stara)                                  | PL (nowa)                                    |
 | ------------------------------- | ----------------------------------- | -------------------------------- | ------------------------------------------- | -------------------------------------------- |
-| sensory najniższej/najwyższej   | Today Min/Max Price Hour Start/End  | Lowest/Highest Price Start/End    | Początek/Koniec Godziny Min./Maks. Ceny     | Początek/Koniec Najniższej/Najwyższej Ceny   |
-| binary PSE                     | Today Cheapest/Most Expensive       | Lowest Price / Highest Price     | Aktywne Najtańsze/Najdroższe Okno Dzisiaj   | Najniższa Cena / Najwyższa Cena              |
-| sensory konfigurowalnych okien  | Today Custom Cheapest/… Window      | Cheapest/Expensive Window Today  | Początek/Koniec Konfig. Najtańszego/… Okna   | Początek/Koniec Najtańszego/Najdroższego     |
-| drugie najdroższe okno          | Today Second Expensive Window        | Second Expensive Window Today     | …                                            | …                                            |
-| średnie okien                   | Today Cheapest Window Avg Price itd. | Cheapest Window Avg Today itd.   | Średnia cena najtańszego okna dzisiaj       | Średnia Najtańszego Okna Dzisiaj             |
-| okna poniżej progu             | Price Below Threshold Start/End      | Below-Threshold Window Today      | Cena Poniżej Progu Początek/Koniec Dzisiaj  | Początek/Koniec Okna Poniżej Progu Dzisiaj  |
-| binary konfig. i progu          | Today Custom Cheapest Window itd.    | Cheapest / Expensive / …          | Aktywne Konfig. Najtańsze Okno Dzisiaj      | Najtańsze Okno / Najdroższe / Cena Poniżej   |
-
-Pełna tabela mapowań nazw (stara → nowa) dla wszystkich encji jest w archiwalnym dokumencie [v2-sensors-changes.md](v2-sensors-changes.md) (wersja angielska).
+| sensory najniższej/najwyższej   | Today Min/Max Price Hour Start/End  | Lowest/Highest Price Start/End   | Początek/Koniec Godziny Min./Maks. Ceny     | Początek/Koniec Najniższej/Najwyższej Ceny   |
+| binary PSE                      | Today Cheapest/Most Expensive       | Lowest Price / Highest Price     | Aktywne Najtańsze/Najdroższe Okno Dzisiaj   | Najniższa Cena / Najwyższa Cena              |
+| sensory konfigurowalnych okien  | Today Custom Cheapest/… Window      | Cheapest/Expensive Window Today  | Początek/Koniec Konfig. Najtańszego/… Okna  | Początek/Koniec Najtańszego/Najdroższego     |
+| drugie najdroższe okno          | Today Second Expensive Window       | Second Expensive Window Today    | …                                           | …                                            |
+| średnie okien                   | Today Cheapest Window Avg Price     | Cheapest Window Avg Today itd.   | Średnia cena najtańszego okna dzisiaj       | Średnia Najtańszego Okna Dzisiaj             |
+| okna poniżej progu              | Price Below Threshold Start/End     | Below-Threshold Window Today     | Cena Poniżej Progu Początek/Koniec Dzisiaj  | Początek/Koniec Okna Poniżej Progu Dzisiaj   |
+| sensory binarne                 | Today Custom Cheapest Window itd.   | Cheapest / Expensive / …         | Aktywne Najtańsze Okno Dzisiaj              | Najtańsze Okno / Najdroższe / Cena Poniżej   |
 
 ---
 
@@ -94,10 +92,10 @@ W automatyzacjach i dashboardach usuń odwołania do tych entity_id lub zastąp 
 
 ### Zmiana entity_id i nazwy
 
-| Stary entity_id                      | Nowy entity_id                         | EN (stara)           | EN (nowa)             | PL (stara)              | PL (nowa)             |
-| ------------------------------------ | -------------------------------------- | -------------------- | --------------------- | ----------------------- | --------------------- |
-| `sensor.rce_pse_next_hour_price`     | `sensor.rce_pse_next_period_price`     | Next Hour Price      | Next Period Price     | Cena Następnej Godziny  | Cena Następny Okres   |
-| `sensor.rce_pse_previous_hour_price`     | `sensor.rce_pse_previous_period_price` | Previous Hour Price  | Previous Period Price | Cena Poprzedniej Godziny | Cena Poprzedni Okres  |
+| Stary entity_id                      | Nowy entity_id                         | EN (stara)           | EN (nowa)             | PL (stara)               | PL (nowa)             |
+| ------------------------------------ | -------------------------------------- | -------------------- | --------------------- | ------------------------ | --------------------- |
+| `sensor.rce_pse_next_hour_price`     | `sensor.rce_pse_next_period_price`     | Next Hour Price      | Next Period Price     | Cena Następnej Godziny   | Cena Następny Okres   |
+| `sensor.rce_pse_previous_hour_price` | `sensor.rce_pse_previous_period_price` | Previous Hour Price  | Previous Period Price | Cena Poprzedniej Godziny | Cena Poprzedni Okres  |
 
 W skryptach, automatyzacjach i kartach zamień stare entity_id na `sensor.rce_pse_next_period_price` i `sensor.rce_pse_previous_period_price`. Jednostka (PLN/MWh) i sens danych bez zmian.
 
@@ -107,8 +105,8 @@ W skryptach, automatyzacjach i kartach zamień stare entity_id na `sensor.rce_ps
 
 Dawnej "Cena za kWh" / "Price per kWh" odpowiada teraz sensor **Cena sprzedaży prosument** w PLN/MWh (jak pozostałe ceny).
 
-| Stary entity_id                   | Nowy entity_id                              | EN (stara)       | EN (nowa)              | PL (stara)   | PL (nowa)                 |
-| --------------------------------- | ------------------------------------------- | ---------------- | ---------------------- | ------------ | ------------------------- |
+| Stary entity_id                   | Nowy entity_id                               | EN (stara)       | EN (nowa)              | PL (stara)   | PL (nowa)                 |
+| --------------------------------- | -------------------------------------------- | ---------------- | ---------------------- | ------------ | ------------------------- |
 | `sensor.rce_pse_today_kwh_price`  | `sensor.rce_pse_today_prosumer_selling_price`| Price per kWh    | Prosumer Selling Price | Cena za kWh  | Cena Sprzedaży Prosument  |
 
 - **Entity ID:** zamień `sensor.rce_pse_today_kwh_price` na `sensor.rce_pse_today_prosumer_selling_price`.
@@ -153,6 +151,3 @@ template:
 - Dla sensorów **tylko z nową nazwą** (bez zmiany entity_id): nic nie zmieniaj w automatyzacjach.
 - Stan czasu to teraz datetime (w szablonach często w formacie ISO). Do porównań i formatowania używaj `as_timestamp()` oraz `timestamp_custom()`.
 
----
-
-Dokument techniczny zmian (wersja angielska, tabele wszystkich encji): [v2-sensors-changes.md](v2-sensors-changes.md).
