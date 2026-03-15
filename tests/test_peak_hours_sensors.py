@@ -149,14 +149,13 @@ class TestTomorrowPeakHoursSensor:
         sensor = RCETomorrowPeakHoursSensor(mock_coordinator)
         assert sensor._attr_unique_id == "rce_pse_tomorrow_peak_hours"
 
-    def test_not_available_before_14(self, mock_coordinator):
+    def test_available_when_coordinator_has_data_like_tomorrow_price(self, mock_coordinator):
         mock_coordinator.data["pdgsz_data"] = []
         sensor = RCETomorrowPeakHoursSensor(mock_coordinator)
-        with patch.object(sensor, 'is_tomorrow_data_available', return_value=False):
-            assert sensor.available is False
+        assert sensor.available is True
 
-    def test_available_after_14_when_pdgsz_present(self, mock_coordinator):
+    def test_native_value_none_when_no_tomorrow_data_shows_unknown(self, mock_coordinator):
         mock_coordinator.data["pdgsz_data"] = []
         sensor = RCETomorrowPeakHoursSensor(mock_coordinator)
-        with patch.object(sensor, 'is_tomorrow_data_available', return_value=True):
-            assert sensor.available is True
+        with patch.object(sensor, 'get_tomorrow_pdgsz_data', return_value=[]):
+            assert sensor.native_value is None
