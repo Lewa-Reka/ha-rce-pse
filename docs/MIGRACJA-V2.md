@@ -75,8 +75,6 @@ Dla poniższych encji zmieniły się tylko **nazwy w UI** (EN/PL). Entity_id poz
 | okna poniżej progu             | Price Below Threshold Start/End      | Below-Threshold Window Today      | Cena Poniżej Progu Początek/Koniec Dzisiaj  | Początek/Koniec Okna Poniżej Progu Dzisiaj  |
 | binary konfig. i progu          | Today Custom Cheapest Window itd.    | Cheapest / Expensive / …          | Aktywne Konfig. Najtańsze Okno Dzisiaj      | Najtańsze Okno / Najdroższe / Cena Poniżej   |
 
-Pełna tabela mapowań nazw (stara → nowa) dla wszystkich encji jest w archiwalnym dokumencie [v2-sensors-changes.md](v2-sensors-changes.md) (wersja angielska).
-
 ---
 
 ## Sensory cen okresu (zmiana nazw i entity_id, usunięcia)
