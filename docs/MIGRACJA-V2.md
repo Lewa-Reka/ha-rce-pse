@@ -153,6 +153,3 @@ template:
 - Dla sensorów **tylko z nową nazwą** (bez zmiany entity_id): nic nie zmieniaj w automatyzacjach.
 - Stan czasu to teraz datetime (w szablonach często w formacie ISO). Do porównań i formatowania używaj `as_timestamp()` oraz `timestamp_custom()`.
 
----
-
-Dokument techniczny zmian (wersja angielska, tabele wszystkich encji): [v2-sensors-changes.md](v2-sensors-changes.md).
