@@ -172,7 +172,7 @@
         "name": "Lowest Price End Tomorrow"
       },
       "rce_pse_today_peak_hours": {
-        "name": "Peak Hours Today",
+        "name": "Energy Compass Today",
         "state_attributes": {
           "recommended_usage": {
             "name": "Recommended usage"
@@ -189,7 +189,7 @@
         }
       },
       "rce_pse_tomorrow_peak_hours": {
-        "name": "Peak Hours Tomorrow",
+        "name": "Energy Compass Tomorrow",
         "state_attributes": {
           "recommended_usage": {
             "name": "Recommended usage"

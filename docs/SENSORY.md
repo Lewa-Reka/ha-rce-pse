@@ -32,12 +32,12 @@
 
 Wszystkie zwracają **timestamp** (datetime). Aby pokazać tylko godzinę (np. HH:MM), użyj szablonu: `as_timestamp(...) | timestamp_custom('%H:%M')`. Szczegóły: [Migracja do v2.0.0](MIGRACJA-V2.md).
 
-## Godziny Szczytu (PDGSZ)
+## Kompas Energetyczny (PDGSZ)
 
 Dane z raportu PSE „Godziny Szczytu” (API PDGSZ) – kiedy zalecane jest użytkowanie energii, a kiedy oszczędzanie.
 
-- **Godziny Szczytu Dzisiaj** – stan: wartość tekstowa dla bieżącej godziny (np. „Zalecane użytkowanie”) lub brak danych jak przy sensorach „Jutro” (np. okna najniższej ceny) – wtedy stan „unknown”. Atrybuty: **records** – surowa odpowiedź API z dnia (tylko wpisy aktywne, is_active); **hourly_states** – lista 24 wpisów `{ "hour": "HH:00", "state": "klucz", "state_display": "tekst np. Zalecane użytkowanie" }` dla każdej godziny dnia.
-- **Godziny Szczytu Jutro** – to samo dla następnego dnia (dostępne po 14:00 CET); stan dla aktualnej godziny, ale dnia jutrzejszego (jak sensor „Cena Jutro”).
+- **Kompas Energetyczny Dzisiaj** – stan: wartość tekstowa dla bieżącej godziny (np. „Zalecane użytkowanie”) lub brak danych jak przy sensorach „Jutro” (np. okna najniższej ceny) – wtedy stan „unknown”. Atrybuty: **records** – surowa odpowiedź API z dnia (tylko wpisy aktywne, is_active); **hourly_states** – lista 24 wpisów `{ "hour": "HH:00", "state": "klucz", "state_display": "tekst np. Zalecane użytkowanie" }` dla każdej godziny dnia.
+- **Kompas Energetyczny Jutro** – to samo dla następnego dnia (dostępne po 14:00 CET); stan dla aktualnej godziny, ale dnia jutrzejszego (jak sensor „Cena Jutro”).
 
 Możliwe stany (wyświetlane jako tekst w języku interfejsu):
 
