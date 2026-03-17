@@ -1,6 +1,13 @@
 from __future__ import annotations
 
+import asyncio
+from datetime import timedelta
 from typing import Any
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
+
+import pytest
+from homeassistant.helpers.update_coordinator import UpdateFailed
+from homeassistant.util import dt as dt_util
 
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
 from custom_components.rce_pse.const import CONF_USE_HOURLY_PRICES, TAX_RATE
@@ -38,15 +45,6 @@ def test_apply_tax_to_data_with_and_without_neg_to_zero(mock_hass) -> None:
 
     third = processed[2]
     assert third["rce_pln"] == f"{350.0 * (1 + TAX_RATE):.2f}"
-
-import asyncio
-from datetime import timedelta
-from unittest.mock import MagicMock, patch, AsyncMock, Mock
-
-import pytest
-from homeassistant.helpers.update_coordinator import UpdateFailed
-from homeassistant.util import dt as dt_util
-
 
 class TestRCEPSEDataUpdateCoordinator:
 
