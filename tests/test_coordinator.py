@@ -39,8 +39,6 @@ def test_apply_tax_to_data_with_and_without_neg_to_zero(mock_hass) -> None:
     third = processed[2]
     assert third["rce_pln"] == f"{350.0 * (1 + TAX_RATE):.2f}"
 
-from __future__ import annotations
-
 import asyncio
 from datetime import timedelta
 from unittest.mock import MagicMock, patch, AsyncMock, Mock
