@@ -21,6 +21,7 @@ from .const import (
     CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     CONF_USE_HOURLY_PRICES,
     CONF_LOW_PRICE_THRESHOLD,
+    CONF_USE_GROSS_PRICES,
     DEFAULT_TIME_WINDOW_START,
     DEFAULT_TIME_WINDOW_END,
     DEFAULT_WINDOW_DURATION_HOURS,
@@ -28,6 +29,7 @@ from .const import (
     DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
     DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     DEFAULT_USE_HOURLY_PRICES,
+    DEFAULT_USE_GROSS_PRICES,
     DEFAULT_LOW_PRICE_THRESHOLD,
 )
 
@@ -107,6 +109,9 @@ CONFIG_SCHEMA = vol.Schema({
         )
     ),
     vol.Optional(CONF_USE_HOURLY_PRICES, default=DEFAULT_USE_HOURLY_PRICES): selector.BooleanSelector(
+        selector.BooleanSelectorConfig()
+    ),
+    vol.Optional(CONF_USE_GROSS_PRICES, default=DEFAULT_USE_GROSS_PRICES): selector.BooleanSelector(
         selector.BooleanSelectorConfig()
     ),
     vol.Optional(CONF_LOW_PRICE_THRESHOLD, default=DEFAULT_LOW_PRICE_THRESHOLD): selector.NumberSelector(
@@ -299,6 +304,12 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
             vol.Optional(
                 CONF_USE_HOURLY_PRICES, 
                 default=current_data.get(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
+            ): selector.BooleanSelector(
+                selector.BooleanSelectorConfig()
+            ),
+            vol.Optional(
+                CONF_USE_GROSS_PRICES, 
+                default=current_data.get(CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES)
             ): selector.BooleanSelector(
                 selector.BooleanSelectorConfig()
             ),

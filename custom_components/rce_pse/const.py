@@ -35,11 +35,13 @@ CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS: Final[str] = "second_expensive_wind
 CONF_WINDOW_DURATION_HOURS: Final[str] = "window_duration_hours"
 CONF_USE_HOURLY_PRICES: Final[str] = "use_hourly_prices"
 CONF_LOW_PRICE_THRESHOLD: Final[str] = "low_price_threshold"
+CONF_USE_GROSS_PRICES: Final[str] = "use_gross_prices"
 
 DEFAULT_TIME_WINDOW_START: Final[int] = 0  
 DEFAULT_TIME_WINDOW_END: Final[int] = 24   
 DEFAULT_WINDOW_DURATION_HOURS: Final[int] = 2
 DEFAULT_USE_HOURLY_PRICES: Final[bool] = False
+DEFAULT_USE_GROSS_PRICES: Final[bool] = False
 
 DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START: Final[int] = 6
 DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END: Final[int] = 10

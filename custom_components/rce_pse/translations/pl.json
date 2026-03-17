@@ -15,7 +15,8 @@
           "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
           "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
           "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
-          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)"
+          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
+          "use_gross_prices": "Korzystaj z cen brutto (z VAT)"
         },
         "data_description": {
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
@@ -28,7 +29,8 @@
           "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
           "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
           "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
-          "low_price_threshold": "Używany przez sensory okien niskiej ceny."
+          "low_price_threshold": "Używany przez sensory okien niskiej ceny.",
+          "use_gross_prices": "Po włączeniu wszystkie ceny będą przeliczane na brutto z wykorzystaniem stawki VAT (obecnie 23%) bez konieczności ręcznych przeliczeń w automatyzacjach."
         }
       }
     },
@@ -55,7 +57,8 @@
           "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
           "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
           "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
-          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)"
+          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
+          "use_gross_prices": "Korzystaj z cen brutto (z VAT)"
         },
         "data_description": {
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
@@ -68,7 +71,8 @@
           "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
           "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
           "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
-          "low_price_threshold": "Używane przez sensory okien niskiej ceny."
+          "low_price_threshold": "Używane przez sensory okien niskiej ceny.",
+          "use_gross_prices": "Po włączeniu wszystkie ceny będą przeliczane na brutto z wykorzystaniem stawki VAT (obecnie 23%) bez konieczności ręcznych przeliczeń w automatyzacjach."
         }
       }
     },
