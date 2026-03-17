@@ -57,7 +57,8 @@ class TestTodayMainSensors:
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = {"rce_pln_neg_to_zero": "350.50"}
-            
+            mock_coordinator._get_config_value.return_value = False
+
             state = sensor.native_value
             assert state == 431.12
 
@@ -90,6 +91,16 @@ class TestTodayMainSensors:
             
             state = sensor.native_value
             assert state == 0
+
+    def test_today_prosumer_selling_price_sensor_state_with_data_gross_mode(self, mock_coordinator):
+        sensor = RCETodayProsumerSellingPriceSensor(mock_coordinator)
+        
+        with patch.object(sensor, "get_current_price_data") as mock_current_price:
+            mock_current_price.return_value = {"rce_pln_neg_to_zero": "350.50"}
+            mock_coordinator._get_config_value.return_value = True
+
+            state = sensor.native_value
+            assert state == 350.5
 
 
 class TestTodayStatsSensors:

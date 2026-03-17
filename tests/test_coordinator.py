@@ -2,15 +2,49 @@ from __future__ import annotations
 
 import asyncio
 from datetime import timedelta
-from unittest.mock import MagicMock, patch, AsyncMock, Mock
+from typing import Any
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
 import pytest
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from homeassistant.util import dt as dt_util
 
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
-from custom_components.rce_pse.const import CONF_USE_HOURLY_PRICES
+from custom_components.rce_pse.const import CONF_USE_HOURLY_PRICES, TAX_RATE
 
+
+def _build_record(rce_pln: float, rce_pln_neg_to_zero: float | None = None) -> dict[str, Any]:
+    record: dict[str, Any] = {
+        "rce_pln": f"{rce_pln:.2f}",
+    }
+    if rce_pln_neg_to_zero is not None:
+        record["rce_pln_neg_to_zero"] = f"{rce_pln_neg_to_zero:.2f}"
+    return record
+
+
+def test_apply_tax_to_data_with_and_without_neg_to_zero(mock_hass) -> None:
+    coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+
+    data = [
+        _build_record(300.0, 280.0),
+        _build_record(0.0, 0.0),
+        _build_record(350.0),
+    ]
+
+    processed = coordinator._apply_tax_to_data(data)
+
+    assert len(processed) == 3
+
+    first = processed[0]
+    assert first["rce_pln"] == f"{300.0 * (1 + TAX_RATE):.2f}"
+    assert first["rce_pln_neg_to_zero"] == f"{280.0 * (1 + TAX_RATE):.2f}"
+
+    second = processed[1]
+    assert second["rce_pln"] == f"{0.0 * (1 + TAX_RATE):.2f}"
+    assert second["rce_pln_neg_to_zero"] == f"{0.0 * (1 + TAX_RATE):.2f}"
+
+    third = processed[2]
+    assert third["rce_pln"] == f"{350.0 * (1 + TAX_RATE):.2f}"
 
 class TestRCEPSEDataUpdateCoordinator:
 

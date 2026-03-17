@@ -17,10 +17,13 @@ from .const import (
     API_SELECT,
     API_UPDATE_INTERVAL,
     CONF_USE_HOURLY_PRICES,
+    CONF_USE_GROSS_PRICES,
     DEFAULT_USE_HOURLY_PRICES,
+    DEFAULT_USE_GROSS_PRICES,
     DOMAIN,
     PSE_API_URL,
     PSE_PDGSZ_API_URL,
+    TAX_RATE,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -139,6 +142,11 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 else:
                     _LOGGER.debug("Hourly prices option disabled, using original 15-minute data")
                     processed_data = self._add_neg_to_zero_key(raw_data)
+
+                use_gross_prices = self._get_config_value(CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES)
+                if use_gross_prices:
+                    _LOGGER.debug("Gross prices option enabled, applying TAX_RATE %.2f to all price fields", TAX_RATE)
+                    processed_data = self._apply_tax_to_data(processed_data)
                 
                 try:
                     pdgsz_data = await self._fetch_pdgsz(session, today)
@@ -263,6 +271,34 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         
         _LOGGER.debug("Added rce_pln_neg_to_zero key to %d records", len(processed_data))
         
+        return processed_data
+
+    def _apply_tax_to_data(self, data: list[dict]) -> list[dict]:
+        if not data:
+            return data
+
+        processed_data: list[dict] = []
+
+        for record in data:
+            try:
+                new_record = record.copy()
+                base_price = float(new_record["rce_pln"])
+                gross_price = base_price * (1 + TAX_RATE)
+                new_record["rce_pln"] = f"{gross_price:.2f}"
+
+                neg_to_zero_value = new_record.get("rce_pln_neg_to_zero")
+                if neg_to_zero_value is not None:
+                    neg_to_zero_price = float(neg_to_zero_value)
+                    gross_neg_to_zero = neg_to_zero_price * (1 + TAX_RATE)
+                    new_record["rce_pln_neg_to_zero"] = f"{gross_neg_to_zero:.2f}"
+
+                processed_data.append(new_record)
+            except (ValueError, KeyError) as e:
+                _LOGGER.warning("Failed to apply tax to record: %s, error: %s", record, e)
+                processed_data.append(record)
+
+        _LOGGER.debug("Applied TAX_RATE to %d records", len(processed_data))
+
         return processed_data
 
     async def async_close(self) -> None:
