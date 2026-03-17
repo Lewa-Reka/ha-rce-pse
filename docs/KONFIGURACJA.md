@@ -58,6 +58,20 @@ Opcja przydatna przy rozliczeniach net-billing (prosumenci, liczniki z rozliczen
 - Włączone: liczone są średnie godzinowe; ta sama cena jest przypisana do wszystkich czterech przedziałów 15-min w danej godzinie.  
 - Przykład: godzina 0 z cenami [300, 320, 340, 360] PLN/MWh → we wszystkich czterech przedziałach wyświetlana jest 330 PLN (średnia).
 
+### Ceny netto/brutto
+
+Integracja pozwala wybrać, czy wszystkie prezentowane ceny mają być traktowane jako netto (tak jak w API PSE), czy brutto (z doliczonym VAT według stawki `TAX_RATE`, obecnie 23%).
+
+- **Użyj cen brutto (z VAT)** (tak/nie): globalne przełączenie netto/brutto  
+  - *Domyślnie:* nie – ceny pozostają w formie netto z API PSE.  
+  - *Po włączeniu:* wszystkie wartości cenowe w danych koordynatora (`rce_pln` oraz `rce_pln_neg_to_zero`) są przemnażane przez `(1 + TAX_RATE)` i dopiero takie dane są przekazywane do sensorów.  
+  - *Efekt:* wszystkie sensory oparte na cenach (dzisiejsze, jutrzejsze, statystyki, okna itp.) automatycznie działają na cenach brutto, bez potrzeby dodatkowych przeliczeń w automatyzacjach.
+
+Sensor ceny sprzedaży prosumenta (`rce_pse_today_prosumer_selling_price`) zawsze bazuje na wartości `rce_pln_neg_to_zero`:
+
+- w trybie **netto** nadal dolicza VAT lokalnie (mnożenie przez `(1 + TAX_RATE)`),  
+- w trybie **brutto** nie dolicza VAT ponownie – zwraca już przeliczoną wartość brutto, aby uniknąć podwójnego naliczania podatku.
+
 ### Próg niskiej ceny sprzedaży
 
 Próg (PLN/MWh) używany do wyznaczania "okna niskiej ceny" w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory "Początek/Koniec okna poniżej progu dzisiaj/jutro"; binary sensor "Cena poniżej progu" ma stan `on`, gdy aktualny czas jest w tym okresie (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan "unknown" (integracja działa normalnie).
