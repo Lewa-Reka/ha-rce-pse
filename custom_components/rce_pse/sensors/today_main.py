@@ -4,7 +4,7 @@ from datetime import timedelta
 from typing import Any, TYPE_CHECKING
 
 from .base import RCEBaseSensor
-from ..const import TAX_RATE
+from ..const import CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES, TAX_RATE
 
 if TYPE_CHECKING:
     from ..coordinator import RCEPSEDataUpdateCoordinator
@@ -64,5 +64,13 @@ class RCETodayProsumerSellingPriceSensor(RCEBaseSensor):
             price = float(current_data["rce_pln_neg_to_zero"])
             if price <= 0:
                 return 0
+
+            use_gross_prices = self.coordinator._get_config_value(
+                CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES
+            )
+
+            if use_gross_prices:
+                return round(price, 2)
+
             return round(price * (1 + TAX_RATE), 2)
         return None
