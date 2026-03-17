@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
-from custom_components.rce_pse.const import TAX_RATE
+from custom_components.rce_pse.const import CONF_USE_HOURLY_PRICES, TAX_RATE
 
 
 def _build_record(rce_pln: float, rce_pln_neg_to_zero: float | None = None) -> dict[str, Any]:
@@ -46,9 +46,6 @@ from unittest.mock import MagicMock, patch, AsyncMock, Mock
 import pytest
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from homeassistant.util import dt as dt_util
-
-from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
-from custom_components.rce_pse.const import CONF_USE_HOURLY_PRICES
 
 
 class TestRCEPSEDataUpdateCoordinator:
