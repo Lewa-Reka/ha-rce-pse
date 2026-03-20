@@ -1,6 +1,6 @@
 # Konfiguracja
 
-Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. Integracja oferuje opcje dostosowania okien czasowych (najtańsze / najdroższe godziny), aby ułatwić znalezienie najlepszych cen prądu.
+Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. Integracja oferuje opcje dostosowania okien czasowych (tanie / drogie godziny), aby ułatwić znalezienie najlepszych cen prądu.
 
 ## Opcje konfiguracji
 
@@ -74,7 +74,7 @@ Sensor ceny sprzedaży prosumenta (`rce_pse_today_prosumer_selling_price`) zawsz
 
 ### Próg niskiej ceny sprzedaży
 
-Próg (PLN/MWh) używany do wyznaczania "okna niskiej ceny" w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory "Początek/Koniec okna poniżej progu dzisiaj/jutro"; binary sensor "Cena poniżej progu" ma stan `on`, gdy aktualny czas jest w tym okresie (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan "unknown" (integracja działa normalnie).
+Próg (PLN/MWh) używany do wyznaczania "okna niskiej ceny" w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory "Cena Poniżej Progu Dzisiaj/Jutro Początek/Koniec"; binary sensor "Cena poniżej progu aktywna" ma stan `on`, gdy trwa ten okres (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan "unknown" (integracja działa normalnie).
 
 - **Próg niskiej ceny sprzedaży** (PLN/MWh): zakres -2000–2000 (dopuszczalne wartości ujemne)  
   - *Domyślnie:* 0
@@ -111,9 +111,9 @@ Integracja przeładuje się z nowymi ustawieniami.
 Po skonfigurowaniu okien integracja udostępnia m.in.:
 
 **Dzisiaj:**  
-- Początek/Koniec najtańszego okna, Średnia najtańszego okna dzisiaj  
-- Początek/Koniec najdroższego okna, Średnia najdroższego okna dzisiaj  
-- Początek/Koniec drugiego najdroższego okna, Średnia drugiego najdroższego okna dzisiaj  
+- Tanie Okno Dzisiaj Początek/Koniec, Tanie Okno Dzisiaj Średnia  
+- Drogie Okno Dzisiaj Początek/Koniec, Drogie Okno Dzisiaj Średnia  
+- Drugie Drogie Okno Dzisiaj Początek/Koniec, Drugie Drogie Okno Dzisiaj Średnia  
 
 **Jutro:**  
 - Odpowiednie sensory dla jutra (dane po 14:00 CET)

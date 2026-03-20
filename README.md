@@ -43,7 +43,7 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 
 - Bieżąca cena energii z dokładnością 15 min, dane historyczne i prognoza następnego okresu
 - Statystyki dzienne (średnia, min, max, mediana), porównanie dziś vs jutro
-- Konfigurowalne okna najtańszych i najdroższych godzin, sensory czasowe (timestampy)
+- Definiowane przez użytkownika okna tanich i drogich godzin, sensory czasowe (timestampy)
 - Opcjonalne ceny godzinowe (net-billing), próg niskiej ceny sprzedaży
 - Dane "jutro" dostępne po 14:00 CET, odświeżanie co 30 min
 

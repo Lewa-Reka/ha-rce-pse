@@ -26,9 +26,9 @@
 
 ## Godziny cen (timestampy, dane PSE)
 
-- **Początek/Koniec najniższej ceny dzisiaj** – kiedy zaczyna i kończy się okres najniższej ceny
-- **Początek/Koniec najwyższej ceny dzisiaj**
-- **Początek/Koniec najniższej/najwyższej ceny jutro**
+- **Najniższa Cena Dzisiaj Początek/Koniec** – kiedy zaczyna i kończy się okres najniższej ceny
+- **Najwyższa Cena Dzisiaj Początek/Koniec**
+- **Najniższa/Najwyższa Cena Jutro Początek/Koniec**
 
 Wszystkie zwracają **timestamp** (datetime). Aby pokazać tylko godzinę (np. HH:MM), użyj szablonu: `as_timestamp(...) | timestamp_custom('%H:%M')`. Szczegóły: [Migracja do v2.0.0](MIGRACJA-V2.md).
 
@@ -54,22 +54,22 @@ Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md).
 
 ### Dzisiaj
 
-- **Początek/Koniec najtańszego okna dzisiaj** (timestamp)
-- **Średnia najtańszego okna dzisiaj** (PLN/MWh)
-- **Początek/Koniec najdroższego okna dzisiaj**, **Średnia najdroższego okna dzisiaj**
-- **Początek/Koniec drugiego najdroższego okna dzisiaj**, **Średnia drugiego najdroższego okna dzisiaj**
+- **Tanie Okno Dzisiaj Początek/Koniec** (timestamp)
+- **Tanie Okno Dzisiaj Średnia** (PLN/MWh)
+- **Drogie Okno Dzisiaj Początek/Koniec**, **Drogie Okno Dzisiaj Średnia**
+- **Drugie Drogie Okno Dzisiaj Początek/Koniec**, **Drugie Drogie Okno Dzisiaj Średnia**
 
 ### Jutro (po 14:00 CET)
 
-- Odpowiednie sensory: najtańsze okno, najdroższe, drugie najdroższe (początek, koniec, średnia)
+- Odpowiednie sensory: tanie okno, drogie okno, drugie drogie okno (początek, koniec, średnia) z **Jutro** w nazwie (np. **Tanie Okno Jutro Początek**)
 
 ### Okna poniżej progu ceny
 
 Przy ustawionym "Progu niskiej ceny sprzedaży":
 
-- **Początek okna poniżej progu dzisiaj** – początek pierwszego ciągłego okresu dzisiaj z ceną ≤ progu
-- **Koniec okna poniżej progu dzisiaj**
-- **Początek/Koniec okna poniżej progu jutro**
+- **Cena Poniżej Progu Dzisiaj Początek** – początek pierwszego ciągłego okresu dzisiaj z ceną ≤ progu
+- **Cena Poniżej Progu Dzisiaj Koniec**
+- **Cena Poniżej Progu Jutro Początek/Koniec**
 
 Gdy w danym dniu nie ma takiego okresu, stan sensorów to "unknown"; integracja pozostaje dostępna.
 
@@ -83,15 +83,15 @@ Wskazują, czy **aktualny moment** jest w danym oknie cenowym (przydatne w autom
 
 ### Okna PSE (najniższa/najwyższa cena)
 
-- **Najniższa cena** – `on`, gdy jesteś w okresie najniższej ceny w danym dniu
-- **Najwyższa cena** – `on`, gdy jesteś w okresie najwyższej ceny
+- **Najniższa cena aktywna** – `on`, gdy trwa okres najniższej ceny w danym dniu
+- **Najwyższa cena aktywna** – `on`, gdy trwa okres najwyższej ceny
 
 ### Okna konfigurowalne
 
-- **Najtańsze okno** – `on`, gdy jesteś w skonfigurowanym najtańszym oknie
-- **Najdroższe okno** – w skonfigurowanym najdroższym
-- **Drugie najdroższe okno** – w drugim najdroższym
-- **Cena poniżej progu** – `on`, gdy aktualny czas jest w pierwszym okresie dzisiaj z ceną ≤ progu
+- **Tanie okno aktywne** – `on`, gdy trwa skonfigurowane najtańsze okno
+- **Drogie okno aktywne** – `on`, gdy trwa skonfigurowane najdroższe okno
+- **Drugie drogie okno aktywne** – `on`, gdy trwa drugie najdroższe okno
+- **Cena poniżej progu aktywna** – `on`, gdy trwa pierwszy ciągły okres dzisiaj z ceną ≤ progu
 
 ---
 

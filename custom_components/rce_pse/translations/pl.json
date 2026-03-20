@@ -8,12 +8,12 @@
           "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
           "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
           "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
-          "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
-          "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
-          "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)",
-          "second_expensive_time_window_start": "Drugie najdroższe - początek przeszukiwania (godzina)",
-          "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
-          "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
+          "expensive_time_window_start": "Drogie - początek przeszukiwania (godzina)",
+          "expensive_time_window_end": "Drogie - koniec przeszukiwania (godzina)",
+          "expensive_window_duration_hours": "Drogie - długość poszukiwanego okna (godziny)",
+          "second_expensive_time_window_start": "Drugie drogie - początek przeszukiwania (godzina)",
+          "second_expensive_time_window_end": "Drugie drogie - koniec przeszukiwania (godzina)",
+          "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)",
           "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
           "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
           "use_gross_prices": "Korzystaj z cen brutto (z VAT)"
@@ -22,12 +22,12 @@
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
           "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
           "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
-          "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
-          "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
-          "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)",
-          "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego najdroższego okna (0-23)",
-          "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
-          "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
+          "expensive_time_window_start": "Godzina początkowa dla poszukiwania drogich okien (0-23)",
+          "expensive_time_window_end": "Godzina końcowa dla poszukiwania drogich okien (1-24)",
+          "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego (1-24 godzin)",
+          "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego drogiego okna (0-23)",
+          "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego drogiego okna (1-24)",
+          "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)",
           "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
           "low_price_threshold": "Używany przez sensory okien niskiej ceny.",
           "use_gross_prices": "Po włączeniu wszystkie ceny będą przeliczane na brutto z wykorzystaniem stawki VAT (obecnie 23%) bez konieczności ręcznych przeliczeń w automatyzacjach."
@@ -50,12 +50,12 @@
           "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
           "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
           "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
-          "expensive_time_window_start": "Najdroższe - początek przeszukiwania (godzina)",
-          "expensive_time_window_end": "Najdroższe - koniec przeszukiwania (godzina)",
-          "expensive_window_duration_hours": "Najdroższe - długość poszukiwanego okna (godziny)",
-          "second_expensive_time_window_start": "Drugie najdroższe - początek przeszukiwania (godzina)",
-          "second_expensive_time_window_end": "Drugie najdroższe - koniec przeszukiwania (godzina)",
-          "second_expensive_window_duration_hours": "Drugie najdroższe - długość poszukiwanego okna (godziny)",
+          "expensive_time_window_start": "Drogie - początek przeszukiwania (godzina)",
+          "expensive_time_window_end": "Drogie - koniec przeszukiwania (godzina)",
+          "expensive_window_duration_hours": "Drogie - długość poszukiwanego okna (godziny)",
+          "second_expensive_time_window_start": "Drugie drogie - początek przeszukiwania (godzina)",
+          "second_expensive_time_window_end": "Drugie drogie - koniec przeszukiwania (godzina)",
+          "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)",
           "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
           "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
           "use_gross_prices": "Korzystaj z cen brutto (z VAT)"
@@ -64,12 +64,12 @@
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
           "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
           "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
-          "expensive_time_window_start": "Godzina początkowa dla poszukiwania najdroższych okien (0-23)",
-          "expensive_time_window_end": "Godzina końcowa dla poszukiwania najdroższych okien (1-24)",
-          "expensive_window_duration_hours": "Długość ciągłego najdroższego okna czasowego (1-24 godzin)",
-          "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego najdroższego okna (0-23)",
-          "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego najdroższego okna (1-24)",
-          "second_expensive_window_duration_hours": "Długość ciągłego drugiego najdroższego okna czasowego (1-24 godzin)",
+          "expensive_time_window_start": "Godzina początkowa dla poszukiwania drogich okien (0-23)",
+          "expensive_time_window_end": "Godzina końcowa dla poszukiwania drogich okien (1-24)",
+          "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego (1-24 godzin)",
+          "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego drogiego okna (0-23)",
+          "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego drogiego okna (1-24)",
+          "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)",
           "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
           "low_price_threshold": "Używane przez sensory okien niskiej ceny.",
           "use_gross_prices": "Po włączeniu wszystkie ceny będą przeliczane na brutto z wykorzystaniem stawki VAT (obecnie 23%) bez konieczności ręcznych przeliczeń w automatyzacjach."
@@ -128,52 +128,52 @@
         "name": "Jutro vs Dzisiaj Średnia"
       },
       "rce_pse_today_cheapest_window_start": {
-        "name": "Początek Najtańszego Okna Dzisiaj"
+        "name": "Tanie Okno Dzisiaj Początek"
       },
       "rce_pse_today_cheapest_window_end": {
-        "name": "Koniec Najtańszego Okna Dzisiaj"
+        "name": "Tanie Okno Dzisiaj Koniec"
       },
       "rce_pse_today_expensive_window_start": {
-        "name": "Początek Najdroższego Okna Dzisiaj"
+        "name": "Drogie Okno Dzisiaj Początek"
       },
       "rce_pse_today_expensive_window_end": {
-        "name": "Koniec Najdroższego Okna Dzisiaj"
+        "name": "Drogie Okno Dzisiaj Koniec"
       },
       "rce_pse_tomorrow_cheapest_window_start": {
-        "name": "Początek Najtańszego Okna Jutro"
+        "name": "Tanie Okno Jutro Początek"
       },
       "rce_pse_tomorrow_cheapest_window_end": {
-        "name": "Koniec Najtańszego Okna Jutro"
+        "name": "Tanie Okno Jutro Koniec"
       },
       "rce_pse_tomorrow_expensive_window_start": {
-        "name": "Początek Najdroższego Okna Jutro"
+        "name": "Drogie Okno Jutro Początek"
       },
       "rce_pse_tomorrow_expensive_window_end": {
-        "name": "Koniec Najdroższego Okna Jutro"
+        "name": "Drogie Okno Jutro Koniec"
       },
       "rce_pse_today_max_price_hour_start": {
-        "name": "Początek Najwyższej Ceny Dzisiaj"
+        "name": "Najwyższa Cena Dzisiaj Początek"
       },
       "rce_pse_today_max_price_hour_end": {
-        "name": "Koniec Najwyższej Ceny Dzisiaj"
+        "name": "Najwyższa Cena Dzisiaj Koniec"
       },
       "rce_pse_today_min_price_hour_start": {
-        "name": "Początek Najniższej Ceny Dzisiaj"
+        "name": "Najniższa Cena Dzisiaj Początek"
       },
       "rce_pse_today_min_price_hour_end": {
-        "name": "Koniec Najniższej Ceny Dzisiaj"
+        "name": "Najniższa Cena Dzisiaj Koniec"
       },
       "rce_pse_tomorrow_max_price_hour_start": {
-        "name": "Początek Najwyższej Ceny Jutro"
+        "name": "Najwyższa Cena Jutro Początek"
       },
       "rce_pse_tomorrow_max_price_hour_end": {
-        "name": "Koniec Najwyższej Ceny Jutro"
+        "name": "Najwyższa Cena Jutro Koniec"
       },
       "rce_pse_tomorrow_min_price_hour_start": {
-        "name": "Początek Najniższej Ceny Jutro"
+        "name": "Najniższa Cena Jutro Początek"
       },
       "rce_pse_tomorrow_min_price_hour_end": {
-        "name": "Koniec Najniższej Ceny Jutro"
+        "name": "Najniższa Cena Jutro Koniec"
       },
       "rce_pse_today_peak_hours": {
         "name": "Kompas Energetyczny Dzisiaj",
@@ -210,66 +210,66 @@
         }
       },
       "rce_pse_today_second_expensive_window_start": {
-        "name": "Początek Drugiego Najdroższego Okna Dzisiaj"
+        "name": "Drugie Drogie Okno Dzisiaj Początek"
       },
       "rce_pse_today_second_expensive_window_end": {
-        "name": "Koniec Drugiego Najdroższego Okna Dzisiaj"
+        "name": "Drugie Drogie Okno Dzisiaj Koniec"
       },
       "rce_pse_tomorrow_second_expensive_window_start": {
-        "name": "Początek Drugiego Najdroższego Okna Jutro"
+        "name": "Drugie Drogie Okno Jutro Początek"
       },
       "rce_pse_tomorrow_second_expensive_window_end": {
-        "name": "Koniec Drugiego Najdroższego Okna Jutro"
+        "name": "Drugie Drogie Okno Jutro Koniec"
       },
       "rce_pse_today_cheapest_window_avg_price": {
-        "name": "Średnia Najtańszego Okna Dzisiaj"
+        "name": "Tanie Okno Średnia Cena Dzisiaj"
       },
       "rce_pse_today_expensive_window_avg_price": {
-        "name": "Średnia Najdroższego Okna Dzisiaj"
+        "name": "Drogie Okno Średnia Cena Dzisiaj"
       },
       "rce_pse_today_second_expensive_window_avg_price": {
-        "name": "Średnia Drugiego Najdroższego Okna Dzisiaj"
+        "name": "Drugie Drogie Okno Średnia Cena Dzisiaj"
       },
       "rce_pse_tomorrow_cheapest_window_avg_price": {
-        "name": "Średnia Najtańszego Okna Jutro"
+        "name": "Tanie Okno Średnia Cena Jutro"
       },
       "rce_pse_tomorrow_expensive_window_avg_price": {
-        "name": "Średnia Najdroższego Okna Jutro"
+        "name": "Drogie Okno Średnia Cena Jutro"
       },
       "rce_pse_tomorrow_second_expensive_window_avg_price": {
-        "name": "Średnia Drugiego Najdroższego Okna Jutro"
+        "name": "Drugie Drogie Okno Średnia Cena Jutro"
       },
       "rce_pse_today_low_price_threshold_window_start": {
-        "name": "Początek Okna Poniżej Progu Dzisiaj"
+        "name": "Cena Poniżej Progu Dzisiaj Początek"
       },
       "rce_pse_today_low_price_threshold_window_end": {
-        "name": "Koniec Okna Poniżej Progu Dzisiaj"
+        "name": "Cena Poniżej Progu Dzisiaj Koniec"
       },
       "rce_pse_tomorrow_low_price_threshold_window_start": {
-        "name": "Początek Okna Poniżej Progu Jutro"
+        "name": "Cena Poniżej Progu Jutro Początek"
       },
       "rce_pse_tomorrow_low_price_threshold_window_end": {
-        "name": "Koniec Okna Poniżej Progu Jutro"
+        "name": "Cena Poniżej Progu Jutro Koniec"
       }
     },
     "binary_sensor": {
       "rce_pse_today_min_price_window_active": {
-        "name": "Najniższa Cena"
+        "name": "Najniższa Cena Aktywna"
       },
       "rce_pse_today_max_price_window_active": {
-        "name": "Najwyższa Cena"
+        "name": "Najwyższa Cena Aktywna"
       },
       "rce_pse_today_cheapest_window_active": {
-        "name": "Najtańsze Okno"
+        "name": "Tanie Okno Aktywne"
       },
       "rce_pse_today_expensive_window_active": {
-        "name": "Najdroższe Okno"
+        "name": "Drogie Okno Aktywne"
       },
       "rce_pse_today_second_expensive_window_active": {
-        "name": "Drugie Najdroższe Okno"
+        "name": "Drugie Drogie Okno Aktywne"
       },
       "rce_pse_today_low_price_threshold_window_active": {
-        "name": "Cena Poniżej Progu"
+        "name": "Cena Poniżej Progu Aktywna"
       }
     }
   }
