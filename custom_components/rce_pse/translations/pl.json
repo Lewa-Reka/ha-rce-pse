@@ -5,6 +5,9 @@
         "title": "Konfiguracja RCE PSE",
         "description": "Skonfiguruj integrację RCE PSE",
         "data": {
+          "use_hourly_prices": "Średnie ceny godzinowe",
+          "use_gross_prices": "Ceny brutto (z VAT)",
+          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
           "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
           "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
           "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
@@ -13,12 +16,12 @@
           "expensive_window_duration_hours": "Drogie - długość poszukiwanego okna (godziny)",
           "second_expensive_time_window_start": "Drugie drogie - początek przeszukiwania (godzina)",
           "second_expensive_time_window_end": "Drugie drogie - koniec przeszukiwania (godzina)",
-          "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)",
-          "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
-          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
-          "use_gross_prices": "Korzystaj z cen brutto (z VAT)"
+          "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)"
         },
         "data_description": {
+          "use_hourly_prices": "Dla każdej godziny liczona jest średnia z czterech opublikowanych cen kwadransowych. Wyłącz, aby używać surowych cen 15-minutowych z API PSE. Przydatne przy rozliczeniach net-billing i opomiarowaniu do godziny (art. 4b ust. 11 ustawy o OZE)",
+          "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach. Po wyłączeniu pozostają ceny netto z API PSE",
+          "low_price_threshold": "Używany przez sensory Cena Poniżej Progu",
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
           "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
           "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
@@ -27,10 +30,7 @@
           "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego (1-24 godzin)",
           "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego drogiego okna (0-23)",
           "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego drogiego okna (1-24)",
-          "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)",
-          "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
-          "low_price_threshold": "Używany przez sensory okien niskiej ceny.",
-          "use_gross_prices": "Po włączeniu wszystkie ceny będą przeliczane na brutto z wykorzystaniem stawki VAT (obecnie 23%) bez konieczności ręcznych przeliczeń w automatyzacjach."
+          "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)"
         }
       }
     },
@@ -44,9 +44,12 @@
   "options": {
     "step": {
       "init": {
-        "title": "Ustawienia RCE PSE",
-        "description": "Zmień ustawienia integracji RCE PSE",
+        "title": "Konfiguracja RCE PSE",
+        "description": "Zmień opcje konfiguracji RCE PSE",
         "data": {
+          "use_hourly_prices": "Średnie ceny godzinowe",
+          "use_gross_prices": "Ceny brutto (z VAT)",
+          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
           "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
           "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
           "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
@@ -55,12 +58,12 @@
           "expensive_window_duration_hours": "Drogie - długość poszukiwanego okna (godziny)",
           "second_expensive_time_window_start": "Drugie drogie - początek przeszukiwania (godzina)",
           "second_expensive_time_window_end": "Drugie drogie - koniec przeszukiwania (godzina)",
-          "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)",
-          "use_hourly_prices": "Korzystaj ze średnich cen godzinowych",
-          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
-          "use_gross_prices": "Korzystaj z cen brutto (z VAT)"
+          "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)"
         },
         "data_description": {
+          "use_hourly_prices": "Domyślnie włączone: dla każdej godziny liczona jest średnia z czterech opublikowanych cen kwadransowych (ta sama wartość we wszystkich czterech przedziałach w godzinie). Wyłącz, aby używać surowych cen 15-minutowych z API PSE. Przydatne przy rozliczeniach net-billing i opomiarowaniu do godziny (art. 4b ust. 11 ustawy o OZE)",
+          "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach. Po wyłączeniu pozostają ceny netto z API PSE",
+          "low_price_threshold": "Używany przez sensory Cena Poniżej Progu",
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
           "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
           "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
@@ -69,10 +72,7 @@
           "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego (1-24 godzin)",
           "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego drogiego okna (0-23)",
           "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego drogiego okna (1-24)",
-          "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)",
-          "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
-          "low_price_threshold": "Używane przez sensory okien niskiej ceny.",
-          "use_gross_prices": "Po włączeniu wszystkie ceny będą przeliczane na brutto z wykorzystaniem stawki VAT (obecnie 23%) bez konieczności ręcznych przeliczeń w automatyzacjach."
+          "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)"
         }
       }
     },

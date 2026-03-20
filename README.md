@@ -36,15 +36,15 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 
 1. **Ustawienia** → **Integracje**
 2. **Dodaj integrację** → wyszukaj "RCE PSE"
-3. Ustaw opcje okien czasowych (szczegóły: [Konfiguracja](docs/KONFIGURACJA.md))
+3. Ustaw opcje cenowe i okna czasowe (szczegóły: [Konfiguracja](docs/KONFIGURACJA.md))
 4. **Zapisz**
 
 ## Funkcje
 
-- Bieżąca cena energii z dokładnością 15 min, dane historyczne i prognoza następnego okresu
+- Bieżąca cena energii: domyślnie okres godzinowy (średnia z kwadransów), opcjonalnie surowe kwadranse 15 min; dane historyczne i prognoza następnego okresu
 - Statystyki dzienne (średnia, min, max, mediana), porównanie dziś vs jutro
 - Definiowane przez użytkownika okna tanich i drogich godzin, sensory czasowe (timestampy)
-- Opcjonalne ceny godzinowe (net-billing), próg niskiej ceny sprzedaży
+- Średnie ceny godzinowe domyślnie włączone (net-billing); próg niskiej ceny sprzedaży; opcjonalne ceny brutto
 - Dane "jutro" dostępne po 14:00 CET, odświeżanie co 30 min
 
 Szczegóły: [Konfiguracja](docs/KONFIGURACJA.md), [Sensory](docs/SENSORY.md).

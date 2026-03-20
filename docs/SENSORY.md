@@ -8,8 +8,8 @@
 
 ## Sensory cen okresu
 
-- **Cena następnego okresu** – cena za następny przedział (15 min lub 1 h przy włączonej opcji "Ceny godzinowe")
-- **Cena poprzedniego okresu** – cena z poprzedniego przedziału (15 min lub 1 h)
+- **Cena następnego okresu** – cena za następny przedział (domyślnie 1 h przy średnich cenach godzinowych; 15 min po wyłączeniu tej opcji)
+- **Cena poprzedniego okresu** – cena z poprzedniego przedziału (jak wyżej)
 
 ## Statystyki dzisiaj
 

@@ -79,7 +79,7 @@ Dla poniższych encji zmieniły się tylko **nazwy w UI** (EN/PL). Entity_id poz
 
 ## Sensory cen okresu (zmiana nazw i entity_id, usunięcia)
 
-Dawne "cena następnej godziny" / "cena poprzedniej godziny" zastąpiono sensorami **okresu**. Długość okresu zależy od opcji **Ceny godzinowe**: wyłączone (domyślnie) = 15 min, włączone = 1 godzina (uśredniona cena).
+Dawne "cena następnej godziny" / "cena poprzedniej godziny" zastąpiono sensorami **okresu**. Długość okresu zależy od opcji **średnich cen godzinowych**: wyłączone = 15 min, włączone = 1 godzina (uśredniona cena). Przy **nowej** konfiguracji integracji ta opcja jest obecnie domyślnie włączona; starsze wpisy zachowują zapisane wartości (w czasie migracji do v2 domyślnie bywało wyłączenie i okres 15 min).
 
 ### Usunięte
 

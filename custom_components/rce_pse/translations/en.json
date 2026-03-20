@@ -5,6 +5,9 @@
         "title": "RCE PSE Configuration",
         "description": "Set up the RCE PSE integration",
         "data": {
+          "use_hourly_prices": "Hourly average prices",
+          "use_gross_prices": "Gross prices (with VAT)",
+          "low_price_threshold": "Low sell price threshold (PLN/MWh)",
           "cheapest_time_window_start": "Cheap - time window start (hour)",
           "cheapest_time_window_end": "Cheap - time window end (hour)",
           "cheapest_window_duration_hours": "Cheap - search window duration (hours)",
@@ -13,12 +16,12 @@
           "expensive_window_duration_hours": "Expensive - search window duration (hours)",
           "second_expensive_time_window_start": "Second expensive - time window start (hour)",
           "second_expensive_time_window_end": "Second expensive - time window end (hour)",
-          "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)",
-          "use_hourly_prices": "Use hourly prices",
-          "low_price_threshold": "Low sell price threshold (PLN/MWh)",
-          "use_gross_prices": "Use gross prices (with VAT)"
+          "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)"
         },
         "data_description": {
+          "use_hourly_prices": "Each hour uses the average of the four published quarter-hour prices. Turn off for raw 15-minute prices from the PSE API. Useful for net-billing with hourly metering (Art. 4b sec. 11 of the Ustawa o OZE).",
+          "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations. When disabled, prices stay net as from the PSE API.",
+          "low_price_threshold": "Used by the low price window sensors.",
           "cheapest_time_window_start": "Starting hour for searching cheap windows (0-23)",
           "cheapest_time_window_end": "Ending hour for searching cheap windows (1-24)",
           "cheapest_window_duration_hours": "Duration of continuous cheap time window (1-24 hours)",
@@ -27,10 +30,7 @@
           "expensive_window_duration_hours": "Duration of continuous expensive time window (1-24 hours)",
           "second_expensive_time_window_start": "Starting hour for searching second expensive windows (0-23)",
           "second_expensive_time_window_end": "Ending hour for searching second expensive windows (1-24)",
-          "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)",
-          "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
-          "low_price_threshold": "Used by low price window sensors.",
-          "use_gross_prices": "When enabled, all prices will be converted to gross using the VAT (currently 23%), so you do not need to apply VAT manually in automations."
+          "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)"
         }
       }
     },
@@ -47,6 +47,9 @@
         "title": "RCE PSE Settings",
         "description": "Modify RCE PSE integration settings",
         "data": {
+          "use_hourly_prices": "Hourly average prices",
+          "use_gross_prices": "Gross prices (with VAT)",
+          "low_price_threshold": "Low sell price threshold (PLN/MWh)",
           "cheapest_time_window_start": "Cheap - time window start (hour)",
           "cheapest_time_window_end": "Cheap - time window end (hour)",
           "cheapest_window_duration_hours": "Cheap - search window duration (hours)",
@@ -55,12 +58,12 @@
           "expensive_window_duration_hours": "Expensive - search window duration (hours)",
           "second_expensive_time_window_start": "Second expensive - time window start (hour)",
           "second_expensive_time_window_end": "Second expensive - time window end (hour)",
-          "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)",
-          "use_hourly_prices": "Use hourly prices",
-          "low_price_threshold": "Low sell price threshold (PLN/MWh)",
-          "use_gross_prices": "Use gross prices (with VAT)"
+          "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)"
         },
         "data_description": {
+          "use_hourly_prices": "Each hour uses the average of the four published quarter-hour prices. Turn off for raw 15-minute prices from the PSE API. Useful for net-billing with hourly metering (Art. 4b sec. 11 of the Ustawa o OZE).",
+          "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations. When disabled, prices stay net as from the PSE API.",
+          "low_price_threshold": "Used by the low price window sensors.",
           "cheapest_time_window_start": "Starting hour for searching cheap windows (0-23)",
           "cheapest_time_window_end": "Ending hour for searching cheap windows (1-24)",
           "cheapest_window_duration_hours": "Duration of continuous cheap time window (1-24 hours)",
@@ -69,10 +72,7 @@
           "expensive_window_duration_hours": "Duration of continuous expensive time window (1-24 hours)",
           "second_expensive_time_window_start": "Starting hour for searching second expensive windows (0-23)",
           "second_expensive_time_window_end": "Ending hour for searching second expensive windows (1-24)",
-          "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)",
-          "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
-          "low_price_threshold": "Used by low price window sensors.",
-          "use_gross_prices": "When enabled, all prices will be converted to gross using the VAT (currently 23%), so you do not need to apply VAT manually in automations."
+          "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)"
         }
       }
     },

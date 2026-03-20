@@ -1,6 +1,6 @@
 # Konfiguracja
 
-Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. Integracja oferuje opcje dostosowania okien czasowych (tanie / drogie godziny), aby ułatwić znalezienie najlepszych cen prądu.
+Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. W formularzu najpierw wybierasz opcje cenowe (średnie godzinowe, brutto, próg niskiej ceny), potem okna czasowe (tanie / drogie godziny), aby ułatwić znalezienie najlepszych cen prądu.
 
 ## Opcje konfiguracji
 
@@ -46,17 +46,17 @@ Osobne okno do wyznaczenia drugiego szczytu (np. poranek vs wieczór):
 
 ### Ceny godzinowe
 
-Opcja przydatna przy rozliczeniach net-billing (prosumenci, liczniki z rozliczeniem co godzinę przy 15-minutowych cenach PSE). Po włączeniu integracja liczy średnią cenę za każdą godzinę z czterech przedziałów 15-minutowych.
+Opcja przydatna przy rozliczeniach net-billing (prosumenci, liczniki z rozliczeniem co godzinę przy 15-minutowych cenach PSE). Przy włączeniu integracja liczy średnią cenę za każdą godzinę z czterech przedziałów 15-minutowych.
 
-- **Użyj cen godzinowych** (tak/nie): włączenie uśredniania  
-  - *Domyślnie:* nie (używane są ceny 15-minutowe z API PSE)  
-  - *Po włączeniu:* średnia za godzinę z czterech przedziałów 15-min  
+- **Średnie ceny godzinowe** (tak/nie): uśrednianie w obrębie godziny  
+  - *Domyślnie:* tak (średnia z czterech kwadransów w godzinie; ta sama wartość we wszystkich przedziałach 15-min w tej godzinie)  
+  - *Po wyłączeniu:* surowe ceny 15-minutowe z API PSE  
   - *Zastosowanie:* rozliczenia według art. 4b ust. 11 ustawy o OZE
 
 **Działanie:**  
-- Wyłączone: używane są surowe ceny 15-min z API PSE.  
 - Włączone: liczone są średnie godzinowe; ta sama cena jest przypisana do wszystkich czterech przedziałów 15-min w danej godzinie.  
-- Przykład: godzina 0 z cenami [300, 320, 340, 360] PLN/MWh → we wszystkich czterech przedziałach wyświetlana jest 330 PLN (średnia).
+- Wyłączone: używane są surowe ceny 15-min z API PSE.  
+- Przykład: godzina 0 z cenami [300, 320, 340, 360] PLN/MWh → przy włączonym uśrednianiu we wszystkich czterech przedziałach wyświetlana jest 330 PLN (średnia).
 
 ### Ceny netto/brutto
 

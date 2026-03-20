@@ -36,6 +36,21 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 CONFIG_SCHEMA = vol.Schema({
+    vol.Optional(CONF_USE_HOURLY_PRICES, default=DEFAULT_USE_HOURLY_PRICES): selector.BooleanSelector(
+        selector.BooleanSelectorConfig()
+    ),
+    vol.Optional(CONF_USE_GROSS_PRICES, default=DEFAULT_USE_GROSS_PRICES): selector.BooleanSelector(
+        selector.BooleanSelectorConfig()
+    ),
+    vol.Optional(CONF_LOW_PRICE_THRESHOLD, default=DEFAULT_LOW_PRICE_THRESHOLD): selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=-2000,
+            max=2000,
+            step=0.01,
+            mode=selector.NumberSelectorMode.BOX,
+            unit_of_measurement="PLN/MWh",
+        )
+    ),
     vol.Required(CONF_CHEAPEST_TIME_WINDOW_START, default=DEFAULT_TIME_WINDOW_START): selector.NumberSelector(
         selector.NumberSelectorConfig(
             min=0,
@@ -106,21 +121,6 @@ CONFIG_SCHEMA = vol.Schema({
             max=24,
             step=1,
             mode=selector.NumberSelectorMode.BOX,
-        )
-    ),
-    vol.Optional(CONF_USE_HOURLY_PRICES, default=DEFAULT_USE_HOURLY_PRICES): selector.BooleanSelector(
-        selector.BooleanSelectorConfig()
-    ),
-    vol.Optional(CONF_USE_GROSS_PRICES, default=DEFAULT_USE_GROSS_PRICES): selector.BooleanSelector(
-        selector.BooleanSelectorConfig()
-    ),
-    vol.Optional(CONF_LOW_PRICE_THRESHOLD, default=DEFAULT_LOW_PRICE_THRESHOLD): selector.NumberSelector(
-        selector.NumberSelectorConfig(
-            min=-2000,
-            max=2000,
-            step=0.01,
-            mode=selector.NumberSelectorMode.BOX,
-            unit_of_measurement="PLN/MWh",
         )
     ),
 })
@@ -202,113 +202,14 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
 
         current_data = self.config_entry.options if self.config_entry.options else self.config_entry.data
         options_schema = vol.Schema({
-            vol.Required(
-                CONF_CHEAPEST_TIME_WINDOW_START, 
-                default=current_data.get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=0,
-                    max=23,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_CHEAPEST_TIME_WINDOW_END, 
-                default=current_data.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_CHEAPEST_WINDOW_DURATION_HOURS, 
-                default=current_data.get(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_EXPENSIVE_TIME_WINDOW_START, 
-                default=current_data.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=0,
-                    max=23,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_EXPENSIVE_TIME_WINDOW_END, 
-                default=current_data.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_EXPENSIVE_WINDOW_DURATION_HOURS, 
-                default=current_data.get(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, 
-                default=current_data.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=0,
-                    max=23,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, 
-                default=current_data.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
-            vol.Required(
-                CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, 
-                default=current_data.get(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
-            ),
             vol.Optional(
-                CONF_USE_HOURLY_PRICES, 
+                CONF_USE_HOURLY_PRICES,
                 default=current_data.get(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
             ): selector.BooleanSelector(
                 selector.BooleanSelectorConfig()
             ),
             vol.Optional(
-                CONF_USE_GROSS_PRICES, 
+                CONF_USE_GROSS_PRICES,
                 default=current_data.get(CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES)
             ): selector.BooleanSelector(
                 selector.BooleanSelectorConfig()
@@ -323,6 +224,105 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
                     step=0.01,
                     mode=selector.NumberSelectorMode.BOX,
                     unit_of_measurement="PLN/MWh",
+                )
+            ),
+            vol.Required(
+                CONF_CHEAPEST_TIME_WINDOW_START,
+                default=current_data.get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=23,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_CHEAPEST_TIME_WINDOW_END,
+                default=current_data.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_CHEAPEST_WINDOW_DURATION_HOURS,
+                default=current_data.get(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_EXPENSIVE_TIME_WINDOW_START,
+                default=current_data.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=23,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_EXPENSIVE_TIME_WINDOW_END,
+                default=current_data.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+                default=current_data.get(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+                default=current_data.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0,
+                    max=23,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+                default=current_data.get(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                )
+            ),
+            vol.Required(
+                CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+                default=current_data.get(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=1,
+                    max=24,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
                 )
             ),
         })
