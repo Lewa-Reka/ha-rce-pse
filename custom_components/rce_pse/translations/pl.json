@@ -222,22 +222,22 @@
         "name": "Drugie Drogie Okno Jutro Koniec"
       },
       "rce_pse_today_cheapest_window_avg_price": {
-        "name": "Tanie Okno Dzisiaj Średnia"
+        "name": "Tanie Okno Średnia Cena Dzisiaj"
       },
       "rce_pse_today_expensive_window_avg_price": {
-        "name": "Drogie Okno Dzisiaj Średnia"
+        "name": "Drogie Okno Średnia Cena Dzisiaj"
       },
       "rce_pse_today_second_expensive_window_avg_price": {
-        "name": "Drugie Drogie Okno Dzisiaj Średnia"
+        "name": "Drugie Drogie Okno Średnia Cena Dzisiaj"
       },
       "rce_pse_tomorrow_cheapest_window_avg_price": {
-        "name": "Tanie Okno Jutro Średnia"
+        "name": "Tanie Okno Średnia Cena Jutro"
       },
       "rce_pse_tomorrow_expensive_window_avg_price": {
-        "name": "Drogie Okno Jutro Średnia"
+        "name": "Drogie Okno Średnia Cena Jutro"
       },
       "rce_pse_tomorrow_second_expensive_window_avg_price": {
-        "name": "Drugie Drogie Okno Jutro Średnia"
+        "name": "Drugie Drogie Okno Średnia Cena Jutro"
       },
       "rce_pse_today_low_price_threshold_window_start": {
         "name": "Cena Poniżej Progu Dzisiaj Początek"
