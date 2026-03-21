@@ -1,6 +1,6 @@
 # Konfiguracja
 
-Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. W formularzu najpierw wybierasz opcje cenowe (średnie godzinowe, brutto, próg niskiej ceny), potem okna czasowe (tanie / drogie godziny), aby ułatwić znalezienie najlepszych cen prądu.
+Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. Ustawienia są pogrupowane w sekcje (ceny, okna najtańszych i najdroższych godzin, drugi szczyt cenowy), żeby łatwiej było nawigować po formularzu.
 
 ## Opcje konfiguracji
 
