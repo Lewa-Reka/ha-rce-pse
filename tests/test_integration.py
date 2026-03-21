@@ -6,8 +6,26 @@ import pytest
 from homeassistant.config_entries import ConfigEntry
 
 from custom_components.rce_pse import async_setup_entry, async_unload_entry
-from custom_components.rce_pse.config_flow import RCEConfigFlow
-from custom_components.rce_pse.const import DOMAIN
+from custom_components.rce_pse.config_flow import (
+    RCEConfigFlow,
+    SECTION_CHEAPEST_WINDOW,
+    SECTION_EXPENSIVE_WINDOW,
+    SECTION_PRICING,
+    SECTION_SECOND_EXPENSIVE_WINDOW,
+)
+from custom_components.rce_pse.const import (
+    CONF_CHEAPEST_TIME_WINDOW_END,
+    CONF_CHEAPEST_TIME_WINDOW_START,
+    CONF_CHEAPEST_WINDOW_DURATION_HOURS,
+    CONF_EXPENSIVE_TIME_WINDOW_END,
+    CONF_EXPENSIVE_TIME_WINDOW_START,
+    CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+    CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+    CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+    CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+    CONF_USE_HOURLY_PRICES,
+    DOMAIN,
+)
 
 
 class TestRCEPSEIntegration:
@@ -141,6 +159,46 @@ class TestRCEPSEConfigFlow:
                         mock_create_entry.assert_called_once()
                         call_data = mock_create_entry.call_args[1]["data"]
                         assert call_data.get("low_price_threshold") == 50.0
+
+    @pytest.mark.asyncio
+    async def test_config_flow_user_step_nested_sections_stored_flat(self, mock_hass):
+        flow = RCEConfigFlow()
+        flow.hass = mock_hass
+        flow.flow_id = "test_flow_id"
+        flow.context = {}
+        mock_hass.config_entries = Mock()
+        mock_hass.config_entries.flow = Mock()
+        mock_hass.config_entries.flow.async_progress_by_handler = Mock(return_value=[])
+        mock_hass.config_entries.async_entry_for_domain_unique_id = Mock(return_value=None)
+        user_input = {
+            SECTION_PRICING: {CONF_USE_HOURLY_PRICES: True},
+            SECTION_CHEAPEST_WINDOW: {
+                CONF_CHEAPEST_TIME_WINDOW_START: 0,
+                CONF_CHEAPEST_TIME_WINDOW_END: 24,
+                CONF_CHEAPEST_WINDOW_DURATION_HOURS: 2,
+            },
+            SECTION_EXPENSIVE_WINDOW: {
+                CONF_EXPENSIVE_TIME_WINDOW_START: 0,
+                CONF_EXPENSIVE_TIME_WINDOW_END: 24,
+                CONF_EXPENSIVE_WINDOW_DURATION_HOURS: 2,
+            },
+            SECTION_SECOND_EXPENSIVE_WINDOW: {
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_START: 6,
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_END: 10,
+                CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS: 2,
+            },
+        }
+        with patch.object(flow, "_async_current_entries", return_value=[]):
+            with patch.object(flow, "async_set_unique_id"):
+                with patch.object(flow, "_abort_if_unique_id_configured"):
+                    with patch.object(flow, "async_create_entry") as mock_create_entry:
+                        mock_create_entry.return_value = {"type": "create_entry"}
+                        result = await flow.async_step_user(user_input=user_input)
+                        assert result.get("type") == "create_entry"
+                        call_data = mock_create_entry.call_args[1]["data"]
+                        assert call_data[CONF_USE_HOURLY_PRICES] is True
+                        assert SECTION_PRICING not in call_data
+                        assert CONF_CHEAPEST_TIME_WINDOW_START in call_data
 
     @pytest.mark.asyncio
     async def test_config_flow_user_step_no_input(self, mock_hass):
