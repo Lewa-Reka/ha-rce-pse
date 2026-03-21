@@ -6,7 +6,11 @@ from typing import TYPE_CHECKING, Any
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.util import dt as dt_util
 
-from ..const import CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES
+from ..const import (
+    CONF_USE_HOURLY_PRICES,
+    DEFAULT_USE_HOURLY_PRICES,
+    DISPLAY_PRICE_DECIMALS,
+)
 from ..time_window import parse_pse_dtime
 from ..shared_base import RCEBaseCommonEntity
 
@@ -112,11 +116,18 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
         prices = self.calculator.get_prices_from_data(data)
         return {
             "count": len(prices),
-            "average": round(self.calculator.calculate_average(prices), 2),
-            "median": round(self.calculator.calculate_median(prices), 2),
+            "average": round(self.calculator.calculate_average(prices), DISPLAY_PRICE_DECIMALS),
+            "median": round(self.calculator.calculate_median(prices), DISPLAY_PRICE_DECIMALS),
             "min": min(prices),
             "max": max(prices),
             "range": max(prices) - min(prices),
         }
+
+
+class RCEPriceSensor(RCEBaseSensor):
+
+    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str) -> None:
+        super().__init__(coordinator, unique_id)
+        self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
 
  

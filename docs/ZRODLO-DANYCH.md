@@ -8,5 +8,6 @@ Integracja pobiera dane z oficjalnego API PSE (Polskie Sieci Elektroenergetyczne
 
 Endpointy:
 
-- **RCE (ceny energii):** `\rce-pln` – ceny rynkowe energii (RCE) w PLN/MWh, rozdzielczość 15 minut.
-- **PDGSZ (Godziny Szczytu):** `\pdgsz` – prognoza użytkowania (usage_fcst) na godziny, zalecenia PSE co do użytkowania i oszczędzania energii.
+- **RCE (Ceny Energii):** `\rce-pln` – ceny rynkowe energii (RCE) w PLN/MWh, rozdzielczość 15 minut. Zapytanie OData ogranicza pola do tych używanych w integracji: m.in. `dtime`, `period`, `rce_pln`, `business_date`.
+
+- **PDGSZ (Godziny Szczytu / Energetyczny Kompas):** `\pdgsz` – prognoza użytkowania (`usage_fcst`) na godziny, zalecenia PSE co do użytkowania i oszczędzania energii. Pobierane są m.in. `business_date`, `dtime`, `is_active`, `usage_fcst`.

@@ -8,11 +8,13 @@
           "pricing": {
             "name": "Podstawowe ustawienia",
             "data": {
+              "price_unit": "Jednostka",
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)",
               "low_price_threshold": "Próg niskiej ceny"
             },
             "data_description": {
+              "price_unit": "Jednostka dla wszystkich sensorów",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
               "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
               "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\""
@@ -78,11 +80,13 @@
           "pricing": {
             "name": "Podstawowe ustawienia",
             "data": {
+              "price_unit": "Jednostka",
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)",
               "low_price_threshold": "Próg niskiej ceny"
             },
             "data_description": {
+              "price_unit": "UWAGA! Po zmianie, statystyki mogą mieszać starą i nową jednostkę. Po przełączeniu zaktualizuj automatyzacje i próg niskiej ceny.",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
               "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
               "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\""

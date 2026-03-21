@@ -18,6 +18,7 @@ from custom_components.rce_pse.sensors.today_prices import (
     RCENextPeriodPriceSensor,
     RCEPreviousPeriodPriceSensor,
 )
+from custom_components.rce_pse.const import CONF_USE_GROSS_PRICES, CONF_USE_HOURLY_PRICES
 class TestTodayMainSensors:
 
     def test_today_main_price_sensor_initialization(self, mock_coordinator):
@@ -57,7 +58,6 @@ class TestTodayMainSensors:
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = {"rce_pln_neg_to_zero": "350.50"}
-            mock_coordinator._get_config_value.return_value = False
 
             state = sensor.native_value
             assert state == 431.12
@@ -97,7 +97,13 @@ class TestTodayMainSensors:
         
         with patch.object(sensor, "get_current_price_data") as mock_current_price:
             mock_current_price.return_value = {"rce_pln_neg_to_zero": "350.50"}
-            mock_coordinator._get_config_value.return_value = True
+
+            def _gross_on(key, default):
+                if key == CONF_USE_GROSS_PRICES:
+                    return True
+                return default
+
+            mock_coordinator._get_config_value.side_effect = _gross_on
 
             state = sensor.native_value
             assert state == 350.5
@@ -271,19 +277,22 @@ class TestTodayPriceSensors:
                     assert state is None
 
     def test_period_slots_multiplier_1_when_hourly_disabled(self, mock_coordinator):
-        mock_coordinator._get_config_value.return_value = False
         sensor = RCENextPeriodPriceSensor(mock_coordinator)
         assert sensor._period_slots_multiplier() == 1
 
     def test_period_slots_multiplier_4_when_hourly_enabled(self, mock_coordinator):
-        mock_coordinator._get_config_value.return_value = True
+        def _hourly_on(key, default):
+            if key == CONF_USE_HOURLY_PRICES:
+                return True
+            return default
+
+        mock_coordinator._get_config_value.side_effect = _hourly_on
         sensor = RCENextPeriodPriceSensor(mock_coordinator)
         assert sensor._period_slots_multiplier() == 4
 
     def test_next_period_uses_future_period_with_15min_when_hourly_disabled(
         self, mock_coordinator, coordinator_data
     ):
-        mock_coordinator._get_config_value.return_value = False
         sensor = RCENextPeriodPriceSensor(mock_coordinator)
         with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
             from datetime import datetime
@@ -301,7 +310,12 @@ class TestTodayPriceSensors:
             assert value == 388.5
 
     def test_next_period_uses_hour_when_hourly_enabled(self, mock_coordinator):
-        mock_coordinator._get_config_value.return_value = True
+        def _hourly_on(key, default):
+            if key == CONF_USE_HOURLY_PRICES:
+                return True
+            return default
+
+        mock_coordinator._get_config_value.side_effect = _hourly_on
         sensor = RCENextPeriodPriceSensor(mock_coordinator)
         raw = [{
             "dtime": "2025-03-14 11:15:00",
@@ -320,7 +334,6 @@ class TestTodayPriceSensors:
     def test_previous_period_uses_past_period_with_15min_when_hourly_disabled(
         self, mock_coordinator, coordinator_data
     ):
-        mock_coordinator._get_config_value.return_value = False
         sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
         with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
             from datetime import datetime
@@ -338,7 +351,12 @@ class TestTodayPriceSensors:
             assert value == 362.0
 
     def test_previous_period_uses_hour_when_hourly_enabled(self, mock_coordinator):
-        mock_coordinator._get_config_value.return_value = True
+        def _hourly_on(key, default):
+            if key == CONF_USE_HOURLY_PRICES:
+                return True
+            return default
+
+        mock_coordinator._get_config_value.side_effect = _hourly_on
         sensor = RCEPreviousPeriodPriceSensor(mock_coordinator)
         raw = [{
             "dtime": "2025-03-14 11:30:00",
@@ -496,7 +514,7 @@ class TestTomorrowMainSensor:
                         assert attrs["data_points"] == 2
                         assert attrs["available_after"] == "14:00 CET"
                         assert "tomorrow_price_for_hour" in attrs
-                        assert attrs["tomorrow_price_for_hour"]["rce_pln"] == "350.00"
+                        assert attrs["tomorrow_price_for_hour"]["rce_pln"] == 350.0
                         for rec in attrs["prices"]:
                             assert "rce_pln_neg_to_zero" not in rec
                             assert "publication_ts" not in rec

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..const import CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT, DISPLAY_PRICE_DECIMALS
 from .base import RCEBaseSensor
 
 if TYPE_CHECKING:
@@ -10,10 +11,23 @@ if TYPE_CHECKING:
 
 class RCETodayStatsSensor(RCEBaseSensor):
 
-    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, unique_id: str, unit: str = "PLN/MWh", icon: str = "mdi:cash") -> None:
+    def __init__(
+        self,
+        coordinator: RCEPSEDataUpdateCoordinator,
+        unique_id: str,
+        unit: str | None = None,
+        icon: str = "mdi:cash",
+    ) -> None:
         super().__init__(coordinator, unique_id)
-        self._attr_native_unit_of_measurement = unit
+        resolved = unit if unit is not None else coordinator._get_config_value(
+            CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT
+        )
+        self._attr_native_unit_of_measurement = resolved
         self._attr_icon = icon
+        if resolved == "%":
+            self._attr_suggested_display_precision = 1
+        else:
+            self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
 
 
 class RCETodayAvgPriceSensor(RCETodayStatsSensor):
@@ -28,7 +42,7 @@ class RCETodayAvgPriceSensor(RCETodayStatsSensor):
             return None
         
         prices = self.calculator.get_prices_from_data(today_data)
-        return round(self.calculator.calculate_average(prices), 2)
+        return self.round_display_price(self.calculator.calculate_average(prices))
 
 
 class RCETodayMaxPriceSensor(RCETodayStatsSensor):
@@ -43,7 +57,7 @@ class RCETodayMaxPriceSensor(RCETodayStatsSensor):
             return None
         
         prices = self.calculator.get_prices_from_data(today_data)
-        return max(prices) if prices else None
+        return self.round_display_price(max(prices)) if prices else None
 
 
 class RCETodayMinPriceSensor(RCETodayStatsSensor):
@@ -58,7 +72,7 @@ class RCETodayMinPriceSensor(RCETodayStatsSensor):
             return None
         
         prices = self.calculator.get_prices_from_data(today_data)
-        return min(prices) if prices else None
+        return self.round_display_price(min(prices)) if prices else None
 
 
 class RCETodayMedianPriceSensor(RCETodayStatsSensor):
@@ -73,7 +87,7 @@ class RCETodayMedianPriceSensor(RCETodayStatsSensor):
             return None
         
         prices = self.calculator.get_prices_from_data(today_data)
-        return round(self.calculator.calculate_median(prices), 2)
+        return self.round_display_price(self.calculator.calculate_median(prices))
 
 
 class RCETodayCurrentVsAverageSensor(RCETodayStatsSensor):

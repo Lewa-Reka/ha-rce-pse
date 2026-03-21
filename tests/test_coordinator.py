@@ -9,8 +9,19 @@ import pytest
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
-from custom_components.rce_pse.const import CONF_USE_HOURLY_PRICES, TAX_RATE
+from custom_components.rce_pse.coordinator import (
+    RCEPSEDataUpdateCoordinator,
+    format_internal_price,
+)
+from custom_components.rce_pse.const import (
+    CONF_PRICE_UNIT,
+    CONF_USE_HOURLY_PRICES,
+    DEFAULT_PRICE_UNIT,
+    PSE_API_PAGE_SIZE,
+    RCE_PLN_API_SELECT,
+    UNIT_PLN_KWH,
+    TAX_RATE,
+)
 
 
 def _build_record(rce_pln: float, rce_pln_neg_to_zero: float | None = None) -> dict[str, Any]:
@@ -36,15 +47,15 @@ def test_apply_tax_to_data_with_and_without_neg_to_zero(mock_hass) -> None:
     assert len(processed) == 3
 
     first = processed[0]
-    assert first["rce_pln"] == f"{300.0 * (1 + TAX_RATE):.2f}"
-    assert first["rce_pln_neg_to_zero"] == f"{280.0 * (1 + TAX_RATE):.2f}"
+    assert first["rce_pln"] == format_internal_price(300.0 * (1 + TAX_RATE))
+    assert first["rce_pln_neg_to_zero"] == format_internal_price(280.0 * (1 + TAX_RATE))
 
     second = processed[1]
-    assert second["rce_pln"] == f"{0.0 * (1 + TAX_RATE):.2f}"
-    assert second["rce_pln_neg_to_zero"] == f"{0.0 * (1 + TAX_RATE):.2f}"
+    assert second["rce_pln"] == format_internal_price(0.0 * (1 + TAX_RATE))
+    assert second["rce_pln_neg_to_zero"] == format_internal_price(0.0 * (1 + TAX_RATE))
 
     third = processed[2]
-    assert third["rce_pln"] == f"{350.0 * (1 + TAX_RATE):.2f}"
+    assert third["rce_pln"] == format_internal_price(350.0 * (1 + TAX_RATE))
 
 class TestRCEPSEDataUpdateCoordinator:
 
@@ -128,7 +139,8 @@ class TestRCEPSEDataUpdateCoordinator:
                 assert "$select" in params
                 assert "$filter" in params
                 assert "$first" in params
-                assert params["$first"] == 200
+                assert params["$select"] == RCE_PLN_API_SELECT
+                assert params["$first"] == PSE_API_PAGE_SIZE
 
     @pytest.mark.asyncio
     async def test_fetch_data_method(self, mock_hass, sample_api_response):
@@ -152,8 +164,9 @@ class TestRCEPSEDataUpdateCoordinator:
                 
                 for i, record in enumerate(result["raw_data"]):
                     original_record = sample_api_response["value"][i]
-                    assert record["rce_pln"] == original_record["rce_pln"]
-                    assert record["rce_pln_neg_to_zero"] == original_record["rce_pln"]
+                    op = float(original_record["rce_pln"])
+                    assert record["rce_pln"] == format_internal_price(op)
+                    assert record["rce_pln_neg_to_zero"] == format_internal_price(max(0.0, op))
                     assert record["dtime"] == original_record["dtime"]
                     assert record["period"] == original_record["period"]
                     assert record["business_date"] == original_record["business_date"]
@@ -400,7 +413,7 @@ class TestRCEPSEDataUpdateCoordinator:
         
         result = coordinator._calculate_hourly_averages(data)
         assert len(result) == 1
-        assert result[0]["rce_pln"] == "350.00"
+        assert result[0]["rce_pln"] == format_internal_price(350.0)
 
     def test_calculate_hourly_averages_multiple_quarters_same_hour(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -437,7 +450,7 @@ class TestRCEPSEDataUpdateCoordinator:
 
         for record in result:
             if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
-                assert record["rce_pln"] == "330.00"
+                assert record["rce_pln"] == format_internal_price(330.0)
 
     def test_calculate_hourly_averages_different_hours(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -474,10 +487,10 @@ class TestRCEPSEDataUpdateCoordinator:
         
         hour_0_records = [r for r in result if "00:" in r["period"]]
         for record in hour_0_records:
-            assert record["rce_pln"] == "310.00"
+            assert record["rce_pln"] == format_internal_price(310.0)
         hour_1_records = [r for r in result if "01:" in r["period"]]
         for record in hour_1_records:
-            assert record["rce_pln"] == "410.00"
+            assert record["rce_pln"] == format_internal_price(410.0)
 
     def test_calculate_hourly_averages_different_dates(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -514,10 +527,10 @@ class TestRCEPSEDataUpdateCoordinator:
         
         jan_1_records = [r for r in result if "2024-01-01" in r["dtime"]]
         for record in jan_1_records:
-            assert record["rce_pln"] == "310.00"
+            assert record["rce_pln"] == format_internal_price(310.0)
         jan_2_records = [r for r in result if "2024-01-02" in r["dtime"]]
         for record in jan_2_records:
-            assert record["rce_pln"] == "410.00"
+            assert record["rce_pln"] == format_internal_price(410.0)
 
     def test_calculate_hourly_averages_invalid_data_handling(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -546,7 +559,7 @@ class TestRCEPSEDataUpdateCoordinator:
         result = coordinator._calculate_hourly_averages(data)
         assert len(result) == 2
         for record in result:
-            assert record["rce_pln"] == "300.00"
+            assert record["rce_pln"] == format_internal_price(300.0)
 
     def test_get_config_value_with_options(self, mock_hass):
         mock_config_entry = Mock()
@@ -622,7 +635,7 @@ class TestRCEPSEDataUpdateCoordinator:
                 
                 assert len(result["raw_data"]) == 2
                 for record in result["raw_data"]:
-                    assert record["rce_pln"] == "310.00"
+                    assert record["rce_pln"] == format_internal_price(310.0)
 
     @pytest.mark.asyncio
     async def test_fetch_data_with_hourly_prices_disabled(self, mock_hass):
@@ -661,8 +674,8 @@ class TestRCEPSEDataUpdateCoordinator:
                 result = await coordinator._fetch_data()
                 
                 assert len(result["raw_data"]) == 2
-                assert result["raw_data"][0]["rce_pln"] == "300.00"
-                assert result["raw_data"][1]["rce_pln"] == "320.00"
+                assert result["raw_data"][0]["rce_pln"] == format_internal_price(300.0)
+                assert result["raw_data"][1]["rce_pln"] == format_internal_price(320.0)
 
     def test_calculate_hourly_averages_with_negative_values(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -702,8 +715,8 @@ class TestRCEPSEDataUpdateCoordinator:
         
         for record in result:
             if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
-                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
-                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+                assert record["rce_pln"] == format_internal_price(expected_normal_average)
+                assert record["rce_pln_neg_to_zero"] == format_internal_price(expected_neg_to_zero_average)
 
     def test_calculate_hourly_averages_all_negative_values(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -743,8 +756,8 @@ class TestRCEPSEDataUpdateCoordinator:
         
         for record in result:
             if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
-                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
-                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+                assert record["rce_pln"] == format_internal_price(expected_normal_average)
+                assert record["rce_pln_neg_to_zero"] == format_internal_price(expected_neg_to_zero_average)
 
     def test_calculate_hourly_averages_mixed_positive_negative_values(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -784,8 +797,8 @@ class TestRCEPSEDataUpdateCoordinator:
         
         for record in result:
             if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"] or "00:45" in record["period"]:
-                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
-                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+                assert record["rce_pln"] == format_internal_price(expected_normal_average)
+                assert record["rce_pln_neg_to_zero"] == format_internal_price(expected_neg_to_zero_average)
 
     def test_calculate_hourly_averages_zero_values(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -819,8 +832,8 @@ class TestRCEPSEDataUpdateCoordinator:
         
         for record in result:
             if "00:00" in record["period"] or "00:15" in record["period"] or "00:30" in record["period"]:
-                assert record["rce_pln"] == f"{expected_normal_average:.2f}"
-                assert record["rce_pln_neg_to_zero"] == f"{expected_neg_to_zero_average:.2f}"
+                assert record["rce_pln"] == format_internal_price(expected_normal_average)
+                assert record["rce_pln_neg_to_zero"] == format_internal_price(expected_neg_to_zero_average)
 
     def test_add_neg_to_zero_key_empty_data(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -841,7 +854,7 @@ class TestRCEPSEDataUpdateCoordinator:
         result = coordinator._add_neg_to_zero_key(data)
         assert len(result) == 1
         assert result[0]["rce_pln"] == "350.00"
-        assert result[0]["rce_pln_neg_to_zero"] == "350.00"
+        assert result[0]["rce_pln_neg_to_zero"] == format_internal_price(350.0)
 
     def test_add_neg_to_zero_key_single_record_negative(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -856,7 +869,7 @@ class TestRCEPSEDataUpdateCoordinator:
         result = coordinator._add_neg_to_zero_key(data)
         assert len(result) == 1
         assert result[0]["rce_pln"] == "-50.00"
-        assert result[0]["rce_pln_neg_to_zero"] == "0.00"
+        assert result[0]["rce_pln_neg_to_zero"] == format_internal_price(0.0)
 
     def test_add_neg_to_zero_key_mixed_values(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -892,16 +905,16 @@ class TestRCEPSEDataUpdateCoordinator:
         assert len(result) == 4
         
         assert result[0]["rce_pln"] == "300.00"
-        assert result[0]["rce_pln_neg_to_zero"] == "300.00"
+        assert result[0]["rce_pln_neg_to_zero"] == format_internal_price(300.0)
         
         assert result[1]["rce_pln"] == "-100.00"
-        assert result[1]["rce_pln_neg_to_zero"] == "0.00"
+        assert result[1]["rce_pln_neg_to_zero"] == format_internal_price(0.0)
         
         assert result[2]["rce_pln"] == "0.00"
-        assert result[2]["rce_pln_neg_to_zero"] == "0.00"
+        assert result[2]["rce_pln_neg_to_zero"] == format_internal_price(0.0)
         
         assert result[3]["rce_pln"] == "-50.00"
-        assert result[3]["rce_pln_neg_to_zero"] == "0.00"
+        assert result[3]["rce_pln_neg_to_zero"] == format_internal_price(0.0)
 
     def test_add_neg_to_zero_key_invalid_data_handling(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
@@ -931,13 +944,13 @@ class TestRCEPSEDataUpdateCoordinator:
         assert len(result) == 3
         
         assert result[0]["rce_pln"] == "300.00"
-        assert result[0]["rce_pln_neg_to_zero"] == "300.00"
+        assert result[0]["rce_pln_neg_to_zero"] == format_internal_price(300.0)
         
         assert result[1]["rce_pln"] == "invalid_price"
         assert "rce_pln_neg_to_zero" not in result[1]
         
         assert result[2]["rce_pln"] == "-50.00"
-        assert result[2]["rce_pln_neg_to_zero"] == "0.00"
+        assert result[2]["rce_pln_neg_to_zero"] == format_internal_price(0.0)
 
     @pytest.mark.asyncio
     async def test_fetch_data_with_hourly_prices_disabled_adds_neg_to_zero(self, mock_hass):
@@ -976,10 +989,10 @@ class TestRCEPSEDataUpdateCoordinator:
                 result = await coordinator._fetch_data()
                 
                 assert len(result["raw_data"]) == 2
-                assert result["raw_data"][0]["rce_pln"] == "300.00"
-                assert result["raw_data"][0]["rce_pln_neg_to_zero"] == "300.00"
-                assert result["raw_data"][1]["rce_pln"] == "-50.00"
-                assert result["raw_data"][1]["rce_pln_neg_to_zero"] == "0.00"
+                assert result["raw_data"][0]["rce_pln"] == format_internal_price(300.0)
+                assert result["raw_data"][0]["rce_pln_neg_to_zero"] == format_internal_price(300.0)
+                assert result["raw_data"][1]["rce_pln"] == format_internal_price(-50.0)
+                assert result["raw_data"][1]["rce_pln_neg_to_zero"] == format_internal_price(0.0)
 
     @pytest.mark.asyncio
     async def test_fetch_data_includes_pdgsz_data(self, mock_hass, sample_api_response):
@@ -1037,3 +1050,25 @@ class TestRCEPSEDataUpdateCoordinator:
         dtimes = [r["dtime"] for r in result]
         assert "2025-05-29 08:00" in dtimes
         assert "2025-05-29 09:00" in dtimes
+
+
+def test_finalize_price_records_pln_mwh(mock_hass) -> None:
+    mock_config_entry = Mock()
+    mock_config_entry.options = {CONF_PRICE_UNIT: DEFAULT_PRICE_UNIT}
+    mock_config_entry.data = {}
+    coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+    data = [{"rce_pln": "100.123456", "rce_pln_neg_to_zero": "50.5"}]
+    out = coordinator._finalize_price_records(data)
+    assert out[0]["rce_pln"] == format_internal_price(100.123456)
+    assert out[0]["rce_pln_neg_to_zero"] == format_internal_price(50.5)
+
+
+def test_finalize_price_records_pln_kwh(mock_hass) -> None:
+    mock_config_entry = Mock()
+    mock_config_entry.options = {CONF_PRICE_UNIT: UNIT_PLN_KWH}
+    mock_config_entry.data = {}
+    coordinator = RCEPSEDataUpdateCoordinator(mock_hass, mock_config_entry)
+    data = [{"rce_pln": "1000.000000", "rce_pln_neg_to_zero": "500.000000"}]
+    out = coordinator._finalize_price_records(data)
+    assert out[0]["rce_pln"] == format_internal_price(1.0)
+    assert out[0]["rce_pln_neg_to_zero"] == format_internal_price(0.5)

@@ -8,11 +8,13 @@
           "pricing": {
             "name": "Basic settings",
             "data": {
+              "price_unit": "Price unit",
               "use_hourly_prices": "Hourly average prices",
               "use_gross_prices": "Gross prices (with VAT)",
               "low_price_threshold": "Low sell price threshold"
             },
             "data_description": {
+              "price_unit": "Unit for all price sensors",
               "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
               "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations",
               "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors."
@@ -78,11 +80,13 @@
           "pricing": {
             "name": "Basic settings",
             "data": {
+              "price_unit": "Price unit",
               "use_hourly_prices": "Hourly average prices",
               "use_gross_prices": "Gross prices (with VAT)",
               "low_price_threshold": "Low sell price threshold"
             },
             "data_description": {
+              "price_unit": "Unit for all price sensors. WARNING! After changing, statistics may mix old and new units. Update automations and the low-price threshold when switching between PLN/MWh and PLN/kWh",
               "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
               "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations",
               "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors."

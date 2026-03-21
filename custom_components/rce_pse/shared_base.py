@@ -6,7 +6,13 @@ from typing import TYPE_CHECKING
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN, MANUFACTURER
+from .const import (
+    CONF_PRICE_UNIT,
+    DEFAULT_PRICE_UNIT,
+    DISPLAY_PRICE_DECIMALS,
+    DOMAIN,
+    MANUFACTURER,
+)
 from .price_calculator import PriceCalculator
 
 if TYPE_CHECKING:
@@ -19,6 +25,37 @@ class RCEBaseCommonEntity(CoordinatorEntity):
         self._attr_has_entity_name = True
         self._attr_translation_key = f"rce_pse_{unique_id}"
         self.calculator = PriceCalculator()
+
+    def native_price_unit(self) -> str:
+        return self.coordinator._get_config_value(CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT)
+
+    def round_display_price(self, value: float) -> float:
+        return round(value, DISPLAY_PRICE_DECIMALS)
+
+    def round_price_records_for_attributes(self, records: list[dict]) -> list[dict]:
+        out: list[dict] = []
+        for record in records:
+            item = dict(record)
+            for key in ("rce_pln", "rce_pln_neg_to_zero"):
+                if key in item and item[key] is not None:
+                    try:
+                        item[key] = round(float(item[key]), DISPLAY_PRICE_DECIMALS)
+                    except (ValueError, TypeError):
+                        pass
+            out.append(item)
+        return out
+
+    def round_price_dict_for_attributes(self, record: dict | None) -> dict | None:
+        if record is None:
+            return None
+        item = dict(record)
+        for key in ("rce_pln", "rce_pln_neg_to_zero"):
+            if key in item and item[key] is not None:
+                try:
+                    item[key] = round(float(item[key]), DISPLAY_PRICE_DECIMALS)
+                except (ValueError, TypeError):
+                    pass
+        return item
 
     @property
     def device_info(self):

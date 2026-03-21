@@ -19,6 +19,7 @@ from ..const import (
     DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START,
     DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
     DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+    DISPLAY_PRICE_DECIMALS,
 )
 from .custom_windows import RCECustomWindowSensor
 
@@ -27,7 +28,8 @@ class RCETodayCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
         super().__init__(coordinator, config_entry, "today_cheapest_window_avg_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
+        self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
         self._attr_icon = "mdi:cash"
 
     @property
@@ -48,14 +50,15 @@ class RCETodayCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
             return None
 
         prices = self.calculator.get_prices_from_data(optimal_window)
-        return round(self.calculator.calculate_average(prices), 2)
+        return self.round_display_price(self.calculator.calculate_average(prices))
 
 
 class RCETodayExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
         super().__init__(coordinator, config_entry, "today_expensive_window_avg_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
+        self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
         self._attr_icon = "mdi:cash"
 
     @property
@@ -76,14 +79,15 @@ class RCETodayExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
             return None
 
         prices = self.calculator.get_prices_from_data(optimal_window)
-        return round(self.calculator.calculate_average(prices), 2)
+        return self.round_display_price(self.calculator.calculate_average(prices))
 
 
 class RCETodaySecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
         super().__init__(coordinator, config_entry, "today_second_expensive_window_avg_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
+        self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
         self._attr_icon = "mdi:cash"
 
     @property
@@ -110,14 +114,15 @@ class RCETodaySecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
             return None
 
         prices = self.calculator.get_prices_from_data(optimal_window)
-        return round(self.calculator.calculate_average(prices), 2)
+        return self.round_display_price(self.calculator.calculate_average(prices))
 
 
 class RCETomorrowCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
         super().__init__(coordinator, config_entry, "tomorrow_cheapest_window_avg_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
+        self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
         self._attr_icon = "mdi:cash"
 
     @property
@@ -138,14 +143,15 @@ class RCETomorrowCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
             return None
 
         prices = self.calculator.get_prices_from_data(optimal_window)
-        return round(self.calculator.calculate_average(prices), 2)
+        return self.round_display_price(self.calculator.calculate_average(prices))
 
 
 class RCETomorrowExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
         super().__init__(coordinator, config_entry, "tomorrow_expensive_window_avg_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
+        self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
         self._attr_icon = "mdi:cash"
 
     @property
@@ -166,14 +172,15 @@ class RCETomorrowExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
             return None
 
         prices = self.calculator.get_prices_from_data(optimal_window)
-        return round(self.calculator.calculate_average(prices), 2)
+        return self.round_display_price(self.calculator.calculate_average(prices))
 
 
 class RCETomorrowSecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry) -> None:
         super().__init__(coordinator, config_entry, "tomorrow_second_expensive_window_avg_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
+        self._attr_suggested_display_precision = DISPLAY_PRICE_DECIMALS
         self._attr_icon = "mdi:cash"
 
     @property
@@ -200,4 +207,4 @@ class RCETomorrowSecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
             return None
 
         prices = self.calculator.get_prices_from_data(optimal_window)
-        return round(self.calculator.calculate_average(prices), 2)
+        return self.round_display_price(self.calculator.calculate_average(prices))

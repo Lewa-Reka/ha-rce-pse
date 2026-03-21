@@ -14,20 +14,35 @@ from homeassistant.util import dt as dt_util
 
 from .time_window import parse_pse_dtime
 from .const import (
-    API_FIRST,
-    API_SELECT,
     API_UPDATE_INTERVAL,
+    CONF_PRICE_UNIT,
+    UNIT_PLN_KWH,
     CONF_USE_HOURLY_PRICES,
     CONF_USE_GROSS_PRICES,
+    DEFAULT_PRICE_UNIT,
     DEFAULT_USE_HOURLY_PRICES,
     DEFAULT_USE_GROSS_PRICES,
     DOMAIN,
-    PSE_API_URL,
-    PSE_PDGSZ_API_URL,
+    MWH_TO_KWH_DIVISOR,
+    PDGSZ_API_SELECT,
+    PSE_API_BASE_URL,
+    PSE_API_PAGE_SIZE,
+    PSE_ENDPOINT_PDGSZ,
+    PSE_ENDPOINT_RCE_PLN,
+    PRICE_INTERNAL_DECIMALS,
+    RCE_PLN_API_SELECT,
     TAX_RATE,
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _pse_request_url(endpoint: str) -> str:
+    return f"{PSE_API_BASE_URL.rstrip('/')}/{endpoint}"
+
+
+def format_internal_price(value: float) -> str:
+    return f"{value:.{PRICE_INTERNAL_DECIMALS}f}"
 
 
 class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
@@ -96,24 +111,25 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         today = dt_util.now().strftime("%Y-%m-%d")
         _LOGGER.debug("Fetching PSE data for business_date >= %s", today)
         
+        rce_url = _pse_request_url(PSE_ENDPOINT_RCE_PLN)
         params = {
-            "$select": API_SELECT,
+            "$select": RCE_PLN_API_SELECT,
             "$filter": f"business_date ge '{today}'",
-            "$first": API_FIRST,
+            "$first": PSE_API_PAGE_SIZE,
         }
         
         headers = {
             "Accept": "application/json",
         }
 
-        _LOGGER.debug("PSE API request URL: %s, params: %s", PSE_API_URL, params)
+        _LOGGER.debug("PSE API request URL: %s, params: %s", rce_url, params)
 
         session = self.session
         if session is None:
             raise UpdateFailed("HTTP session not initialized")
         try:
             async with session.get(
-                PSE_API_URL, params=params, headers=headers
+                rce_url, params=params, headers=headers
             ) as response:
                 _LOGGER.debug("PSE API response status: %d", response.status)
                 
@@ -148,7 +164,9 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 if use_gross_prices:
                     _LOGGER.debug("Gross prices option enabled, applying TAX_RATE %.2f to all price fields", TAX_RATE)
                     processed_data = self._apply_tax_to_data(processed_data)
-                
+
+                processed_data = self._finalize_price_records(processed_data)
+
                 try:
                     pdgsz_data = await self._fetch_pdgsz(session, today)
                 except Exception as pdgsz_exception:
@@ -166,15 +184,19 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
             raise UpdateFailed(f"Error fetching data: {exception}") from exception
 
     async def _fetch_pdgsz(self, session: aiohttp.ClientSession, today: str) -> list[dict]:
+        pdgsz_first_url = _pse_request_url(PSE_ENDPOINT_PDGSZ)
         params = {
+            "$select": PDGSZ_API_SELECT,
             "$filter": f"business_date ge '{today}'",
-            "$first": 200,
+            "$first": PSE_API_PAGE_SIZE,
         }
         headers = {"Accept": "application/json"}
         seen: dict[tuple[str, str], dict] = {}
-        url: str | None = PSE_PDGSZ_API_URL
+        url: str | None = pdgsz_first_url
         while url:
-            async with session.get(url, params=params if url == PSE_PDGSZ_API_URL else None, headers=headers) as response:
+            async with session.get(
+                url, params=params if url == pdgsz_first_url else None, headers=headers
+            ) as response:
                 if response.status != 200:
                     _LOGGER.warning("PDGSZ API returned status %d", response.status)
                     break
@@ -241,8 +263,8 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
             for record in records:
                 try:
                     new_record = record.copy()
-                    new_record["rce_pln"] = f"{average_price:.2f}"
-                    new_record["rce_pln_neg_to_zero"] = f"{average_price_neg_to_zero:.2f}"
+                    new_record["rce_pln"] = format_internal_price(average_price)
+                    new_record["rce_pln_neg_to_zero"] = format_internal_price(average_price_neg_to_zero)
                     processed_data.append(new_record)
                 except (ValueError, KeyError) as e:
                     _LOGGER.warning("Failed to process record: %s, error: %s", record, e)
@@ -264,7 +286,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 new_record = record.copy()
                 price = float(record["rce_pln"])
                 neg_to_zero_price = max(0, price)
-                new_record["rce_pln_neg_to_zero"] = f"{neg_to_zero_price:.2f}"
+                new_record["rce_pln_neg_to_zero"] = format_internal_price(neg_to_zero_price)
                 processed_data.append(new_record)
             except (ValueError, KeyError) as e:
                 _LOGGER.warning("Failed to process record for neg_to_zero: %s, error: %s", record, e)
@@ -285,13 +307,13 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 new_record = record.copy()
                 base_price = float(new_record["rce_pln"])
                 gross_price = base_price * (1 + TAX_RATE)
-                new_record["rce_pln"] = f"{gross_price:.2f}"
+                new_record["rce_pln"] = format_internal_price(gross_price)
 
                 neg_to_zero_value = new_record.get("rce_pln_neg_to_zero")
                 if neg_to_zero_value is not None:
                     neg_to_zero_price = float(neg_to_zero_value)
                     gross_neg_to_zero = neg_to_zero_price * (1 + TAX_RATE)
-                    new_record["rce_pln_neg_to_zero"] = f"{gross_neg_to_zero:.2f}"
+                    new_record["rce_pln_neg_to_zero"] = format_internal_price(gross_neg_to_zero)
 
                 processed_data.append(new_record)
             except (ValueError, KeyError) as e:
@@ -301,6 +323,25 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         _LOGGER.debug("Applied TAX_RATE to %d records", len(processed_data))
 
         return processed_data
+
+    def _finalize_price_records(self, data: list[dict]) -> list[dict]:
+        if not data:
+            return data
+        unit = self._get_config_value(CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT)
+        scale = 1.0 / MWH_TO_KWH_DIVISOR if unit == UNIT_PLN_KWH else 1.0
+        processed: list[dict] = []
+        for record in data:
+            try:
+                new_record = record.copy()
+                for key in ("rce_pln", "rce_pln_neg_to_zero"):
+                    if key not in new_record or new_record[key] is None:
+                        continue
+                    value = float(new_record[key]) * scale
+                    new_record[key] = format_internal_price(value)
+                processed.append(new_record)
+            except (ValueError, TypeError, KeyError):
+                processed.append(record)
+        return processed
 
     async def async_close(self) -> None:
         _LOGGER.debug("Closing PSE API session")
