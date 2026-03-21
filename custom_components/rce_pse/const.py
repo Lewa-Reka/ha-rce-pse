@@ -56,7 +56,3 @@ DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END: Final[str] = "10:00"
 DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS: Final[str] = "02:00"
 DEFAULT_LOW_PRICE_THRESHOLD: Final[float] = 0.0
 DEFAULT_PRICE_UNIT: Final[str] = UNIT_PLN_MWH
-
-
-def format_internal_price(value: float) -> str:
-    return f"{value:.{PRICE_INTERNAL_DECIMALS}f}"

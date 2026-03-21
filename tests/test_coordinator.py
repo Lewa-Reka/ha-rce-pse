@@ -9,14 +9,16 @@ import pytest
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
+from custom_components.rce_pse.coordinator import (
+    RCEPSEDataUpdateCoordinator,
+    format_internal_price,
+)
 from custom_components.rce_pse.const import (
     CONF_PRICE_UNIT,
     CONF_USE_HOURLY_PRICES,
     DEFAULT_PRICE_UNIT,
     UNIT_PLN_KWH,
     TAX_RATE,
-    format_internal_price,
 )
 
 

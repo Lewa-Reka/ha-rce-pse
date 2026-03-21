@@ -28,11 +28,15 @@ from .const import (
     MWH_TO_KWH_DIVISOR,
     PSE_API_URL,
     PSE_PDGSZ_API_URL,
+    PRICE_INTERNAL_DECIMALS,
     TAX_RATE,
-    format_internal_price,
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def format_internal_price(value: float) -> str:
+    return f"{value:.{PRICE_INTERNAL_DECIMALS}f}"
 
 
 class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
