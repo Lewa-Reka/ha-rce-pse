@@ -7,7 +7,7 @@
         "data": {
           "use_hourly_prices": "Hourly average prices",
           "use_gross_prices": "Gross prices (with VAT)",
-          "low_price_threshold": "Low sell price threshold (PLN/MWh)",
+          "low_price_threshold": "Low sell price threshold",
           "cheapest_time_window_start": "Cheap - time window start (hour)",
           "cheapest_time_window_end": "Cheap - time window end (hour)",
           "cheapest_window_duration_hours": "Cheap - search window duration (hours)",
@@ -21,7 +21,7 @@
         "data_description": {
           "use_hourly_prices": "Each hour uses the average of the four published quarter-hour prices. Turn off for raw 15-minute prices from the PSE API. Useful for net-billing with hourly metering (Art. 4b sec. 11 of the Ustawa o OZE).",
           "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations. When disabled, prices stay net as from the PSE API.",
-          "low_price_threshold": "Used by the low price window sensors.",
+          "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors.",
           "cheapest_time_window_start": "Starting hour for searching cheap windows (0-23)",
           "cheapest_time_window_end": "Ending hour for searching cheap windows (1-24)",
           "cheapest_window_duration_hours": "Duration of continuous cheap time window (1-24 hours)",
@@ -49,7 +49,7 @@
         "data": {
           "use_hourly_prices": "Hourly average prices",
           "use_gross_prices": "Gross prices (with VAT)",
-          "low_price_threshold": "Low sell price threshold (PLN/MWh)",
+          "low_price_threshold": "Low sell price threshold",
           "cheapest_time_window_start": "Cheap - time window start (hour)",
           "cheapest_time_window_end": "Cheap - time window end (hour)",
           "cheapest_window_duration_hours": "Cheap - search window duration (hours)",
@@ -63,7 +63,7 @@
         "data_description": {
           "use_hourly_prices": "Each hour uses the average of the four published quarter-hour prices. Turn off for raw 15-minute prices from the PSE API. Useful for net-billing with hourly metering (Art. 4b sec. 11 of the Ustawa o OZE).",
           "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations. When disabled, prices stay net as from the PSE API.",
-          "low_price_threshold": "Used by the low price window sensors.",
+          "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors.",
           "cheapest_time_window_start": "Starting hour for searching cheap windows (0-23)",
           "cheapest_time_window_end": "Ending hour for searching cheap windows (1-24)",
           "cheapest_window_duration_hours": "Duration of continuous cheap time window (1-24 hours)",

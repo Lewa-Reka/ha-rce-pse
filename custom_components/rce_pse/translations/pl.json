@@ -7,7 +7,7 @@
         "data": {
           "use_hourly_prices": "Średnie ceny godzinowe",
           "use_gross_prices": "Ceny brutto (z VAT)",
-          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
+          "low_price_threshold": "Próg niskiej ceny",
           "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
           "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
           "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
@@ -21,7 +21,7 @@
         "data_description": {
           "use_hourly_prices": "Dla każdej godziny liczona jest średnia z czterech opublikowanych cen kwadransowych. Wyłącz, aby używać surowych cen 15-minutowych z API PSE. Przydatne przy rozliczeniach net-billing i opomiarowaniu do godziny (art. 4b ust. 11 ustawy o OZE)",
           "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach. Po wyłączeniu pozostają ceny netto z API PSE",
-          "low_price_threshold": "Używany przez sensory Cena Poniżej Progu",
+          "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\"",
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
           "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
           "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
@@ -49,7 +49,7 @@
         "data": {
           "use_hourly_prices": "Średnie ceny godzinowe",
           "use_gross_prices": "Ceny brutto (z VAT)",
-          "low_price_threshold": "Próg niskiej ceny sprzedaży (PLN/MWh)",
+          "low_price_threshold": "Próg niskiej ceny",
           "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
           "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
           "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)",
@@ -63,7 +63,7 @@
         "data_description": {
           "use_hourly_prices": "Domyślnie włączone: dla każdej godziny liczona jest średnia z czterech opublikowanych cen kwadransowych (ta sama wartość we wszystkich czterech przedziałach w godzinie). Wyłącz, aby używać surowych cen 15-minutowych z API PSE. Przydatne przy rozliczeniach net-billing i opomiarowaniu do godziny (art. 4b ust. 11 ustawy o OZE)",
           "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach. Po wyłączeniu pozostają ceny netto z API PSE",
-          "low_price_threshold": "Używany przez sensory Cena Poniżej Progu",
+          "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\"",
           "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
           "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
           "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)",
