@@ -6,62 +6,62 @@
         "description": "Skonfiguruj integrację RCE PSE",
         "sections": {
           "pricing": {
-            "name": "Ceny",
+            "name": "Podstawowe ustawienia",
             "data": {
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)",
               "low_price_threshold": "Próg niskiej ceny"
             },
             "data_description": {
-              "use_hourly_prices": "Dla każdej godziny liczona jest średnia z czterech opublikowanych cen kwadransowych. Wyłącz, aby używać surowych cen 15-minutowych z API PSE. Przydatne przy rozliczeniach net-billing i opomiarowaniu do godziny (art. 4b ust. 11 ustawy o OZE)",
-              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach. Po wyłączeniu pozostają ceny netto z API PSE",
+              "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
+              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
               "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\""
             }
           },
           "cheapest_window": {
-            "name": "Najtańsze godziny",
+            "name": "Okno tanich godzin",
             "data": {
-              "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
-              "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
-              "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)"
+              "cheapest_time_window_start": "Początek przeszukiwania",
+              "cheapest_time_window_end": "Koniec przeszukiwania",
+              "cheapest_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
-              "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
-              "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)"
+              "cheapest_time_window_start": "Godzina początkowa",
+              "cheapest_time_window_end": "Godzina końcowa",
+              "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego"
             }
           },
           "expensive_window": {
-            "name": "Najdroższe godziny",
+            "name": "Okno drogich godzin",
             "data": {
-              "expensive_time_window_start": "Drogie - początek przeszukiwania (godzina)",
-              "expensive_time_window_end": "Drogie - koniec przeszukiwania (godzina)",
-              "expensive_window_duration_hours": "Drogie - długość poszukiwanego okna (godziny)"
+              "expensive_time_window_start": "Początek przeszukiwania",
+              "expensive_time_window_end": "Koniec przeszukiwania",
+              "expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "expensive_time_window_start": "Godzina początkowa dla poszukiwania drogich okien (0-23)",
-              "expensive_time_window_end": "Godzina końcowa dla poszukiwania drogich okien (1-24)",
-              "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego (1-24 godzin)"
+              "expensive_time_window_start": "Godzina początkowa",
+              "expensive_time_window_end": "Godzina końcowa",
+              "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego"
             }
           },
           "second_expensive_window": {
-            "name": "Drugi szczyt cenowy",
+            "name": "Drugie okno drogich godzin",
             "data": {
-              "second_expensive_time_window_start": "Drugie drogie - początek przeszukiwania (godzina)",
-              "second_expensive_time_window_end": "Drugie drogie - koniec przeszukiwania (godzina)",
-              "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)"
+              "second_expensive_time_window_start": "Początek przeszukiwania",
+              "second_expensive_time_window_end": "Koniec przeszukiwania",
+              "second_expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego drogiego okna (0-23)",
-              "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego drogiego okna (1-24)",
-              "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)"
+              "second_expensive_time_window_start": "Godzina początkowa",
+              "second_expensive_time_window_end": "Godzina końcowa",
+              "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego"
             }
           }
         }
       }
     },
     "error": {
-      "invalid_time_window": "Godzina początku musi być wcześniejsza niż godzina końca"
+      "invalid_time_window": "Godzina początku okna musi być wcześniejsza niż godzina końca okna"
     },
     "abort": {
       "single_instance_allowed": "Dozwolona jest tylko jedna konfiguracja RCE PSE."
@@ -74,62 +74,62 @@
         "description": "Zmień opcje konfiguracji RCE PSE",
         "sections": {
           "pricing": {
-            "name": "Ceny",
+            "name": "Podstawowe ustawienia",
             "data": {
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)",
               "low_price_threshold": "Próg niskiej ceny"
             },
             "data_description": {
-              "use_hourly_prices": "Domyślnie włączone: dla każdej godziny liczona jest średnia z czterech opublikowanych cen kwadransowych (ta sama wartość we wszystkich czterech przedziałach w godzinie). Wyłącz, aby używać surowych cen 15-minutowych z API PSE. Przydatne przy rozliczeniach net-billing i opomiarowaniu do godziny (art. 4b ust. 11 ustawy o OZE)",
-              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach. Po wyłączeniu pozostają ceny netto z API PSE",
+              "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
+              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
               "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\""
             }
           },
           "cheapest_window": {
-            "name": "Najtańsze godziny",
+            "name": "Okno tanich godzin",
             "data": {
-              "cheapest_time_window_start": "Najtańsze - początek przeszukiwania (godzina)",
-              "cheapest_time_window_end": "Najtańsze - koniec przeszukiwania (godzina)",
-              "cheapest_window_duration_hours": "Najtańsze - długość poszukiwanego okna (godziny)"
+              "cheapest_time_window_start": "Początek przeszukiwania",
+              "cheapest_time_window_end": "Koniec przeszukiwania",
+              "cheapest_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "cheapest_time_window_start": "Godzina początkowa dla poszukiwania najtańszych okien (0-23)",
-              "cheapest_time_window_end": "Godzina końcowa dla poszukiwania najtańszych okien (1-24)",
-              "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego (1-24 godzin)"
+              "cheapest_time_window_start": "Godzina początkowa",
+              "cheapest_time_window_end": "Godzina końcowa",
+              "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego"
             }
           },
           "expensive_window": {
-            "name": "Najdroższe godziny",
+            "name": "Okno drogich godzin",
             "data": {
-              "expensive_time_window_start": "Drogie - początek przeszukiwania (godzina)",
-              "expensive_time_window_end": "Drogie - koniec przeszukiwania (godzina)",
-              "expensive_window_duration_hours": "Drogie - długość poszukiwanego okna (godziny)"
+              "expensive_time_window_start": "Początek przeszukiwania",
+              "expensive_time_window_end": "Koniec przeszukiwania",
+              "expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "expensive_time_window_start": "Godzina początkowa dla poszukiwania drogich okien (0-23)",
-              "expensive_time_window_end": "Godzina końcowa dla poszukiwania drogich okien (1-24)",
-              "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego (1-24 godzin)"
+              "expensive_time_window_start": "Godzina początkowa",
+              "expensive_time_window_end": "Godzina końcowa",
+              "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego"
             }
           },
           "second_expensive_window": {
-            "name": "Drugi szczyt cenowy",
+            "name": "Drugie okno drogich godzin",
             "data": {
-              "second_expensive_time_window_start": "Drugie drogie - początek przeszukiwania (godzina)",
-              "second_expensive_time_window_end": "Drugie drogie - koniec przeszukiwania (godzina)",
-              "second_expensive_window_duration_hours": "Drugie drogie - długość poszukiwanego okna (godziny)"
+              "second_expensive_time_window_start": "Początek przeszukiwania",
+              "second_expensive_time_window_end": "Koniec przeszukiwania",
+              "second_expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Godzina początkowa dla poszukiwania drugiego drogiego okna (0-23)",
-              "second_expensive_time_window_end": "Godzina końcowa dla poszukiwania drugiego drogiego okna (1-24)",
-              "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego (1-24 godzin)"
+              "second_expensive_time_window_start": "Godzina początkowa",
+              "second_expensive_time_window_end": "Godzina końcowa",
+              "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego"
             }
           }
         }
       }
     },
     "error": {
-      "invalid_time_window": "Godzina początku musi być wcześniejsza niż godzina końca"
+      "invalid_time_window": "Godzina początku okna musi być wcześniejsza niż godzina końca okna"
     }
   },
   "entity": {

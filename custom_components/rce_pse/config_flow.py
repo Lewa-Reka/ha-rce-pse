@@ -213,8 +213,8 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
     return vol.Schema(
         {
             vol.Required(SECTION_PRICING): section(pricing_inner, {"collapsed": False}),
-            vol.Required(SECTION_CHEAPEST_WINDOW): section(cheapest_inner, {"collapsed": False}),
-            vol.Required(SECTION_EXPENSIVE_WINDOW): section(expensive_inner, {"collapsed": False}),
+            vol.Required(SECTION_CHEAPEST_WINDOW): section(cheapest_inner, {"collapsed": True}),
+            vol.Required(SECTION_EXPENSIVE_WINDOW): section(expensive_inner, {"collapsed": True}),
             vol.Required(SECTION_SECOND_EXPENSIVE_WINDOW): section(
                 second_expensive_inner, {"collapsed": True}
             ),

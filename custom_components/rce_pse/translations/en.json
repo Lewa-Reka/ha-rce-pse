@@ -6,55 +6,55 @@
         "description": "Set up the RCE PSE integration",
         "sections": {
           "pricing": {
-            "name": "Prices",
+            "name": "Basic settings",
             "data": {
               "use_hourly_prices": "Hourly average prices",
               "use_gross_prices": "Gross prices (with VAT)",
               "low_price_threshold": "Low sell price threshold"
             },
             "data_description": {
-              "use_hourly_prices": "Each hour uses the average of the four published quarter-hour prices. Turn off for raw 15-minute prices from the PSE API. Useful for net-billing with hourly metering (Art. 4b sec. 11 of the Ustawa o OZE).",
-              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations. When disabled, prices stay net as from the PSE API.",
+              "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
+              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations",
               "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors."
             }
           },
           "cheapest_window": {
-            "name": "Cheapest hours",
+            "name": "Cheap time window",
             "data": {
-              "cheapest_time_window_start": "Cheap - time window start (hour)",
-              "cheapest_time_window_end": "Cheap - time window end (hour)",
-              "cheapest_window_duration_hours": "Cheap - search window duration (hours)"
+              "cheapest_time_window_start": "Time window start",
+              "cheapest_time_window_end": "Time window end",
+              "cheapest_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "cheapest_time_window_start": "Starting hour for searching cheap windows (0-23)",
-              "cheapest_time_window_end": "Ending hour for searching cheap windows (1-24)",
-              "cheapest_window_duration_hours": "Duration of continuous cheap time window (1-24 hours)"
+              "cheapest_time_window_start": "Starting hour for searching cheap window",
+              "cheapest_time_window_end": "Ending hour for searching cheap window",
+              "cheapest_window_duration_hours": "Duration of continuous cheap time window"
             }
           },
           "expensive_window": {
-            "name": "Most expensive hours",
+            "name": "Expensive time window",
             "data": {
-              "expensive_time_window_start": "Expensive - time window start (hour)",
-              "expensive_time_window_end": "Expensive - time window end (hour)",
-              "expensive_window_duration_hours": "Expensive - search window duration (hours)"
+              "expensive_time_window_start": "Time window start",
+              "expensive_time_window_end": "Time window end",
+              "expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "expensive_time_window_start": "Starting hour for searching expensive windows (0-23)",
-              "expensive_time_window_end": "Ending hour for searching expensive windows (1-24)",
-              "expensive_window_duration_hours": "Duration of continuous expensive time window (1-24 hours)"
+              "expensive_time_window_start": "Starting hour for searching expensive window",
+              "expensive_time_window_end": "Ending hour for searching expensive window",
+              "expensive_window_duration_hours": "Duration of continuous expensive time window"
             }
           },
           "second_expensive_window": {
-            "name": "Second expensive peak",
+            "name": "Second expensive time window",
             "data": {
-              "second_expensive_time_window_start": "Second expensive - time window start (hour)",
-              "second_expensive_time_window_end": "Second expensive - time window end (hour)",
-              "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)"
+              "second_expensive_time_window_start": "Time window start",
+              "second_expensive_time_window_end": "Time window end",
+              "second_expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Starting hour for searching second expensive windows (0-23)",
-              "second_expensive_time_window_end": "Ending hour for searching second expensive windows (1-24)",
-              "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)"
+              "second_expensive_time_window_start": "Starting hour for searching second expensive window",
+              "second_expensive_time_window_end": "Ending hour for searching second expensive window",
+              "second_expensive_window_duration_hours": "Duration of continuous second expensive time window"
             }
           }
         }
@@ -74,55 +74,55 @@
         "description": "Modify RCE PSE integration settings",
         "sections": {
           "pricing": {
-            "name": "Prices",
+            "name": "Basic settings",
             "data": {
               "use_hourly_prices": "Hourly average prices",
               "use_gross_prices": "Gross prices (with VAT)",
               "low_price_threshold": "Low sell price threshold"
             },
             "data_description": {
-              "use_hourly_prices": "Each hour uses the average of the four published quarter-hour prices. Turn off for raw 15-minute prices from the PSE API. Useful for net-billing with hourly metering (Art. 4b sec. 11 of the Ustawa o OZE).",
-              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations. When disabled, prices stay net as from the PSE API.",
+              "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
+              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations",
               "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors."
             }
           },
           "cheapest_window": {
-            "name": "Cheapest hours",
+            "name": "Cheap time window",
             "data": {
-              "cheapest_time_window_start": "Cheap - time window start (hour)",
-              "cheapest_time_window_end": "Cheap - time window end (hour)",
-              "cheapest_window_duration_hours": "Cheap - search window duration (hours)"
+              "cheapest_time_window_start": "time window start",
+              "cheapest_time_window_end": "time window end",
+              "cheapest_window_duration_hours": "search window duration"
             },
             "data_description": {
-              "cheapest_time_window_start": "Starting hour for searching cheap windows (0-23)",
-              "cheapest_time_window_end": "Ending hour for searching cheap windows (1-24)",
-              "cheapest_window_duration_hours": "Duration of continuous cheap time window (1-24 hours)"
+              "cheapest_time_window_start": "Starting hour for searching cheap window",
+              "cheapest_time_window_end": "Ending hour for searching cheap window",
+              "cheapest_window_duration_hours": "Duration of continuous cheap time window"
             }
           },
           "expensive_window": {
-            "name": "Most expensive hours",
+            "name": "Expensive time window",
             "data": {
-              "expensive_time_window_start": "Expensive - time window start (hour)",
-              "expensive_time_window_end": "Expensive - time window end (hour)",
-              "expensive_window_duration_hours": "Expensive - search window duration (hours)"
+              "expensive_time_window_start": "Time window start",
+              "expensive_time_window_end": "Time window end",
+              "expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "expensive_time_window_start": "Starting hour for searching expensive windows (0-23)",
-              "expensive_time_window_end": "Ending hour for searching expensive windows (1-24)",
-              "expensive_window_duration_hours": "Duration of continuous expensive time window (1-24 hours)"
+              "expensive_time_window_start": "Starting hour for searching expensive window",
+              "expensive_time_window_end": "Ending hour for searching expensive window",
+              "expensive_window_duration_hours": "Duration of continuous expensive time window"
             }
           },
           "second_expensive_window": {
-            "name": "Second expensive peak",
+            "name": "Second expensive time window",
             "data": {
-              "second_expensive_time_window_start": "Second expensive - time window start (hour)",
-              "second_expensive_time_window_end": "Second expensive - time window end (hour)",
-              "second_expensive_window_duration_hours": "Second expensive - search window duration (hours)"
+              "second_expensive_time_window_start": "Time window start",
+              "second_expensive_time_window_end": "Time window end",
+              "second_expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Starting hour for searching second expensive windows (0-23)",
-              "second_expensive_time_window_end": "Ending hour for searching second expensive windows (1-24)",
-              "second_expensive_window_duration_hours": "Duration of continuous second expensive time window (1-24 hours)"
+              "second_expensive_time_window_start": "Starting hour for searching second expensive window",
+              "second_expensive_time_window_end": "Ending hour for searching second expensive window",
+              "second_expensive_window_duration_hours": "Duration of continuous second expensive time window"
             }
           }
         }
