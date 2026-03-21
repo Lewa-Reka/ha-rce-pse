@@ -23,6 +23,10 @@ from .const import (
     CONF_USE_HOURLY_PRICES,
     CONF_LOW_PRICE_THRESHOLD,
     CONF_USE_GROSS_PRICES,
+    CONF_PRICE_UNIT,
+    DEFAULT_PRICE_UNIT,
+    UNIT_PLN_KWH,
+    UNIT_PLN_MWH,
     DEFAULT_TIME_WINDOW_START,
     DEFAULT_TIME_WINDOW_END,
     DEFAULT_WINDOW_DURATION_HOURS,
@@ -77,6 +81,18 @@ WINDOW_END_KEYS = frozenset(
         CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
     }
 )
+
+
+def migrate_price_unit_in_mapping(data: dict[str, Any]) -> dict[str, Any]:
+    out = dict(data)
+    if CONF_PRICE_UNIT not in out:
+        return out
+    v = out[CONF_PRICE_UNIT]
+    if v == "pln_kwh":
+        out[CONF_PRICE_UNIT] = UNIT_PLN_KWH
+    elif v == "pln_mwh":
+        out[CONF_PRICE_UNIT] = UNIT_PLN_MWH
+    return out
 
 
 def migrate_legacy_time_values(data: Mapping[str, Any]) -> dict[str, Any]:
@@ -217,6 +233,12 @@ def _time_window_errors(flat: Mapping[str, Any]) -> dict[str, str]:
     return {}
 
 
+def _price_unit_select_options() -> list[dict[str, str]]:
+    return [
+        {"value": UNIT_PLN_MWH, "label": UNIT_PLN_MWH},
+        {"value": UNIT_PLN_KWH, "label": UNIT_PLN_KWH},
+    ]
+
 def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
     def _get(key: str, default: Any) -> Any:
         v = current_data.get(key, default)
@@ -239,16 +261,24 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                 CONF_USE_GROSS_PRICES, default=_get(CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES)
             ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
             vol.Optional(
+                CONF_PRICE_UNIT, default=_get(CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT)
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_price_unit_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                )
+            ),
+            vol.Optional(
                 CONF_LOW_PRICE_THRESHOLD, default=_get(CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD)
             ): selector.NumberSelector(
                 selector.NumberSelectorConfig(
-                    min=-2000,
-                    max=2000,
+                    min=-3000,
+                    max=3000,
                     step=0.01,
                     mode=selector.NumberSelectorMode.BOX,
-                    unit_of_measurement="PLN/MWh",
+                    unit_of_measurement="PLN",
                 )
-            ),
+            )
         }
     )
 
@@ -375,7 +405,7 @@ CONFIG_SCHEMA = _rce_form_schema({})
 class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
 
     VERSION = 2
-    MINOR_VERSION = 1
+    MINOR_VERSION = 0
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 
     @staticmethod

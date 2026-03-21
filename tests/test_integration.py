@@ -82,7 +82,7 @@ class TestRCEPSEConfigFlow:
         flow = RCEConfigFlow()
         
         assert flow.VERSION == 2
-        assert flow.MINOR_VERSION == 1
+        assert flow.MINOR_VERSION == 0
 
     @pytest.mark.asyncio
     async def test_config_flow_user_step_success(self, mock_hass):

@@ -11,6 +11,10 @@ from homeassistant.helpers.frame import _hass
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
 
 
+def _mock_get_config_value(key, default):
+    return default
+
+
 @pytest.fixture
 def mock_hass():
     if _hass.hass is None:
@@ -119,7 +123,7 @@ def mock_coordinator(mock_hass, coordinator_data):
     coordinator.config_entry = Mock()
     coordinator.config_entry.options = {}
     coordinator.config_entry.data = {}
-    coordinator._get_config_value = Mock(return_value=False)
+    coordinator._get_config_value = Mock(side_effect=_mock_get_config_value)
     return coordinator
 
 

@@ -1,9 +1,11 @@
 # Sensory
 
+Jednostka cen (PLN/MWh lub PLN/kWh) wynika z [konfiguracji](KONFIGURACJA.md) integracji; sensory cenowe używają tej samej jednostki. Wyświetlane kwoty są zaokrąglane do dwóch miejsc po przecinku.
+
 ## Sensory główne
 
 - **Cena** – aktualna cena energii (atrybut: wszystkie ceny na dziś)
-- **Cena sprzedaży prosument** – rzeczywista cena sprzedaży w PLN/MWh (ceny ujemne → 0, VAT 23%; bez przeliczenia MWh→kWh)
+- **Cena sprzedaży prosument** – rzeczywista cena sprzedaży w wybranej jednostce (ceny ujemne → 0, VAT 23%; przy PLN/kWh wartości odpowiadają podziałowi z PLN/MWh przez 1000)
 - **Cena jutro** – cena na jutro (dostępna po 14:00 CET), z atrybutem wszystkich cen na następny dzień
 
 ## Sensory cen okresu
@@ -55,7 +57,7 @@ Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md). Zakres przeszukiwania j
 ### Dzisiaj
 
 - **Tanie Okno Dzisiaj Początek/Koniec** (timestamp)
-- **Tanie Okno Dzisiaj Średnia** (PLN/MWh)
+- **Tanie Okno Dzisiaj Średnia** (jednostka jak w konfiguracji)
 - **Drogie Okno Dzisiaj Początek/Koniec**, **Drogie Okno Dzisiaj Średnia**
 - **Drugie Drogie Okno Dzisiaj Początek/Koniec**, **Drugie Drogie Okno Dzisiaj Średnia**
 

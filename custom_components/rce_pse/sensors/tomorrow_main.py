@@ -5,17 +5,17 @@ from typing import Any, TYPE_CHECKING
 
 from homeassistant.util import dt as dt_util
 
-from .base import RCEBaseSensor
+from .base import RCEPriceSensor
 
 if TYPE_CHECKING:
     from ..coordinator import RCEPSEDataUpdateCoordinator
 
 
-class RCETomorrowMainSensor(RCEBaseSensor):
+class RCETomorrowMainSensor(RCEPriceSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
         super().__init__(coordinator, "tomorrow_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
         self._attr_icon = "mdi:cash"
 
     @property
@@ -34,7 +34,7 @@ class RCETomorrowMainSensor(RCEBaseSensor):
         if not tomorrow_price_record:
             return None
         
-        return round(float(tomorrow_price_record["rce_pln"]), 2)
+        return self.round_display_price(float(tomorrow_price_record["rce_pln"]))
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
@@ -54,10 +54,9 @@ class RCETomorrowMainSensor(RCEBaseSensor):
         current_hour = now.hour
         tomorrow_data = self.get_tomorrow_data()
         excluded_keys = {"rce_pln_neg_to_zero", "publication_ts"}
-        sanitized_tomorrow_data = [
-            {k: v for k, v in record.items() if k not in excluded_keys}
-            for record in tomorrow_data
-        ]
+        sanitized_tomorrow_data = self.round_price_records_for_attributes(
+            [{k: v for k, v in record.items() if k not in excluded_keys} for record in tomorrow_data]
+        )
         tomorrow_price_record = self.get_tomorrow_price_at_time(now)
         
         attributes = {
@@ -69,7 +68,7 @@ class RCETomorrowMainSensor(RCEBaseSensor):
             "current_hour": current_hour,
             "current_minute": now.minute,
             "current_time": now.isoformat(),
-            "tomorrow_price_for_hour": tomorrow_price_record,
+            "tomorrow_price_for_hour": self.round_price_dict_for_attributes(tomorrow_price_record),
         }
         
         return attributes 

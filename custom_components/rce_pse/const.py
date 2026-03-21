@@ -36,6 +36,14 @@ CONF_WINDOW_DURATION_HOURS: Final[str] = "window_duration_hours"
 CONF_USE_HOURLY_PRICES: Final[str] = "use_hourly_prices"
 CONF_LOW_PRICE_THRESHOLD: Final[str] = "low_price_threshold"
 CONF_USE_GROSS_PRICES: Final[str] = "use_gross_prices"
+CONF_PRICE_UNIT: Final[str] = "price_unit"
+
+UNIT_PLN_MWH: Final[str] = "PLN/MWh"
+UNIT_PLN_KWH: Final[str] = "PLN/kWh"
+MWH_TO_KWH_DIVISOR: Final[float] = 1000.0
+
+PRICE_INTERNAL_DECIMALS: Final[int] = 6
+DISPLAY_PRICE_DECIMALS: Final[int] = 2
 
 DEFAULT_TIME_WINDOW_START: Final[str] = "00:00"
 DEFAULT_TIME_WINDOW_END: Final[str] = "00:00"
@@ -47,3 +55,8 @@ DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START: Final[str] = "06:00"
 DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END: Final[str] = "10:00"
 DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS: Final[str] = "02:00"
 DEFAULT_LOW_PRICE_THRESHOLD: Final[float] = 0.0
+DEFAULT_PRICE_UNIT: Final[str] = UNIT_PLN_MWH
+
+
+def format_internal_price(value: float) -> str:
+    return f"{value:.{PRICE_INTERNAL_DECIMALS}f}"

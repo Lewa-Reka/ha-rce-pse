@@ -65,11 +65,16 @@ Sensor ceny sprzedaży prosumenta (`rce_pse_today_prosumer_selling_price`) zawsz
 - w trybie **netto** nadal dolicza VAT lokalnie (mnożenie przez `(1 + TAX_RATE)`),  
 - w trybie **brutto** nie dolicza VAT ponownie – zwraca już przeliczoną wartość brutto, aby uniknąć podwójnego naliczania podatku.
 
+### Jednostka ceny (PLN/MWh lub PLN/kWh)
+
+- **Jednostka ceny** (domyślnie **PLN/MWh**): ta sama skala co w API PSE.  
+- **PLN/kWh**: wszystkie wartości cen w danych koordynatora są dzielone przez 1000 względem surowych danych z API (czyli z MWh na kWh energetycznie). Sensory pokazują kwoty zaokrąglone do dwóch miejsc po przecinku; w `raw_data` stosowana jest wyższa precyzja wewnętrzna (formatowanie liczb w integracji).
+
 ### Próg niskiej ceny sprzedaży
 
-Próg (PLN/MWh) używany do wyznaczania "okna niskiej ceny" w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory "Cena Poniżej Progu Dzisiaj/Jutro Początek/Koniec"; binary sensor "Cena poniżej progu aktywna" ma stan `on`, gdy trwa ten okres (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan "unknown" (integracja działa normalnie).
+Próg w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh), używany do wyznaczania „okna niskiej ceny” w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory „Cena Poniżej Progu Dzisiaj/Jutro Początek/Koniec”; binary sensor „Cena poniżej progu aktywna” ma stan `on`, gdy trwa ten okres (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan „unknown” (integracja działa normalnie).
 
-- **Próg niskiej ceny sprzedaży** (PLN/MWh): zakres -2000–2000 (dopuszczalne wartości ujemne)  
+- **Próg niskiej ceny sprzedaży**: zakres zależy od jednostki — przy PLN/MWh: -2000…2000; przy PLN/kWh: -2…2 (dopuszczalne wartości ujemne).  
   - *Domyślnie:* 0
 
 ## Zmiana ustawień
@@ -79,7 +84,7 @@ Próg (PLN/MWh) używany do wyznaczania "okna niskiej ceny" w dedykowanych senso
 3. Kliknij **Konfiguruj**
 4. Zmień parametry i zatwierdź **Zapisz**
 
-Integracja przeładuje się z nowymi ustawieniami.
+Integracja przeładuje się z nowymi ustawieniami. Po zmianie m.in. jednostki ceny encje mogą chwilowo być niedostępne; historia zapisana w recorderze nadal może zawierać stare próbki w poprzedniej skali przy tym samym `entity_id` — warto uwzględnić to w wykresach i automatyzacjach. Po przełączeniu PLN/MWh ↔ PLN/kWh zaktualizuj próg oraz ewentualne stałe liczby w automatyzacjach.
 
 ## Przykłady konfiguracji
 

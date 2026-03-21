@@ -3,18 +3,18 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any, TYPE_CHECKING
 
-from .base import RCEBaseSensor
+from .base import RCEPriceSensor
 from ..const import CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES, TAX_RATE
 
 if TYPE_CHECKING:
     from ..coordinator import RCEPSEDataUpdateCoordinator
 
 
-class RCETodayMainSensor(RCEBaseSensor):
+class RCETodayMainSensor(RCEPriceSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
         super().__init__(coordinator, "today_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
         self._attr_icon = "mdi:cash"
 
     @property
@@ -29,17 +29,16 @@ class RCETodayMainSensor(RCEBaseSensor):
     def native_value(self) -> float | None:
         current_data = self.get_current_price_data()
         if current_data:
-            return float(current_data["rce_pln"])
+            return self.round_display_price(float(current_data["rce_pln"]))
         return None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         today_data = self.get_today_data()
         excluded_keys = {"rce_pln_neg_to_zero", "publication_ts"}
-        sanitized_today_data = [
-            {k: v for k, v in record.items() if k not in excluded_keys}
-            for record in today_data
-        ]
+        sanitized_today_data = self.round_price_records_for_attributes(
+            [{k: v for k, v in record.items() if k not in excluded_keys} for record in today_data]
+        )
         
         attributes = {
             "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
@@ -50,11 +49,11 @@ class RCETodayMainSensor(RCEBaseSensor):
         return attributes
 
 
-class RCETodayProsumerSellingPriceSensor(RCEBaseSensor):
+class RCETodayProsumerSellingPriceSensor(RCEPriceSensor):
 
     def __init__(self, coordinator: RCEPSEDataUpdateCoordinator) -> None:
         super().__init__(coordinator, "today_prosumer_selling_price")
-        self._attr_native_unit_of_measurement = "PLN/MWh"
+        self._attr_native_unit_of_measurement = self.native_price_unit()
         self._attr_icon = "mdi:cash"
 
     @property
@@ -70,7 +69,7 @@ class RCETodayProsumerSellingPriceSensor(RCEBaseSensor):
             )
 
             if use_gross_prices:
-                return round(price, 2)
+                return self.round_display_price(price)
 
-            return round(price * (1 + TAX_RATE), 2)
+            return self.round_display_price(price * (1 + TAX_RATE))
         return None
