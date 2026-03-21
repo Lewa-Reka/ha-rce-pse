@@ -260,7 +260,7 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
             vol.Optional(
                 CONF_USE_GROSS_PRICES, default=_get(CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES)
             ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
-            vol.Optional(
+            vol.Required(
                 CONF_PRICE_UNIT, default=_get(CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT)
             ): selector.SelectSelector(
                 selector.SelectSelectorConfig(
@@ -268,7 +268,7 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                     mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
-            vol.Optional(
+            vol.Required(
                 CONF_LOW_PRICE_THRESHOLD, default=_get(CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD)
             ): selector.NumberSelector(
                 selector.NumberSelectorConfig(
