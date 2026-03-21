@@ -17,6 +17,8 @@ from custom_components.rce_pse.const import (
     CONF_PRICE_UNIT,
     CONF_USE_HOURLY_PRICES,
     DEFAULT_PRICE_UNIT,
+    PSE_API_PAGE_SIZE,
+    RCE_PLN_API_SELECT,
     UNIT_PLN_KWH,
     TAX_RATE,
 )
@@ -137,7 +139,8 @@ class TestRCEPSEDataUpdateCoordinator:
                 assert "$select" in params
                 assert "$filter" in params
                 assert "$first" in params
-                assert params["$first"] == 200
+                assert params["$select"] == RCE_PLN_API_SELECT
+                assert params["$first"] == PSE_API_PAGE_SIZE
 
     @pytest.mark.asyncio
     async def test_fetch_data_method(self, mock_hass, sample_api_response):

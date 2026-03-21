@@ -248,16 +248,34 @@ class TestConstants:
         from custom_components.rce_pse.const import MANUFACTURER
         assert MANUFACTURER == "Lewa-Reka"
 
-    def test_api_url_constant(self):
-        from custom_components.rce_pse.const import PSE_API_URL
-        assert PSE_API_URL == "https://api.raporty.pse.pl/api/rce-pln"
+    def test_api_base_and_endpoints(self):
+        from custom_components.rce_pse.const import (
+            PSE_API_BASE_URL,
+            PSE_ENDPOINT_PDGSZ,
+            PSE_ENDPOINT_RCE_PLN,
+        )
+
+        assert PSE_API_BASE_URL == "https://api.raporty.pse.pl/api"
+        assert PSE_ENDPOINT_RCE_PLN == "rce-pln"
+        assert PSE_ENDPOINT_PDGSZ == "pdgsz"
+        assert f"{PSE_API_BASE_URL}/{PSE_ENDPOINT_RCE_PLN}" == (
+            "https://api.raporty.pse.pl/api/rce-pln"
+        )
+        assert f"{PSE_API_BASE_URL}/{PSE_ENDPOINT_PDGSZ}" == (
+            "https://api.raporty.pse.pl/api/pdgsz"
+        )
 
     def test_update_interval_constant(self):
         from custom_components.rce_pse.const import API_UPDATE_INTERVAL
         assert API_UPDATE_INTERVAL.total_seconds() == 1800
 
     def test_api_parameters_constants(self):
-        from custom_components.rce_pse.const import API_SELECT, API_FIRST
-        
-        assert API_SELECT == "dtime,period,rce_pln,business_date,publication_ts"
-        assert API_FIRST == 200 
+        from custom_components.rce_pse.const import (
+            PDGSZ_API_SELECT,
+            PSE_API_PAGE_SIZE,
+            RCE_PLN_API_SELECT,
+        )
+
+        assert RCE_PLN_API_SELECT == "dtime,period,rce_pln,business_date"
+        assert PDGSZ_API_SELECT == "business_date,dtime,is_active,usage_fcst"
+        assert PSE_API_PAGE_SIZE == 200

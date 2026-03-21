@@ -14,8 +14,6 @@ from homeassistant.util import dt as dt_util
 
 from .time_window import parse_pse_dtime
 from .const import (
-    API_FIRST,
-    API_SELECT,
     API_UPDATE_INTERVAL,
     CONF_PRICE_UNIT,
     UNIT_PLN_KWH,
@@ -26,13 +24,21 @@ from .const import (
     DEFAULT_USE_GROSS_PRICES,
     DOMAIN,
     MWH_TO_KWH_DIVISOR,
-    PSE_API_URL,
-    PSE_PDGSZ_API_URL,
+    PDGSZ_API_SELECT,
+    PSE_API_BASE_URL,
+    PSE_API_PAGE_SIZE,
+    PSE_ENDPOINT_PDGSZ,
+    PSE_ENDPOINT_RCE_PLN,
     PRICE_INTERNAL_DECIMALS,
+    RCE_PLN_API_SELECT,
     TAX_RATE,
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _pse_request_url(endpoint: str) -> str:
+    return f"{PSE_API_BASE_URL.rstrip('/')}/{endpoint}"
 
 
 def format_internal_price(value: float) -> str:
@@ -105,24 +111,25 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         today = dt_util.now().strftime("%Y-%m-%d")
         _LOGGER.debug("Fetching PSE data for business_date >= %s", today)
         
+        rce_url = _pse_request_url(PSE_ENDPOINT_RCE_PLN)
         params = {
-            "$select": API_SELECT,
+            "$select": RCE_PLN_API_SELECT,
             "$filter": f"business_date ge '{today}'",
-            "$first": API_FIRST,
+            "$first": PSE_API_PAGE_SIZE,
         }
         
         headers = {
             "Accept": "application/json",
         }
 
-        _LOGGER.debug("PSE API request URL: %s, params: %s", PSE_API_URL, params)
+        _LOGGER.debug("PSE API request URL: %s, params: %s", rce_url, params)
 
         session = self.session
         if session is None:
             raise UpdateFailed("HTTP session not initialized")
         try:
             async with session.get(
-                PSE_API_URL, params=params, headers=headers
+                rce_url, params=params, headers=headers
             ) as response:
                 _LOGGER.debug("PSE API response status: %d", response.status)
                 
@@ -177,15 +184,19 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
             raise UpdateFailed(f"Error fetching data: {exception}") from exception
 
     async def _fetch_pdgsz(self, session: aiohttp.ClientSession, today: str) -> list[dict]:
+        pdgsz_first_url = _pse_request_url(PSE_ENDPOINT_PDGSZ)
         params = {
+            "$select": PDGSZ_API_SELECT,
             "$filter": f"business_date ge '{today}'",
-            "$first": 200,
+            "$first": PSE_API_PAGE_SIZE,
         }
         headers = {"Accept": "application/json"}
         seen: dict[tuple[str, str], dict] = {}
-        url: str | None = PSE_PDGSZ_API_URL
+        url: str | None = pdgsz_first_url
         while url:
-            async with session.get(url, params=params if url == PSE_PDGSZ_API_URL else None, headers=headers) as response:
+            async with session.get(
+                url, params=params if url == pdgsz_first_url else None, headers=headers
+            ) as response:
                 if response.status != 200:
                     _LOGGER.warning("PDGSZ API returned status %d", response.status)
                     break

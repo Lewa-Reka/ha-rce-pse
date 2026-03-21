@@ -6,8 +6,12 @@ from typing import Final
 DOMAIN: Final[str] = "rce_pse"
 SENSOR_PREFIX: Final[str] = "RCE PSE"
 MANUFACTURER: Final[str] = "Lewa-Reka"
-PSE_API_URL: Final[str] = "https://api.raporty.pse.pl/api/rce-pln"
-PSE_PDGSZ_API_URL: Final[str] = "https://api.raporty.pse.pl/api/pdgsz"
+PSE_API_BASE_URL: Final[str] = "https://api.raporty.pse.pl/api"
+PSE_ENDPOINT_RCE_PLN: Final[str] = "rce-pln"
+PSE_ENDPOINT_PDGSZ: Final[str] = "pdgsz"
+RCE_PLN_API_SELECT: Final[str] = "dtime,period,rce_pln,business_date"
+PDGSZ_API_SELECT: Final[str] = "business_date,dtime,is_active,usage_fcst"
+PSE_API_PAGE_SIZE: Final[int] = 200
 API_UPDATE_INTERVAL: Final[timedelta] = timedelta(minutes=30)
 PDGSZ_USAGE_FCST_TO_ATTR: Final[dict[int, str]] = {
     0: "recommended_usage",
@@ -15,8 +19,6 @@ PDGSZ_USAGE_FCST_TO_ATTR: Final[dict[int, str]] = {
     2: "recommended_saving",
     3: "required_restriction",
 }
-API_SELECT: Final[str] = "dtime,period,rce_pln,business_date,publication_ts"
-API_FIRST: Final[int] = 200
 
 TAX_RATE: Final[float] = 0.23
 
