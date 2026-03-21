@@ -26,9 +26,9 @@
               "cheapest_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "cheapest_time_window_start": "Starting hour for searching cheap window",
-              "cheapest_time_window_end": "Ending hour for searching cheap window",
-              "cheapest_window_duration_hours": "Duration of continuous cheap time window"
+              "cheapest_time_window_start": "Start of the search range. Same calendar day only.",
+              "cheapest_time_window_end": "End of the search range. Use 00:00 here to mean end of that calendar day.",
+              "cheapest_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
             }
           },
           "expensive_window": {
@@ -39,9 +39,9 @@
               "expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "expensive_time_window_start": "Starting hour for searching expensive window",
-              "expensive_time_window_end": "Ending hour for searching expensive window",
-              "expensive_window_duration_hours": "Duration of continuous expensive time window"
+              "expensive_time_window_start": "Start of the search range. Same calendar day only.",
+              "expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
+              "expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
             }
           },
           "second_expensive_window": {
@@ -52,16 +52,18 @@
               "second_expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Starting hour for searching second expensive window",
-              "second_expensive_time_window_end": "Ending hour for searching second expensive window",
-              "second_expensive_window_duration_hours": "Duration of continuous second expensive time window"
+              "second_expensive_time_window_start": "Start of the search range. Same calendar day only.",
+              "second_expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
+              "second_expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
             }
           }
         }
       }
     },
     "error": {
-      "invalid_time_window": "Start hour must be earlier than end hour"
+      "invalid_time_window": "Invalid search range: end must be after start on the same day, unless end is 00:00 (end of day).",
+      "invalid_duration": "Duration must use 15-minute steps from 00:15 to 24:00.",
+      "duration_exceeds_search_window": "Duration is longer than the configured search range."
     },
     "abort": {
       "single_instance_allowed": "Only a single configuration of RCE PSE is allowed."
@@ -89,14 +91,14 @@
           "cheapest_window": {
             "name": "Cheap time window",
             "data": {
-              "cheapest_time_window_start": "time window start",
-              "cheapest_time_window_end": "time window end",
-              "cheapest_window_duration_hours": "search window duration"
+              "cheapest_time_window_start": "Time window start",
+              "cheapest_time_window_end": "Time window end",
+              "cheapest_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "cheapest_time_window_start": "Starting hour for searching cheap window",
-              "cheapest_time_window_end": "Ending hour for searching cheap window",
-              "cheapest_window_duration_hours": "Duration of continuous cheap time window"
+              "cheapest_time_window_start": "Start of the search range. Same calendar day only.",
+              "cheapest_time_window_end": "End of the search range. Use 00:00 here to mean end of that calendar day.",
+              "cheapest_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
             }
           },
           "expensive_window": {
@@ -107,9 +109,9 @@
               "expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "expensive_time_window_start": "Starting hour for searching expensive window",
-              "expensive_time_window_end": "Ending hour for searching expensive window",
-              "expensive_window_duration_hours": "Duration of continuous expensive time window"
+              "expensive_time_window_start": "Start of the search range. Same calendar day only.",
+              "expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
+              "expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
             }
           },
           "second_expensive_window": {
@@ -120,16 +122,18 @@
               "second_expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Starting hour for searching second expensive window",
-              "second_expensive_time_window_end": "Ending hour for searching second expensive window",
-              "second_expensive_window_duration_hours": "Duration of continuous second expensive time window"
+              "second_expensive_time_window_start": "Start of the search range. Same calendar day only.",
+              "second_expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
+              "second_expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
             }
           }
         }
       }
     },
     "error": {
-      "invalid_time_window": "Start hour must be earlier than end hour"
+      "invalid_time_window": "Invalid search range: end must be after start on the same day, unless end is 00:00 (end of day).",
+      "invalid_duration": "Duration must use 15-minute steps from 00:15 to 24:00.",
+      "duration_exceeds_search_window": "Duration is longer than the configured search range."
     }
   },
   "entity": {

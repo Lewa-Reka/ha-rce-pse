@@ -167,26 +167,28 @@ class TestTodayCustomWindowBinarySensors:
         with patch.object(sensor, "get_today_data") as mock_today_data:
             mock_today_data.return_value = [
                 {
+                    "business_date": "2024-01-15",
                     "period": "23:00 - 23:15",
                     "rce_pln": "200.00",
-                    "dtime": "2024-01-15 23:15:00"
+                    "dtime": "2024-01-15 23:15:00",
                 },
                 {
+                    "business_date": "2024-01-15",
                     "period": "23:15 - 23:30",
                     "rce_pln": "200.00",
-                    "dtime": "2024-01-15 23:30:00"
-                }
+                    "dtime": "2024-01-15 23:30:00",
+                },
             ]
-            
+
             with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
                 mock_find_window.return_value = [
                     {"dtime": "2024-01-15 23:15:00"},
-                    {"dtime": "2024-01-15 23:30:00"}
+                    {"dtime": "2024-01-15 23:30:00"},
                 ]
-                
-                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+
+                with patch.object(sensor, "is_now_within_optimal_window_records") as mock_in_window:
                     mock_in_window.return_value = True
-                    
+
                     state = sensor.is_on
                     assert state is True
 
@@ -200,20 +202,21 @@ class TestTodayCustomWindowBinarySensors:
         with patch.object(sensor, "get_today_data") as mock_today_data:
             mock_today_data.return_value = [
                 {
+                    "business_date": "2024-01-15",
                     "period": "18:00 - 18:15",
                     "rce_pln": "450.00",
-                    "dtime": "2024-01-15 18:15:00"
+                    "dtime": "2024-01-15 18:15:00",
                 }
             ]
-            
+
             with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
                 mock_find_window.return_value = [
-                    {"dtime": "2024-01-15 18:15:00"}
+                    {"dtime": "2024-01-15 18:15:00"},
                 ]
-                
-                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+
+                with patch.object(sensor, "is_now_within_optimal_window_records") as mock_in_window:
                     mock_in_window.return_value = True
-                    
+
                     state = sensor.is_on
                     assert state is True
 
@@ -247,9 +250,13 @@ class TestTodayCustomWindowBinarySensors:
         for sensor in sensors:
             with patch.object(sensor, "get_today_data") as mock_today_data:
                 mock_today_data.return_value = [
-                    {"period": "10:00 - 10:15", "rce_pln": "300.00"}
+                    {
+                        "business_date": "2024-01-15",
+                        "period": "10:00 - 10:15",
+                        "rce_pln": "300.00",
+                    }
                 ]
-                
+
                 with patch.object(sensor.calculator, "find_optimal_window") as mock_find:
                     mock_find.return_value = []
                     
@@ -270,15 +277,16 @@ class TestTodayCustomWindowBinarySensors:
             with patch.object(sensor, "get_today_data") as mock_today_data:
                 mock_today_data.return_value = [
                     {
+                        "business_date": "2024-01-15",
                         "period": "10:00 - 10:15",
                         "rce_pln": "300.00",
-                        "dtime": "invalid_datetime"
+                        "dtime": "invalid_datetime",
                     }
                 ]
-                
+
                 with patch.object(sensor.calculator, "find_optimal_window") as mock_find:
                     mock_find.return_value = [
-                        {"dtime": "invalid_datetime"}
+                        {"dtime": "invalid_datetime"},
                     ]
                     
                     state = sensor.is_on
@@ -355,61 +363,63 @@ class TestSecondExpensiveWindowBinarySensor:
     def test_today_second_expensive_window_active_when_in_window(self, mock_coordinator):
         mock_config_entry = Mock()
         mock_config_entry.data = {
-            "second_expensive_time_window_start": 6,
-            "second_expensive_time_window_end": 10,
-            "second_expensive_window_duration_hours": 2,
+            "second_expensive_time_window_start": "06:00",
+            "second_expensive_time_window_end": "10:00",
+            "second_expensive_window_duration_hours": "02:00",
         }
         mock_config_entry.options = {}
-        
+
         sensor = RCETodaySecondExpensiveWindowBinarySensor(mock_coordinator, mock_config_entry)
-        
+
         with patch.object(sensor, "get_today_data") as mock_today_data:
             mock_today_data.return_value = [
                 {
+                    "business_date": "2024-01-15",
                     "period": "07:00 - 07:15",
                     "rce_pln": "450.00",
-                    "dtime": "2024-01-15 07:15:00"
+                    "dtime": "2024-01-15 07:15:00",
                 }
             ]
-            
+
             with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
                 mock_find_window.return_value = [
-                    {"dtime": "2024-01-15 07:15:00"}
+                    {"dtime": "2024-01-15 07:15:00"},
                 ]
-                
-                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+
+                with patch.object(sensor, "is_now_within_optimal_window_records") as mock_in_window:
                     mock_in_window.return_value = True
-                    
+
                     assert sensor.is_on is True
 
     def test_today_second_expensive_window_not_active_when_outside_window(self, mock_coordinator):
         mock_config_entry = Mock()
         mock_config_entry.data = {
-            "second_expensive_time_window_start": 6,
-            "second_expensive_time_window_end": 10,
-            "second_expensive_window_duration_hours": 2,
+            "second_expensive_time_window_start": "06:00",
+            "second_expensive_time_window_end": "10:00",
+            "second_expensive_window_duration_hours": "02:00",
         }
         mock_config_entry.options = {}
-        
+
         sensor = RCETodaySecondExpensiveWindowBinarySensor(mock_coordinator, mock_config_entry)
-        
+
         with patch.object(sensor, "get_today_data") as mock_today_data:
             mock_today_data.return_value = [
                 {
+                    "business_date": "2024-01-15",
                     "period": "07:00 - 07:15",
                     "rce_pln": "450.00",
-                    "dtime": "2024-01-15 07:15:00"
+                    "dtime": "2024-01-15 07:15:00",
                 }
             ]
-            
+
             with patch.object(sensor.calculator, "find_optimal_window") as mock_find_window:
                 mock_find_window.return_value = [
-                    {"dtime": "2024-01-15 07:15:00"}
+                    {"dtime": "2024-01-15 07:15:00"},
                 ]
-                
-                with patch.object(sensor, "is_current_time_in_window") as mock_in_window:
+
+                with patch.object(sensor, "is_now_within_optimal_window_records") as mock_in_window:
                     mock_in_window.return_value = False
-                    
+
                     assert sensor.is_on is False
 
 

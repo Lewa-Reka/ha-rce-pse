@@ -6,43 +6,36 @@ Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assis
 
 ### Ustawienia najtańszych godzin
 
-Określają, w jakim przedziale szukać najbardziej ekonomicznych okresów:
+Określają, w jakim przedziale szukać najbardziej ekonomicznych okresów. Wartości są w formacie **HH:MM** ze skokiem **15 minut** (00, 15, 30, 45). Zakres przeszukiwania dotyczy **jednego dnia kalendarzowego** — nie da się ustawić jednego ciągłego okna „od wieczora do rana następnego dnia” (np. 22:00–06:00); takie scenariusze rozwiązuj dwoma osobnymi zakresami lub inną logiką w automatyzacji.
 
-- **Godzina początkowa** (0–23): początek okna do wyszukiwania najtańszych godzin  
-  - *Domyślnie:* 0 (północ)  
-  - *Przykład:* 22 – wyszukiwanie od 22:00
+- **Początek przeszukiwania** (HH:MM): od której chwili szukać najtańszego ciągłego okna  
+  - *Domyślnie:* 00:00  
+  - *Przykład:* 22:00 – wyszukiwanie od 22:00 tego samego dnia
 
-- **Godzina końcowa** (1–24): koniec okna do wyszukiwania najtańszych godzin  
-  - *Domyślnie:* 24 (północ następnego dnia)  
-  - *Przykład:* 6 – wyszukiwanie do 6:00
+- **Koniec przeszukiwania** (HH:MM): do której chwili (wyłącznie) obowiązuje zakres  
+  - **Wartość 00:00 w polu końca** oznacza **koniec tego samego dnia kalendarzowego** (ostatni kwadrans przypisany do dnia w danych PSE), a nie północ na początku dnia.  
+  - *Domyślnie:* 00:00 – cały dzień od początku do końca (para 00:00–00:00 = pełny dzień).  
+  - *Przykład:* 16:15–00:00 – od 16:15 do końca dnia (bez przechodzenia przez północ na „następny dzień” w sensie kalendarzowym).
 
-- **Czas trwania (godziny)** (1–24): długość jednego ciągłego okna najtańszych godzin  
-  - *Domyślnie:* 2 godziny  
-  - *Przykład:* 3 – blok 3 godzin najtańszego prądu
+- **Długość poszukiwanego okna** (HH:MM): jak długi ma być jeden ciągły blok (od 00:15 do 24:00)  
+  - *Domyślnie:* 02:00  
+  - *Przykład:* 03:00 – szukany jest blok trzech godzin; 02:15 – dwa godziny i kwadrans
 
 ### Ustawienia najdroższych godzin
 
-Określają wyszukiwanie najdroższych okresów (np. do unikania szczytu):
+Określają wyszukiwanie najdroższych okresów (np. do unikania szczytu). Te same zasady co wyżej: **HH:MM**, skok 15 minut, koniec **00:00** = koniec dnia.
 
-- **Godzina początkowa** (0–23): początek okna dla najdroższych godzin  
-  - *Domyślnie:* 0  
-  - *Przykład:* 16 – od 16:00
-
-- **Godzina końcowa** (1–24): koniec okna  
-  - *Domyślnie:* 24  
-  - *Przykład:* 20 – do 20:00
-
-- **Czas trwania (godziny)** (1–24): długość okna najdroższych godzin  
-  - *Domyślnie:* 2 godziny  
-  - *Przykład:* 1 – jedna godzina
+- **Początek przeszukiwania** – *domyślnie* 00:00  
+- **Koniec przeszukiwania** – *domyślnie* 00:00 (cały dzień)  
+- **Długość poszukiwanego okna** – *domyślnie* 02:00
 
 ### Drugie najdroższe godziny
 
 Osobne okno do wyznaczenia drugiego szczytu (np. poranek vs wieczór):
 
-- **Godzina początkowa** (0–23): *domyślnie* 6  
-- **Godzina końcowa** (1–24): *domyślnie* 10  
-- **Czas trwania (godziny)** (1–24): *domyślnie* 2
+- **Początek przeszukiwania** – *domyślnie* 06:00  
+- **Koniec przeszukiwania** – *domyślnie* 10:00  
+- **Długość poszukiwanego okna** – *domyślnie* 02:00
 
 ### Ceny godzinowe
 
@@ -90,21 +83,24 @@ Integracja przeładuje się z nowymi ustawieniami.
 
 ## Przykłady konfiguracji
 
-**Ładowanie nocne (EV)**  
-- Najtańsze godziny: początek=22, koniec=6, czas trwania=4  
-- Szukane są 4 kolejne najtańsze godziny między 22:00 a 6:00
+**Ładowanie wieczorne (ten sam dzień)**  
+- Najtańsze godziny: początek 18:00, koniec 00:00 (koniec dnia), długość 04:00  
+- Szukane są 4 kolejne najtańsze kwadranse między 18:00 a końcem dnia
 
 **Unikanie szczytu w ciągu dnia**  
-- Najdroższe godziny: początek=8, koniec=18, czas trwania=2  
-- Identyfikacja 2 kolejnych najdroższych godzin w godzinach pracy
+- Najdroższe godziny: początek 08:00, koniec 18:00, długość 02:00  
+- Identyfikacja 2 kolejnych najdroższych kwadransów w wybranym przedziale
 
 **Jeden szczyt wieczorny**  
-- Najdroższe godziny: początek=17, koniec=21, czas trwania=1  
+- Najdroższe godziny: początek 17:00, koniec 21:00, długość 01:00  
 - Jedna najdroższa godzina w szczycie wieczornym
 
 **Dwa szczyty (rano i wieczór)**  
-- Drugie najdroższe: początek=6, koniec=10, czas trwania=2  
-- 2-godzinny szczyt poranny oddzielony od wieczornego
+- Drugie najdroższe: początek 06:00, koniec 10:00, długość 02:00  
+- Osobne okno poranne; wieczór można ustawić w sekcji pierwszego „drogiego” okna z innym zakresem godzin
+
+**Noc z przekroczeniem północy (np. EV)**  
+- Jednego zakresu „22:00–06:00” nie ma — ustaw np. **osobno** szukanie taniego bloku wieczorem (jak wyżej) i ewentualnie drugi profil na kolejny dzień, albo użyj automatyzacji opartej o sensory timestamp i warunki czasowe.
 
 ## Dodatkowe sensory przy własnych oknach
 

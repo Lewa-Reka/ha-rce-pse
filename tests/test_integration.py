@@ -81,7 +81,7 @@ class TestRCEPSEConfigFlow:
     async def test_config_flow_init(self):
         flow = RCEConfigFlow()
         
-        assert flow.VERSION == 1
+        assert flow.VERSION == 2
         assert flow.MINOR_VERSION == 1
 
     @pytest.mark.asyncio
@@ -198,7 +198,13 @@ class TestRCEPSEConfigFlow:
                         call_data = mock_create_entry.call_args[1]["data"]
                         assert call_data[CONF_USE_HOURLY_PRICES] is True
                         assert SECTION_PRICING not in call_data
-                        assert CONF_CHEAPEST_TIME_WINDOW_START in call_data
+                        assert call_data[CONF_CHEAPEST_TIME_WINDOW_START] == "00:00"
+                        assert call_data[CONF_CHEAPEST_TIME_WINDOW_END] == "00:00"
+                        assert call_data[CONF_CHEAPEST_WINDOW_DURATION_HOURS] == "02:00"
+                        assert call_data[CONF_EXPENSIVE_TIME_WINDOW_START] == "00:00"
+                        assert call_data[CONF_EXPENSIVE_TIME_WINDOW_END] == "00:00"
+                        assert call_data[CONF_SECOND_EXPENSIVE_TIME_WINDOW_START] == "06:00"
+                        assert call_data[CONF_SECOND_EXPENSIVE_TIME_WINDOW_END] == "10:00"
 
     @pytest.mark.asyncio
     async def test_config_flow_user_step_no_input(self, mock_hass):

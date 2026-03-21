@@ -36,12 +36,12 @@ class RCETodayCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
         if not today_data:
             return None
 
-        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
 
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=False
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=False
         )
 
         if not optimal_window:
@@ -64,12 +64,12 @@ class RCETodayExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
         if not today_data:
             return None
 
-        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
 
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
         )
 
         if not optimal_window:
@@ -92,12 +92,18 @@ class RCETodaySecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
         if not today_data:
             return None
 
-        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
+        start_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
+        )
+        end_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
+        )
+        duration = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
+        )
 
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
         )
 
         if not optimal_window:
@@ -120,12 +126,12 @@ class RCETomorrowCheapestWindowAvgPriceSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
 
-        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
 
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=False
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=False
         )
 
         if not optimal_window:
@@ -148,12 +154,12 @@ class RCETomorrowExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
 
-        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
 
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=True
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=True
         )
 
         if not optimal_window:
@@ -176,12 +182,18 @@ class RCETomorrowSecondExpensiveWindowAvgPriceSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
 
-        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
+        start_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
+        )
+        end_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
+        )
+        duration = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
+        )
 
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=True
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=True
         )
 
         if not optimal_window:

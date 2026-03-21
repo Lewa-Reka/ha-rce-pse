@@ -151,3 +151,15 @@ template:
 - Dla sensorów **tylko z nową nazwą** (bez zmiany entity_id): nic nie zmieniaj w automatyzacjach.
 - Stan czasu to teraz datetime (w szablonach często w formacie ISO). Do porównań i formatowania używaj `as_timestamp()` oraz `timestamp_custom()`.
 
+---
+
+## Migracja wpisu konfiguracji – okna czasowe (wersja wpisu 2)
+
+Przy aktualizacji integracji wpis konfiguracyjny jest migrowany do **wersji 2**: pola okien (początek, koniec, długość) są przechowywane jako napisy **HH:MM** zamiast liczb całkowitych (godzin).
+
+- Stare wartości godzin (np. `0`, `22`) zamieniane są na `00:00`, `22:00` itd.
+- Stare **24** jako koniec okna zamieniane jest na **`00:00`**, co oznacza **koniec tego samego dnia kalendarzowego** (równoważnie wcześniejszemu „do końca dnia”), a nie godzinę 00:00 rano.
+- Długość okna z liczby godzin (np. `2`) staje się `02:00`.
+
+Po migracji możesz doprecyzować minuty i kwadranse w interfejsie (**Ustawienia** → **Integracje** → RCE PSE → **Konfiguruj**). Szczegóły semantyki: [Konfiguracja](KONFIGURACJA.md).
+

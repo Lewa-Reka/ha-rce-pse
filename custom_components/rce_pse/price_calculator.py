@@ -1,7 +1,16 @@
 from __future__ import annotations
 
 import statistics
-from datetime import datetime, timedelta
+from datetime import timedelta
+
+from .time_window import (
+    parse_pse_dtime,
+    period_bounds_for_record,
+    search_window_exclusive_end,
+    search_window_inclusive_start,
+    period_overlaps_search,
+)
+
 
 class PriceCalculator:
     
@@ -61,66 +70,77 @@ class PriceCalculator:
         return sorted(extreme_records, key=lambda x: x["dtime"])
 
     @staticmethod
-    def find_optimal_window(data: list[dict], window_start_hour: int, window_end_hour: int, 
-                          duration_hours: int, is_max: bool = False) -> list[dict]:
-        if not data or duration_hours <= 0:
+    def find_optimal_window(
+        data: list[dict],
+        business_date: str,
+        search_start_hhmm: str,
+        search_end_hhmm: str,
+        duration_minutes: int,
+        is_max: bool = False,
+    ) -> list[dict]:
+        if not data or duration_minutes <= 0 or duration_minutes % 15 != 0:
             return []
-        
-        duration_periods = int(duration_hours) * 4
-        
+
+        duration_periods = duration_minutes // 15
+
+        search_start = search_window_inclusive_start(business_date, search_start_hhmm)
+        search_end_exclusive = search_window_exclusive_end(business_date, search_end_hhmm)
+
         filtered_data = []
         for record in data:
             try:
-                end_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
-                
-                start_time = end_time - timedelta(minutes=15)
-                
-                if start_time.hour >= window_start_hour and start_time.hour < window_end_hour:
+                bd = record.get("business_date")
+                if bd is not None and bd != business_date:
+                    continue
+                period_start, period_end = period_bounds_for_record(record)
+                if period_overlaps_search(
+                    period_start, period_end, search_start, search_end_exclusive
+                ):
                     filtered_data.append(record)
-                    
             except (ValueError, KeyError):
                 continue
-        
+
         if len(filtered_data) < duration_periods:
             return []
-        
-        filtered_data.sort(key=lambda x: x["dtime"])
-        
+
+        filtered_data.sort(key=lambda x: parse_pse_dtime(x["dtime"]))
+
         best_window = []
         best_avg_price = None
-        
+
         for i in range(len(filtered_data) - duration_periods + 1):
-            window = filtered_data[i:i + duration_periods]
-            
+            window = filtered_data[i : i + duration_periods]
+
             is_continuous = True
             for j in range(len(window) - 1):
                 try:
-                    curr_time = datetime.strptime(window[j]["dtime"], "%Y-%m-%d %H:%M:%S")
-                    next_time = datetime.strptime(window[j + 1]["dtime"], "%Y-%m-%d %H:%M:%S")
-                    
+                    curr_time = parse_pse_dtime(window[j]["dtime"])
+                    next_time = parse_pse_dtime(window[j + 1]["dtime"])
                     if next_time != curr_time + timedelta(minutes=15):
                         is_continuous = False
                         break
                 except (ValueError, KeyError):
                     is_continuous = False
                     break
-            
+
             if not is_continuous:
                 continue
-            
+
             try:
                 window_prices = [float(record["rce_pln"]) for record in window]
                 avg_price = sum(window_prices) / len(window_prices)
-                
+
                 if best_avg_price is None:
                     best_window = window
                     best_avg_price = avg_price
-                elif (is_max and avg_price > best_avg_price) or (not is_max and avg_price < best_avg_price):
+                elif (is_max and avg_price > best_avg_price) or (
+                    not is_max and avg_price < best_avg_price
+                ):
                     best_window = window
                     best_avg_price = avg_price
             except (ValueError, KeyError):
                 continue
-        
+
         return best_window
 
     @staticmethod
@@ -140,8 +160,8 @@ class PriceCalculator:
                 if not current_window:
                     current_window = [record]
                     continue
-                prev_time = datetime.strptime(current_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
-                curr_time = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                prev_time = parse_pse_dtime(current_window[-1]["dtime"])
+                curr_time = parse_pse_dtime(record["dtime"])
                 if curr_time == prev_time + timedelta(minutes=15):
                     current_window.append(record)
                 else:

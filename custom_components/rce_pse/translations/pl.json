@@ -26,9 +26,9 @@
               "cheapest_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "cheapest_time_window_start": "Godzina początkowa",
-              "cheapest_time_window_end": "Godzina końcowa",
-              "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego"
+              "cheapest_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
+              "cheapest_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
+              "cheapest_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
             }
           },
           "expensive_window": {
@@ -39,9 +39,9 @@
               "expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "expensive_time_window_start": "Godzina początkowa",
-              "expensive_time_window_end": "Godzina końcowa",
-              "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego"
+              "expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
+              "expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
+              "expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
             }
           },
           "second_expensive_window": {
@@ -52,16 +52,18 @@
               "second_expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Godzina początkowa",
-              "second_expensive_time_window_end": "Godzina końcowa",
-              "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego"
+              "second_expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
+              "second_expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
+              "second_expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
             }
           }
         }
       }
     },
     "error": {
-      "invalid_time_window": "Godzina początku okna musi być wcześniejsza niż godzina końca okna"
+      "invalid_time_window": "Nieprawidłowy zakres: koniec musi być później niż początek tego samego dnia, chyba że koniec to 00:00 (koniec dnia).",
+      "invalid_duration": "Długość okna musi być w krokach 15 minut od 00:15 do 24:00.",
+      "duration_exceeds_search_window": "Długość okna jest większa niż skonfigurowany zakres przeszukiwania."
     },
     "abort": {
       "single_instance_allowed": "Dozwolona jest tylko jedna konfiguracja RCE PSE."
@@ -94,9 +96,9 @@
               "cheapest_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "cheapest_time_window_start": "Godzina początkowa",
-              "cheapest_time_window_end": "Godzina końcowa",
-              "cheapest_window_duration_hours": "Długość ciągłego najtańszego okna czasowego"
+              "cheapest_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
+              "cheapest_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
+              "cheapest_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
             }
           },
           "expensive_window": {
@@ -107,9 +109,9 @@
               "expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "expensive_time_window_start": "Godzina początkowa",
-              "expensive_time_window_end": "Godzina końcowa",
-              "expensive_window_duration_hours": "Długość ciągłego drogiego okna czasowego"
+              "expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
+              "expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
+              "expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
             }
           },
           "second_expensive_window": {
@@ -120,16 +122,18 @@
               "second_expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
-              "second_expensive_time_window_start": "Godzina początkowa",
-              "second_expensive_time_window_end": "Godzina końcowa",
-              "second_expensive_window_duration_hours": "Długość ciągłego drugiego drogiego okna czasowego"
+              "second_expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
+              "second_expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
+              "second_expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
             }
           }
         }
       }
     },
     "error": {
-      "invalid_time_window": "Godzina początku okna musi być wcześniejsza niż godzina końca okna"
+      "invalid_time_window": "Nieprawidłowy zakres: koniec musi być później niż początek tego samego dnia, chyba że koniec to 00:00 (koniec dnia).",
+      "invalid_duration": "Długość okna musi być w krokach 15 minut od 00:15 do 24:00.",
+      "duration_exceeds_search_window": "Długość okna jest większa niż skonfigurowany zakres przeszukiwania."
     }
   },
   "entity": {

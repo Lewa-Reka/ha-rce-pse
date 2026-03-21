@@ -33,6 +33,14 @@ from .const import (
     DEFAULT_USE_GROSS_PRICES,
     DEFAULT_LOW_PRICE_THRESHOLD,
 )
+from .time_window import (
+    duration_minutes_from_hhmm,
+    is_search_end_end_of_day,
+    is_valid_duration_hhmm,
+    is_valid_quarter_step,
+    minutes_from_midnight,
+    normalize_hhmm,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,6 +58,77 @@ SECTION_KEYS = frozenset(
     }
 )
 
+TIME_KEYS = (
+    CONF_CHEAPEST_TIME_WINDOW_START,
+    CONF_CHEAPEST_TIME_WINDOW_END,
+    CONF_CHEAPEST_WINDOW_DURATION_HOURS,
+    CONF_EXPENSIVE_TIME_WINDOW_START,
+    CONF_EXPENSIVE_TIME_WINDOW_END,
+    CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+    CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+    CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+    CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+)
+
+WINDOW_END_KEYS = frozenset(
+    {
+        CONF_CHEAPEST_TIME_WINDOW_END,
+        CONF_EXPENSIVE_TIME_WINDOW_END,
+        CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+    }
+)
+
+
+def migrate_legacy_time_values(data: Mapping[str, Any]) -> dict[str, Any]:
+    out = dict(data)
+    for key in TIME_KEYS:
+        if key not in out:
+            continue
+        v = out[key]
+        if isinstance(v, int):
+            if key in WINDOW_END_KEYS and v == 24:
+                out[key] = "00:00"
+            else:
+                out[key] = f"{int(v):02d}:00"
+        elif isinstance(v, str) and v.isdigit():
+            iv = int(v)
+            if key in WINDOW_END_KEYS and iv == 24:
+                out[key] = "00:00"
+            else:
+                out[key] = f"{iv:02d}:00"
+    return out
+
+
+def _start_time_select_options() -> list[dict[str, str]]:
+    return [
+        {"value": f"{h:02d}:{m:02d}", "label": f"{h:02d}:{m:02d}"}
+        for h in range(24)
+        for m in (0, 15, 30, 45)
+    ]
+
+
+def _end_time_select_options() -> list[dict[str, str]]:
+    opts: list[dict[str, str]] = [{"value": "00:00", "label": "00:00"}]
+    for h in range(24):
+        for m in (0, 15, 30, 45):
+            if h == 0 and m == 0:
+                continue
+            v = f"{h:02d}:{m:02d}"
+            opts.append({"value": v, "label": v})
+    return opts
+
+
+def _duration_select_options() -> list[dict[str, str]]:
+    opts: list[dict[str, str]] = []
+    for h in range(24):
+        for m in (0, 15, 30, 45):
+            if h == 0 and m == 0:
+                continue
+            v = f"{h:02d}:{m:02d}"
+            opts.append({"value": v, "label": v})
+    opts.append({"value": "24:00", "label": "24:00"})
+    return opts
+
 
 def _flatten_rce_user_input(user_input: dict[str, Any]) -> dict[str, Any]:
     flat: dict[str, Any] = {}
@@ -61,9 +140,95 @@ def _flatten_rce_user_input(user_input: dict[str, Any]) -> dict[str, Any]:
     return flat
 
 
+def _coerce_time_values(flat: Mapping[str, Any]) -> dict[str, Any]:
+    out = dict(flat)
+    for key in TIME_KEYS:
+        if key not in out:
+            continue
+        v = out[key]
+        if isinstance(v, int):
+            if key in WINDOW_END_KEYS and v == 24:
+                out[key] = "00:00"
+            else:
+                out[key] = f"{int(v):02d}:00"
+        elif hasattr(v, "hour") and hasattr(v, "minute"):
+            h = int(v.hour)
+            m = int(v.minute)
+            if h == 24:
+                out[key] = "24:00"
+            else:
+                out[key] = f"{h:02d}:{m:02d}"
+        else:
+            out[key] = normalize_hhmm(v)
+    return out
+
+
+def _search_span_minutes(start_hhmm: str, end_hhmm: str) -> int:
+    sm = minutes_from_midnight(normalize_hhmm(start_hhmm))
+    ne = normalize_hhmm(end_hhmm)
+    if is_search_end_end_of_day(ne):
+        return 24 * 60 - sm
+    em = minutes_from_midnight(ne)
+    return em - sm
+
+
+def _time_window_errors(flat: Mapping[str, Any]) -> dict[str, str]:
+    pairs = (
+        (
+            flat.get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
+            flat.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END),
+            flat.get(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS),
+        ),
+        (
+            flat.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
+            flat.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END),
+            flat.get(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS),
+        ),
+        (
+            flat.get(
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+                DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START,
+            ),
+            flat.get(
+                CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+                DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
+            ),
+            flat.get(
+                CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+                DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+            ),
+        ),
+    )
+    for start, end, duration in pairs:
+        ns = normalize_hhmm(str(start))
+        ne = normalize_hhmm(str(end))
+        if not is_valid_quarter_step(ns):
+            return {"base": "invalid_time_window"}
+        if not is_valid_quarter_step(ne):
+            return {"base": "invalid_time_window"}
+        if not is_valid_duration_hhmm(str(duration)):
+            return {"base": "invalid_duration"}
+        if not is_search_end_end_of_day(ne) and minutes_from_midnight(ns) >= minutes_from_midnight(ne):
+            return {"base": "invalid_time_window"}
+        span = _search_span_minutes(ns, ne)
+        dm = duration_minutes_from_hhmm(str(duration))
+        if dm > span:
+            return {"base": "duration_exceeds_search_window"}
+    return {}
+
+
 def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
     def _get(key: str, default: Any) -> Any:
-        return current_data.get(key, default)
+        v = current_data.get(key, default)
+        if isinstance(v, int) and key in TIME_KEYS:
+            if key.endswith("_end") and v == 24:
+                return "00:00"
+            return f"{int(v):02d}:00"
+        if key in TIME_KEYS and v is not None:
+            if isinstance(v, dict):
+                return normalize_hhmm(v)
+            return normalize_hhmm(str(v))
+        return v
 
     pricing_inner = vol.Schema(
         {
@@ -92,34 +257,28 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
             vol.Required(
                 CONF_CHEAPEST_TIME_WINDOW_START,
                 default=_get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=0,
-                    max=23,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_start_time_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
             vol.Required(
                 CONF_CHEAPEST_TIME_WINDOW_END,
                 default=_get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_end_time_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
             vol.Required(
                 CONF_CHEAPEST_WINDOW_DURATION_HOURS,
                 default=_get(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_duration_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
         }
@@ -130,34 +289,28 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
             vol.Required(
                 CONF_EXPENSIVE_TIME_WINDOW_START,
                 default=_get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=0,
-                    max=23,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_start_time_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
             vol.Required(
                 CONF_EXPENSIVE_TIME_WINDOW_END,
                 default=_get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_end_time_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
             vol.Required(
                 CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
                 default=_get(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_duration_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
         }
@@ -171,12 +324,10 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                     CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
                     DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START,
                 ),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=0,
-                    max=23,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_start_time_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
             vol.Required(
@@ -185,12 +336,10 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                     CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
                     DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
                 ),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_end_time_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
             vol.Required(
@@ -199,12 +348,10 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                     CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
                     DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
                 ),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=1,
-                    max=24,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=_duration_select_options(),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
         }
@@ -225,31 +372,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
 CONFIG_SCHEMA = _rce_form_schema({})
 
 
-def _time_window_errors(flat: Mapping[str, Any]) -> dict[str, str]:
-    errors: dict[str, str] = {}
-    cheapest_start = flat.get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-    cheapest_end = flat.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
-    expensive_start = flat.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-    expensive_end = flat.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
-    second_expensive_start = flat.get(
-        CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
-    )
-    second_expensive_end = flat.get(
-        CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
-    )
-
-    if cheapest_start >= cheapest_end:
-        errors["base"] = "invalid_time_window"
-    elif expensive_start >= expensive_end:
-        errors["base"] = "invalid_time_window"
-    elif second_expensive_start >= second_expensive_end:
-        errors["base"] = "invalid_time_window"
-    return errors
-
-
 class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
 
-    VERSION = 1
+    VERSION = 2
     MINOR_VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 
@@ -269,7 +394,7 @@ class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[c
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            flat = _flatten_rce_user_input(user_input)
+            flat = _coerce_time_values(_flatten_rce_user_input(user_input))
             errors = _time_window_errors(flat)
             if not errors:
                 _LOGGER.debug("Creating RCE PSE config entry with options: %s", flat)
@@ -293,7 +418,7 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            flat = _flatten_rce_user_input(user_input)
+            flat = _coerce_time_values(_flatten_rce_user_input(user_input))
             errors = _time_window_errors(flat)
             if not errors:
                 _LOGGER.debug("Updating RCE PSE options: %s", flat)

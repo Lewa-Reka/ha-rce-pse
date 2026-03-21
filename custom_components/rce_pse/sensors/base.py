@@ -7,6 +7,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.util import dt as dt_util
 
 from ..const import CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES
+from ..time_window import parse_pse_dtime
 from ..shared_base import RCEBaseCommonEntity
 
 if TYPE_CHECKING:
@@ -52,7 +53,7 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
         
         for record in self.coordinator.data["raw_data"]:
             try:
-                period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                period_end = parse_pse_dtime(record["dtime"])
                 period_start = period_end - timedelta(minutes=15)
                 
                 if period_start <= now.replace(tzinfo=None) <= period_end:
@@ -72,7 +73,7 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
 
         for record in self.coordinator.data["raw_data"]:
             try:
-                period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                period_end = parse_pse_dtime(record["dtime"])
                 period_start = period_end - timedelta(minutes=15)
                 if period_start <= target_time <= period_end:
                     return float(record["rce_pln"])
@@ -91,7 +92,7 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
 
         for record in self.coordinator.data["raw_data"]:
             try:
-                period_end = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                period_end = parse_pse_dtime(record["dtime"])
                 period_start = period_end - timedelta(minutes=15)
                 if period_start <= target_time <= period_end:
                     return float(record["rce_pln"])
