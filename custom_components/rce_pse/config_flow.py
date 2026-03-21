@@ -225,7 +225,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                 return "00:00"
             return f"{int(v):02d}:00"
         if key in TIME_KEYS and v is not None:
-            return normalize_hhmm(v)
+            if isinstance(v, dict):
+                return normalize_hhmm(v)
+            return normalize_hhmm(str(v))
         return v
 
     pricing_inner = vol.Schema(

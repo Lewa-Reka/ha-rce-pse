@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta
-
-import pytest
+from datetime import datetime
 
 from custom_components.rce_pse.time_window import (
     is_now_in_window,
