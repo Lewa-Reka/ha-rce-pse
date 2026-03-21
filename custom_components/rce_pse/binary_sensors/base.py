@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.util import dt as dt_util
 
 from ..shared_base import RCEBaseCommonEntity
+from ..time_window import parse_pse_dtime
 
 if TYPE_CHECKING:
     pass
@@ -15,6 +16,18 @@ if TYPE_CHECKING:
 class RCEBaseBinarySensor(RCEBaseCommonEntity, BinarySensorEntity):
     def __init__(self, coordinator, unique_id):
         super().__init__(coordinator, unique_id)
+
+    def is_now_within_optimal_window_records(self, optimal_window: list[dict]) -> bool:
+        if not optimal_window:
+            return False
+        try:
+            first_end = parse_pse_dtime(optimal_window[0]["dtime"])
+            start = first_end - timedelta(minutes=15)
+            end_inclusive = parse_pse_dtime(optimal_window[-1]["dtime"])
+            now = dt_util.now().replace(tzinfo=None)
+            return start <= now <= end_inclusive
+        except (ValueError, KeyError, IndexError):
+            return False
 
     def is_current_time_in_window(self, start_time_str: str, end_time_str: str, target_date: str | None = None) -> bool:
         if not start_time_str or not end_time_str:

@@ -12,6 +12,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
+from .time_window import parse_pse_dtime
 from .const import (
     API_FIRST,
     API_SELECT,
@@ -201,7 +202,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         
         for record in raw_data:
             try:
-                dtime = datetime.strptime(record["dtime"], "%Y-%m-%d %H:%M:%S")
+                dtime = parse_pse_dtime(record["dtime"])
                 period_start = dtime - timedelta(minutes=15)
                 date_hour_key = f"{period_start.strftime('%Y-%m-%d')}_{period_start.hour:02d}"
                 hourly_groups[date_hour_key].append(record)

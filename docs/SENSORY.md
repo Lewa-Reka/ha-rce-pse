@@ -50,7 +50,7 @@ Możliwe stany (wyświetlane jako tekst w języku interfejsu):
 
 ## Sensory konfigurowalnych okien czasowych
 
-Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md).
+Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md). Zakres przeszukiwania jest w formacie **HH:MM** (skok 15 minut); **00:00** jako **koniec** zakresu oznacza koniec tego samego dnia kalendarzowego w danych PSE, a nie północ na początku dnia. Timestamp **końca** okna odpowiada końcowi ostatniego kwadransu w wybranym bloku (nie „00:00” jako godzina tego samego dnia w błędnym sensie).
 
 ### Dzisiaj
 
@@ -88,10 +88,12 @@ Wskazują, czy **aktualny moment** jest w danym oknie cenowym (przydatne w autom
 
 ### Okna konfigurowalne
 
-- **Tanie okno aktywne** – `on`, gdy trwa skonfigurowane najtańsze okno
+- **Tanie okno aktywne** – `on`, gdy trwa skonfigurowane najtańsze okno (w obrębie jednego dnia; koniec zakresu 00:00 = do końca dnia)
 - **Drogie okno aktywne** – `on`, gdy trwa skonfigurowane najdroższe okno
 - **Drugie drogie okno aktywne** – `on`, gdy trwa drugie najdroższe okno
 - **Cena poniżej progu aktywna** – `on`, gdy trwa pierwszy ciągły okres dzisiaj z ceną ≤ progu
+
+Dla automatyzacji „na koniec okna” korzystaj ze zmiany stanu binary sensora lub z sensora timestamp końca okna, zamiast sztywnej godziny 00:00.
 
 ---
 

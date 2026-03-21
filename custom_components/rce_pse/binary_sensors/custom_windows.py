@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
 from typing import Any
+
 from homeassistant.config_entries import ConfigEntry
 
 from ..coordinator import RCEPSEDataUpdateCoordinator
@@ -22,33 +22,61 @@ from ..const import (
     DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
     DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
 )
+from ..time_window import business_date_from_day_data, duration_minutes_from_hhmm, normalize_hhmm
 from .base import RCEBaseBinarySensor
+
+_TIME_WINDOW_KEYS = frozenset(
+    {
+        CONF_CHEAPEST_TIME_WINDOW_START,
+        CONF_CHEAPEST_TIME_WINDOW_END,
+        CONF_CHEAPEST_WINDOW_DURATION_HOURS,
+        CONF_EXPENSIVE_TIME_WINDOW_START,
+        CONF_EXPENSIVE_TIME_WINDOW_END,
+        CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+        CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+        CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+        CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+    }
+)
 
 
 class RCECustomWindowBinarySensor(RCEBaseBinarySensor):
 
-    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry, 
-                 unique_id: str) -> None:
+    def __init__(
+        self,
+        coordinator: RCEPSEDataUpdateCoordinator,
+        config_entry: ConfigEntry,
+        unique_id: str,
+    ) -> None:
         super().__init__(coordinator, unique_id)
         self.config_entry = config_entry
 
     def get_config_value(self, key: str, default: Any) -> Any:
-        value = None
         if self.config_entry.options and key in self.config_entry.options:
             value = self.config_entry.options[key]
         else:
             value = self.config_entry.data.get(key, default)
-        
-        if key in [
-            CONF_CHEAPEST_TIME_WINDOW_START, CONF_CHEAPEST_TIME_WINDOW_END,
-            CONF_CHEAPEST_WINDOW_DURATION_HOURS, CONF_EXPENSIVE_TIME_WINDOW_START,
-            CONF_EXPENSIVE_TIME_WINDOW_END, CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
-            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
-            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
-        ]:
-            return int(value)
-        
+
+        if key in _TIME_WINDOW_KEYS:
+            return normalize_hhmm(str(value))
+
         return value
+
+    def find_optimal_window_for_data(
+        self,
+        day_data: list[dict],
+        search_start: str,
+        search_end: str,
+        duration_hhmm: str,
+        is_max: bool,
+    ) -> list[dict]:
+        bd = business_date_from_day_data(day_data)
+        if not bd:
+            return []
+        dm = duration_minutes_from_hhmm(duration_hhmm)
+        return self.calculator.find_optimal_window(
+            day_data, bd, search_start, search_end, dm, is_max=is_max
+        )
 
 
 class RCETodayCheapestWindowBinarySensor(RCECustomWindowBinarySensor):
@@ -62,29 +90,19 @@ class RCETodayCheapestWindowBinarySensor(RCECustomWindowBinarySensor):
         today_data = self.get_today_data()
         if not today_data:
             return False
-        
-        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+
+        start_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=False
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=False
         )
-        
+
         if not optimal_window:
             return False
-        
-        try:
-            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
-            window_start = first_period_end - timedelta(minutes=15)
-            window_start_str = window_start.strftime("%H:%M")
-            
-            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
-            window_end_str = last_period_end.strftime("%H:%M")
-            
-            return self.is_current_time_in_window(window_start_str, window_end_str)
-        except (ValueError, KeyError):
-            return False
+
+        return self.is_now_within_optimal_window_records(optimal_window)
 
 
 class RCETodayExpensiveWindowBinarySensor(RCECustomWindowBinarySensor):
@@ -98,29 +116,20 @@ class RCETodayExpensiveWindowBinarySensor(RCECustomWindowBinarySensor):
         today_data = self.get_today_data()
         if not today_data:
             return False
-        
-        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+
+        start_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
         )
-        
+
         if not optimal_window:
             return False
-        
-        try:
-            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
-            window_start = first_period_end - timedelta(minutes=15)
-            window_start_str = window_start.strftime("%H:%M")
-            
-            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
-            window_end_str = last_period_end.strftime("%H:%M")
-            
-            return self.is_current_time_in_window(window_start_str, window_end_str)
-        except (ValueError, KeyError):
-            return False
+
+        return self.is_now_within_optimal_window_records(optimal_window)
+
 
 class RCETodaySecondExpensiveWindowBinarySensor(RCECustomWindowBinarySensor):
 
@@ -133,26 +142,22 @@ class RCETodaySecondExpensiveWindowBinarySensor(RCECustomWindowBinarySensor):
         today_data = self.get_today_data()
         if not today_data:
             return False
-        
-        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+
+        start_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
         )
-        
+        end_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
+        )
+        duration = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
+        )
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
+        )
+
         if not optimal_window:
             return False
-        
-        try:
-            first_period_end = datetime.strptime(optimal_window[0]["dtime"], "%Y-%m-%d %H:%M:%S")
-            window_start = first_period_end - timedelta(minutes=15)
-            window_start_str = window_start.strftime("%H:%M")
-            
-            last_period_end = datetime.strptime(optimal_window[-1]["dtime"], "%Y-%m-%d %H:%M:%S")
-            window_end_str = last_period_end.strftime("%H:%M")
-            
-            return self.is_current_time_in_window(window_start_str, window_end_str)
-        except (ValueError, KeyError):
-            return False
+
+        return self.is_now_within_optimal_window_records(optimal_window)

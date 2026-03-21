@@ -127,101 +127,138 @@ class TestPriceCalculator:
         assert min_records == []
 
     def test_find_optimal_window_cheapest(self):
+        bd = "2024-01-01"
         data = [
-            {"rce_pln": "400.00", "dtime": "2024-01-01 09:00:00"},
-            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00"},
-            {"rce_pln": "280.00", "dtime": "2024-01-01 10:30:00"},
-            {"rce_pln": "250.00", "dtime": "2024-01-01 10:45:00"},
-            {"rce_pln": "260.00", "dtime": "2024-01-01 11:00:00"},
-            {"rce_pln": "270.00", "dtime": "2024-01-01 11:15:00"},
-            {"rce_pln": "280.00", "dtime": "2024-01-01 11:30:00"},
-            {"rce_pln": "290.00", "dtime": "2024-01-01 11:45:00"},
-            {"rce_pln": "300.00", "dtime": "2024-01-01 12:00:00"},
-            {"rce_pln": "350.00", "dtime": "2024-01-01 15:45:00"},
-            {"rce_pln": "450.00", "dtime": "2024-01-01 16:00:00"},
-            {"rce_pln": "500.00", "dtime": "2024-01-01 17:00:00"},
+            {"rce_pln": "400.00", "dtime": "2024-01-01 09:00:00", "business_date": bd},
+            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00", "business_date": bd},
+            {"rce_pln": "280.00", "dtime": "2024-01-01 10:30:00", "business_date": bd},
+            {"rce_pln": "250.00", "dtime": "2024-01-01 10:45:00", "business_date": bd},
+            {"rce_pln": "260.00", "dtime": "2024-01-01 11:00:00", "business_date": bd},
+            {"rce_pln": "270.00", "dtime": "2024-01-01 11:15:00", "business_date": bd},
+            {"rce_pln": "280.00", "dtime": "2024-01-01 11:30:00", "business_date": bd},
+            {"rce_pln": "290.00", "dtime": "2024-01-01 11:45:00", "business_date": bd},
+            {"rce_pln": "300.00", "dtime": "2024-01-01 12:00:00", "business_date": bd},
+            {"rce_pln": "350.00", "dtime": "2024-01-01 15:45:00", "business_date": bd},
+            {"rce_pln": "450.00", "dtime": "2024-01-01 16:00:00", "business_date": bd},
+            {"rce_pln": "500.00", "dtime": "2024-01-01 17:00:00", "business_date": bd},
         ]
-        
-        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
+
+        optimal_window = PriceCalculator.find_optimal_window(
+            data, bd, "10:00", "16:00", 120, is_max=False
+        )
         
         assert len(optimal_window) == 8
         assert optimal_window[0]["dtime"] == "2024-01-01 10:15:00"
         assert optimal_window[-1]["dtime"] == "2024-01-01 12:00:00"
 
     def test_find_optimal_window_most_expensive(self):
+        bd = "2024-01-01"
         data = [
-            {"rce_pln": "200.00", "dtime": "2024-01-01 10:15:00"},
-            {"rce_pln": "450.00", "dtime": "2024-01-01 11:00:00"},
-            {"rce_pln": "500.00", "dtime": "2024-01-01 11:15:00"},
-            {"rce_pln": "480.00", "dtime": "2024-01-01 11:30:00"},
-            {"rce_pln": "470.00", "dtime": "2024-01-01 11:45:00"},
-            {"rce_pln": "300.00", "dtime": "2024-01-01 12:00:00"},
+            {"rce_pln": "200.00", "dtime": "2024-01-01 10:15:00", "business_date": bd},
+            {"rce_pln": "450.00", "dtime": "2024-01-01 11:00:00", "business_date": bd},
+            {"rce_pln": "500.00", "dtime": "2024-01-01 11:15:00", "business_date": bd},
+            {"rce_pln": "480.00", "dtime": "2024-01-01 11:30:00", "business_date": bd},
+            {"rce_pln": "470.00", "dtime": "2024-01-01 11:45:00", "business_date": bd},
+            {"rce_pln": "300.00", "dtime": "2024-01-01 12:00:00", "business_date": bd},
         ]
-        
-        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=True)
+
+        optimal_window = PriceCalculator.find_optimal_window(
+            data, bd, "10:00", "16:00", 60, is_max=True
+        )
         
         assert len(optimal_window) == 4
         assert optimal_window[0]["dtime"] == "2024-01-01 11:00:00"
         assert optimal_window[-1]["dtime"] == "2024-01-01 11:45:00"
 
     def test_find_optimal_window_no_continuous_hours(self):
+        bd = "2024-01-01"
         data = [
-            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00"},
-            {"rce_pln": "250.00", "dtime": "2024-01-01 12:15:00"},
-            {"rce_pln": "280.00", "dtime": "2024-01-01 12:30:00"},
-            {"rce_pln": "270.00", "dtime": "2024-01-01 12:45:00"},
-            {"rce_pln": "260.00", "dtime": "2024-01-01 13:00:00"},
+            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00", "business_date": bd},
+            {"rce_pln": "250.00", "dtime": "2024-01-01 12:15:00", "business_date": bd},
+            {"rce_pln": "280.00", "dtime": "2024-01-01 12:30:00", "business_date": bd},
+            {"rce_pln": "270.00", "dtime": "2024-01-01 12:45:00", "business_date": bd},
+            {"rce_pln": "260.00", "dtime": "2024-01-01 13:00:00", "business_date": bd},
         ]
-        
-        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=False)
+
+        optimal_window = PriceCalculator.find_optimal_window(
+            data, bd, "10:00", "16:00", 60, is_max=False
+        )
         
         assert len(optimal_window) == 4
         assert optimal_window[0]["dtime"] == "2024-01-01 12:15:00"
         assert optimal_window[-1]["dtime"] == "2024-01-01 13:00:00"
 
     def test_find_optimal_window_insufficient_data(self):
+        bd = "2024-01-01"
         data = [
-            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00"},
-            {"rce_pln": "320.00", "dtime": "2024-01-01 10:30:00"},
+            {"rce_pln": "300.00", "dtime": "2024-01-01 10:15:00", "business_date": bd},
+            {"rce_pln": "320.00", "dtime": "2024-01-01 10:30:00", "business_date": bd},
         ]
-        
-        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=False)
+
+        optimal_window = PriceCalculator.find_optimal_window(
+            data, bd, "10:00", "16:00", 60, is_max=False
+        )
         
         assert optimal_window == []
 
     def test_find_optimal_window_outside_time_range(self):
+        bd = "2024-01-01"
         data = [
-            {"rce_pln": "100.00", "dtime": "2024-01-01 09:00:00"},
-            {"rce_pln": "200.00", "dtime": "2024-01-01 09:30:00"},
-            {"rce_pln": "500.00", "dtime": "2024-01-01 17:00:00"},
+            {"rce_pln": "100.00", "dtime": "2024-01-01 09:00:00", "business_date": bd},
+            {"rce_pln": "200.00", "dtime": "2024-01-01 09:30:00", "business_date": bd},
+            {"rce_pln": "500.00", "dtime": "2024-01-01 17:00:00", "business_date": bd},
         ]
-        
-        optimal_window = PriceCalculator.find_optimal_window(data, 10, 16, 1, is_max=False)
+
+        optimal_window = PriceCalculator.find_optimal_window(
+            data, bd, "10:00", "16:00", 60, is_max=False
+        )
         
         assert optimal_window == []
 
     def test_find_optimal_window_empty_data(self):
-        optimal_window = PriceCalculator.find_optimal_window([], 10, 16, 2, is_max=False)
-        
+        optimal_window = PriceCalculator.find_optimal_window(
+            [], "2024-01-01", "10:00", "16:00", 120, is_max=False
+        )
+
         assert optimal_window == []
 
-    def test_find_optimal_window_with_float_duration(self):
+    def test_find_optimal_window_duration_two_hours_fifteen(self):
+        bd = "2024-01-01"
         data = [
-            {"dtime": "2024-01-01 10:15:00", "rce_pln": "100.0"},
-            {"dtime": "2024-01-01 10:30:00", "rce_pln": "120.0"},
-            {"dtime": "2024-01-01 10:45:00", "rce_pln": "80.0"},
-            {"dtime": "2024-01-01 11:00:00", "rce_pln": "90.0"},
-            {"dtime": "2024-01-01 11:15:00", "rce_pln": "70.0"},
-            {"dtime": "2024-01-01 11:30:00", "rce_pln": "110.0"},
-            {"dtime": "2024-01-01 11:45:00", "rce_pln": "95.0"},
-            {"dtime": "2024-01-01 12:00:00", "rce_pln": "85.0"},
+            {"dtime": "2024-01-01 10:15:00", "rce_pln": "100.0", "business_date": bd},
+            {"dtime": "2024-01-01 10:30:00", "rce_pln": "120.0", "business_date": bd},
+            {"dtime": "2024-01-01 10:45:00", "rce_pln": "80.0", "business_date": bd},
+            {"dtime": "2024-01-01 11:00:00", "rce_pln": "90.0", "business_date": bd},
+            {"dtime": "2024-01-01 11:15:00", "rce_pln": "70.0", "business_date": bd},
+            {"dtime": "2024-01-01 11:30:00", "rce_pln": "110.0", "business_date": bd},
+            {"dtime": "2024-01-01 11:45:00", "rce_pln": "95.0", "business_date": bd},
+            {"dtime": "2024-01-01 12:00:00", "rce_pln": "85.0", "business_date": bd},
+            {"dtime": "2024-01-01 12:15:00", "rce_pln": "130.0", "business_date": bd},
         ]
-        
-        optimal_window_float = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
-        optimal_window_int = PriceCalculator.find_optimal_window(data, 10, 16, 2, is_max=False)
-        
-        assert optimal_window_float == optimal_window_int
-        assert len(optimal_window_float) == 8
+
+        optimal_window = PriceCalculator.find_optimal_window(
+            data, bd, "10:00", "16:00", 135, is_max=False
+        )
+
+        assert len(optimal_window) == 9
+
+    def test_find_optimal_window_search_end_eod(self):
+        bd = "2024-01-01"
+        data = [
+            {"dtime": "2024-01-01 22:45:00", "rce_pln": "500.0", "business_date": bd},
+            {"dtime": "2024-01-01 23:00:00", "rce_pln": "520.0", "business_date": bd},
+            {"dtime": "2024-01-01 23:15:00", "rce_pln": "510.0", "business_date": bd},
+            {"dtime": "2024-01-01 23:30:00", "rce_pln": "505.0", "business_date": bd},
+            {"dtime": "2024-01-01 23:45:00", "rce_pln": "505.0", "business_date": bd},
+            {"dtime": "2024-01-01 24:00:00", "rce_pln": "530.0", "business_date": bd},
+        ]
+
+        optimal_window = PriceCalculator.find_optimal_window(
+            data, bd, "16:15", "00:00", 60, is_max=True
+        )
+
+        assert len(optimal_window) == 4
+        assert optimal_window[0]["dtime"] == "2024-01-01 23:15:00"
 
     def test_find_first_window_below_threshold_empty_data(self):
         assert PriceCalculator.find_first_window_below_threshold([], 100.0) == []
@@ -469,28 +506,23 @@ class TestRCECustomWindowSensor:
         value = sensor.get_config_value("non_existent_key", "default_value")
         assert value == "default_value"
 
-    def test_get_config_value_converts_float_to_int_for_window_keys(self):
+    def test_get_config_value_normalizes_window_time_keys(self):
         config_entry = MockConfigEntry(
             domain="rce_pse",
             data={
                 CONF_CHEAPEST_TIME_WINDOW_START: 8.0,
                 CONF_CHEAPEST_TIME_WINDOW_END: 20.0,
                 CONF_CHEAPEST_WINDOW_DURATION_HOURS: 2.0,
-                "other_key": 5.5
+                "other_key": 5.5,
             },
-            options={}
+            options={},
         )
         coordinator = MagicMock()
         sensor = RCECustomWindowSensor(coordinator, config_entry, "test")
-        
-        assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, 0) == 8
-        assert isinstance(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, 0), int)
 
-        assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, 24) == 20
-        assert isinstance(sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, 24), int)
-
-        assert sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, 2) == 2
-        assert isinstance(sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, 2), int)
+        assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, "00:00") == "08:00"
+        assert sensor.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, "00:00") == "20:00"
+        assert sensor.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, "02:00") == "02:00"
 
         assert sensor.get_config_value("other_key", 0) == 5.5
         assert isinstance(sensor.get_config_value("other_key", 0), float)

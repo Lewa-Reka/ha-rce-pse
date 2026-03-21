@@ -7,6 +7,12 @@ from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.util import dt as dt_util
 
 from ..coordinator import RCEPSEDataUpdateCoordinator
+from ..time_window import (
+    business_date_from_day_data,
+    duration_minutes_from_hhmm,
+    normalize_hhmm,
+    parse_pse_dtime,
+)
 from ..const import (
     CONF_CHEAPEST_TIME_WINDOW_START,
     CONF_CHEAPEST_TIME_WINDOW_END,
@@ -26,31 +32,76 @@ from ..const import (
 )
 from .base import RCEBaseSensor
 
+_TIME_WINDOW_KEYS = frozenset(
+    {
+        CONF_CHEAPEST_TIME_WINDOW_START,
+        CONF_CHEAPEST_TIME_WINDOW_END,
+        CONF_CHEAPEST_WINDOW_DURATION_HOURS,
+        CONF_EXPENSIVE_TIME_WINDOW_START,
+        CONF_EXPENSIVE_TIME_WINDOW_END,
+        CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+        CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+        CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+        CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+    }
+)
+
 
 class RCECustomWindowSensor(RCEBaseSensor):
 
-    def __init__(self, coordinator: RCEPSEDataUpdateCoordinator, config_entry: ConfigEntry, 
-                 sensor_type: str) -> None:
+    def __init__(
+        self,
+        coordinator: RCEPSEDataUpdateCoordinator,
+        config_entry: ConfigEntry,
+        sensor_type: str,
+    ) -> None:
         super().__init__(coordinator, sensor_type)
         self.config_entry = config_entry
 
     def get_config_value(self, key: str, default: Any) -> Any:
-        value = None
         if self.config_entry.options and key in self.config_entry.options:
             value = self.config_entry.options[key]
         else:
             value = self.config_entry.data.get(key, default)
-        
-        if key in [
-            CONF_CHEAPEST_TIME_WINDOW_START, CONF_CHEAPEST_TIME_WINDOW_END,
-            CONF_CHEAPEST_WINDOW_DURATION_HOURS, CONF_EXPENSIVE_TIME_WINDOW_START,
-            CONF_EXPENSIVE_TIME_WINDOW_END, CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
-            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
-            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
-        ]:
-            return int(value)
-        
+
+        if key in _TIME_WINDOW_KEYS:
+            return normalize_hhmm(str(value))
+
         return value
+
+    def find_optimal_window_for_data(
+        self,
+        day_data: list[dict],
+        search_start: str,
+        search_end: str,
+        duration_hhmm: str,
+        is_max: bool,
+    ) -> list[dict]:
+        bd = business_date_from_day_data(day_data)
+        if not bd:
+            return []
+        dm = duration_minutes_from_hhmm(duration_hhmm)
+        return self.calculator.find_optimal_window(
+            day_data, bd, search_start, search_end, dm, is_max=is_max
+        )
+
+    def window_start_as_local(self, optimal_window: list[dict]) -> datetime | None:
+        if not optimal_window:
+            return None
+        try:
+            pe = parse_pse_dtime(optimal_window[0]["dtime"])
+            return dt_util.as_local(pe - timedelta(minutes=15))
+        except (ValueError, KeyError, IndexError):
+            return None
+
+    def window_end_as_local(self, optimal_window: list[dict]) -> datetime | None:
+        if not optimal_window:
+            return None
+        try:
+            pe = parse_pse_dtime(optimal_window[-1]["dtime"])
+            return dt_util.as_local(pe)
+        except (ValueError, KeyError, IndexError):
+            return None
 
 
 class RCETodayCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
@@ -66,25 +117,18 @@ class RCETodayCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
         if not today_data:
             return None
         
-        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=False
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=False
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_start_as_local(optimal_window)
 
 
 class RCETodayCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
@@ -100,25 +144,18 @@ class RCETodayCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
         if not today_data:
             return None
         
-        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=False
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=False
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(end_datetime)
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_end_as_local(optimal_window)
 
 
 class RCETodayExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
@@ -134,26 +171,18 @@ class RCETodayExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
         if not today_data:
             return None
 
-        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
-            
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_start_as_local(optimal_window)
 
 
 class RCETodayExpensiveWindowEndTimestampSensor(RCECustomWindowSensor):
@@ -169,25 +198,18 @@ class RCETodayExpensiveWindowEndTimestampSensor(RCECustomWindowSensor):
         if not today_data:
             return None
         
-        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(end_datetime)
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_end_as_local(optimal_window)
 
 
 class RCETomorrowCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
@@ -203,26 +225,18 @@ class RCETomorrowCheapestWindowStartTimestampSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
         
-        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=False
+
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=False
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
-            
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_start_as_local(optimal_window)
 
 
 class RCETomorrowCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
@@ -238,25 +252,18 @@ class RCETomorrowCheapestWindowEndTimestampSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
         
-        start_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=False
+
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=False
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(end_datetime)
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_end_as_local(optimal_window)
 
 
 class RCETomorrowExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
@@ -272,26 +279,18 @@ class RCETomorrowExpensiveWindowStartTimestampSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
 
-        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=True
+
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=True
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
-            
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_start_as_local(optimal_window)
 
 
 class RCETomorrowExpensiveWindowEndTimestampSensor(RCECustomWindowSensor):
@@ -307,25 +306,19 @@ class RCETomorrowExpensiveWindowEndTimestampSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
         
-        start_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
+        start_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START)
+        end_s = self.get_config_value(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END)
         duration = self.get_config_value(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=True
+
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=True
         )
-        
+
         if not optimal_window:
             return None
-        
-        try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(end_datetime)
-        except (ValueError, KeyError, IndexError):
-            return None 
+
+        return self.window_end_as_local(optimal_window)
+
 
 class RCETodaySecondExpensiveWindowStartSensor(RCECustomWindowSensor):
 
@@ -340,26 +333,24 @@ class RCETodaySecondExpensiveWindowStartSensor(RCECustomWindowSensor):
         if not today_data:
             return None
 
-        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+        start_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
         )
-        
+        end_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
+        )
+        duration = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
+        )
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
+        )
+
         if not optimal_window:
             return None
-        
-        try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
-            
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_start_as_local(optimal_window)
 
 
 class RCETodaySecondExpensiveWindowEndSensor(RCECustomWindowSensor):
@@ -375,25 +366,24 @@ class RCETodaySecondExpensiveWindowEndSensor(RCECustomWindowSensor):
         if not today_data:
             return None
         
-        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            today_data, start_hour, end_hour, duration, is_max=True
+        start_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
         )
-        
+        end_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
+        )
+        duration = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
+        )
+
+        optimal_window = self.find_optimal_window_for_data(
+            today_data, start_s, end_s, duration, is_max=True
+        )
+
         if not optimal_window:
             return None
-        
-        try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            today_str = dt_util.now().strftime("%Y-%m-%d")
-            datetime_str = f"{today_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(end_datetime)
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_end_as_local(optimal_window)
 
 
 class RCETomorrowSecondExpensiveWindowStartSensor(RCECustomWindowSensor):
@@ -409,26 +399,24 @@ class RCETomorrowSecondExpensiveWindowStartSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
 
-        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=True
+        start_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
         )
-        
+        end_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
+        )
+        duration = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
+        )
+
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=True
+        )
+
         if not optimal_window:
             return None
-        
-        try:
-            start_time_str = optimal_window[0]["period"].split(" - ")[0]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {start_time_str}:00"
-            start_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(start_datetime)
-            
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_start_as_local(optimal_window)
 
 
 class RCETomorrowSecondExpensiveWindowEndSensor(RCECustomWindowSensor):
@@ -444,22 +432,21 @@ class RCETomorrowSecondExpensiveWindowEndSensor(RCECustomWindowSensor):
         if not tomorrow_data:
             return None
         
-        start_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START)
-        end_hour = self.get_config_value(CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END)
-        duration = self.get_config_value(CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS)
-        
-        optimal_window = self.calculator.find_optimal_window(
-            tomorrow_data, start_hour, end_hour, duration, is_max=True
+        start_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_START, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START
         )
-        
+        end_s = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_TIME_WINDOW_END, DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END
+        )
+        duration = self.get_config_value(
+            CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS
+        )
+
+        optimal_window = self.find_optimal_window_for_data(
+            tomorrow_data, start_s, end_s, duration, is_max=True
+        )
+
         if not optimal_window:
             return None
-        
-        try:
-            end_time_str = optimal_window[-1]["period"].split(" - ")[1]
-            tomorrow_str = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-            datetime_str = f"{tomorrow_str} {end_time_str}:00"
-            end_datetime = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            return dt_util.as_local(end_datetime)
-        except (ValueError, KeyError, IndexError):
-            return None
+
+        return self.window_end_as_local(optimal_window)

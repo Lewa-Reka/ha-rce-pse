@@ -49,6 +49,8 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 
 Szczegóły: [Konfiguracja](docs/KONFIGURACJA.md), [Sensory](docs/SENSORY.md).
 
+Okna tanich/drogich godzin ustawia się w **HH:MM** (skok 15 minut); **00:00** przy **końcu** zakresu oznacza koniec dnia kalendarzowego. Przy aktualizacji z starszej wersji wpis konfiguracyjny migruje się automatycznie (zob. [Migracja do v2.0.0](docs/MIGRACJA-V2.md)).
+
 ## Dokumentacja
 
 - [Konfiguracja](docs/KONFIGURACJA.md) – opcje, przykłady, rekonfiguracja
