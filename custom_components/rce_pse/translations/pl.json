@@ -236,10 +236,38 @@
         "name": "Najniższa Cena Jutro Koniec"
       },
       "rce_pse_today_peak_hours": {
-        "name": "Kompas Energetyczny Dzisiaj"
+        "name": "Kompas Energetyczny Dzisiaj",
+        "state_attributes": {
+          "recommended_usage": {
+            "name": "Zalecane użytkowanie"
+          },
+          "normal_usage": {
+            "name": "Normalne użytkowanie"
+          },
+          "recommended_saving": {
+            "name": "Zalecane oszczędzanie"
+          },
+          "required_restriction": {
+            "name": "Wymagane ograniczenie"
+          }
+        }
       },
       "rce_pse_tomorrow_peak_hours": {
-        "name": "Kompas Energetyczny Jutro"
+        "name": "Kompas Energetyczny Jutro",
+        "state_attributes": {
+          "recommended_usage": {
+            "name": "Zalecane użytkowanie"
+          },
+          "normal_usage": {
+            "name": "Normalne użytkowanie"
+          },
+          "recommended_saving": {
+            "name": "Zalecane oszczędzanie"
+          },
+          "required_restriction": {
+            "name": "Wymagane ograniczenie"
+          }
+        }
       },
       "rce_pse_today_second_expensive_window_start": {
         "name": "Drugie Drogie Okno Dzisiaj Początek"

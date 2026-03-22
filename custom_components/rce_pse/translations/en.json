@@ -236,10 +236,38 @@
         "name": "Lowest Price Tomorrow End"
       },
       "rce_pse_today_peak_hours": {
-        "name": "Energy Compass Today"
+        "name": "Energy Compass Today",
+        "state_attributes": {
+          "recommended_usage": {
+            "name": "Recommended usage"
+          },
+          "normal_usage": {
+            "name": "Normal usage"
+          },
+          "recommended_saving": {
+            "name": "Recommended saving"
+          },
+          "required_restriction": {
+            "name": "Required restriction"
+          }
+        }
       },
       "rce_pse_tomorrow_peak_hours": {
-        "name": "Energy Compass Tomorrow"
+        "name": "Energy Compass Tomorrow",
+        "state_attributes": {
+          "recommended_usage": {
+            "name": "Recommended usage"
+          },
+          "normal_usage": {
+            "name": "Normal usage"
+          },
+          "recommended_saving": {
+            "name": "Recommended saving"
+          },
+          "required_restriction": {
+            "name": "Required restriction"
+          }
+        }
       },
       "rce_pse_today_second_expensive_window_start": {
         "name": "Second Expensive Window Today Start"
