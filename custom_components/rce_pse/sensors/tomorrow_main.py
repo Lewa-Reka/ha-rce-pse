@@ -53,9 +53,9 @@ class RCETomorrowMainSensor(RCEPriceSensor):
         
         attributes = {
             "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
+            "status": "Available",
             "data_points": len(tomorrow_data),
             "prices": sanitized_tomorrow_data,
-            "status": "Available",
         }
         
         return attributes

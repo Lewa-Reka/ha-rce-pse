@@ -77,8 +77,6 @@ class RCEBaseCommonEntity(CoordinatorEntity):
         ]
 
     def get_tomorrow_data(self) -> list[dict]:
-        if not self.is_tomorrow_data_available():
-            return []
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return []
         tomorrow = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
@@ -96,18 +94,12 @@ class RCEBaseCommonEntity(CoordinatorEntity):
         return sorted(out, key=lambda r: r.get("dtime", ""))
 
     def get_tomorrow_pdgsz_data(self) -> list[dict]:
-        if not self.is_tomorrow_data_available():
-            return []
         if not self.coordinator.data:
             return []
         pdgsz = self.coordinator.data.get("pdgsz_data") or []
         tomorrow = (dt_util.now() + timedelta(days=1)).strftime("%Y-%m-%d")
         out = [r for r in pdgsz if r.get("business_date") == tomorrow]
         return sorted(out, key=lambda r: r.get("dtime", ""))
-
-    def is_tomorrow_data_available(self) -> bool:
-        now = dt_util.now()
-        return now.hour >= 14
 
     @property
     def available(self) -> bool:
