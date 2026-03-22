@@ -11,13 +11,15 @@
               "price_unit": "Jednostka",
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)",
-              "low_price_threshold": "Próg niskiej ceny"
+              "low_price_threshold": "Próg niskiej ceny",
+              "high_price_threshold": "Próg wysokiej ceny"
             },
             "data_description": {
               "price_unit": "Jednostka dla wszystkich sensorów",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
               "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
-              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\""
+              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\"",
+              "high_price_threshold": "Używany przez sensory \"Cena Powyżej Progu\""
             }
           },
           "cheapest_window": {
@@ -83,13 +85,15 @@
               "price_unit": "Jednostka",
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)",
-              "low_price_threshold": "Próg niskiej ceny"
+              "low_price_threshold": "Próg niskiej ceny",
+              "high_price_threshold": "Próg wysokiej ceny"
             },
             "data_description": {
-              "price_unit": "UWAGA! Po zmianie, statystyki mogą mieszać starą i nową jednostkę. Po przełączeniu zaktualizuj automatyzacje i próg niskiej ceny.",
+              "price_unit": "UWAGA! Po zmianie, statystyki mogą mieszać starą i nową jednostkę. Po przełączeniu zaktualizuj automatyzacje oraz progi niskiej i wysokiej ceny.",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
               "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
-              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\""
+              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\"",
+              "high_price_threshold": "Używany przez sensory \"Cena Powyżej Progu\""
             }
           },
           "cheapest_window": {
@@ -310,6 +314,18 @@
       },
       "rce_pse_tomorrow_low_price_threshold_window_end": {
         "name": "Cena Poniżej Progu Jutro Koniec"
+      },
+      "rce_pse_today_high_price_threshold_window_start": {
+        "name": "Cena Powyżej Progu Dzisiaj Początek"
+      },
+      "rce_pse_today_high_price_threshold_window_end": {
+        "name": "Cena Powyżej Progu Dzisiaj Koniec"
+      },
+      "rce_pse_tomorrow_high_price_threshold_window_start": {
+        "name": "Cena Powyżej Progu Jutro Początek"
+      },
+      "rce_pse_tomorrow_high_price_threshold_window_end": {
+        "name": "Cena Powyżej Progu Jutro Koniec"
       }
     },
     "binary_sensor": {
@@ -330,6 +346,9 @@
       },
       "rce_pse_today_low_price_threshold_window_active": {
         "name": "Cena Poniżej Progu Aktywna"
+      },
+      "rce_pse_today_high_price_threshold_window_active": {
+        "name": "Cena Powyżej Progu Aktywna"
       }
     }
   }
