@@ -36,16 +36,12 @@ from .sensors import (
     RCETomorrowTodayAvgComparisonSensor,
 )
 from .sensors.low_price_threshold_windows import (
-    RCETodayLowPriceThresholdWindowStartSensor,
-    RCETodayLowPriceThresholdWindowEndSensor,
-    RCETomorrowLowPriceThresholdWindowStartSensor,
-    RCETomorrowLowPriceThresholdWindowEndSensor,
+    RCELowPriceThresholdWindowStartSensor,
+    RCELowPriceThresholdWindowEndSensor,
 )
 from .sensors.high_price_threshold_windows import (
-    RCETodayHighPriceThresholdWindowStartSensor,
-    RCETodayHighPriceThresholdWindowEndSensor,
-    RCETomorrowHighPriceThresholdWindowStartSensor,
-    RCETomorrowHighPriceThresholdWindowEndSensor,
+    RCEHighPriceThresholdWindowStartSensor,
+    RCEHighPriceThresholdWindowEndSensor,
 )
 from .sensors.custom_windows import (
     RCETodayCheapestWindowStartTimestampSensor,
@@ -124,14 +120,10 @@ async def async_setup_entry(
         RCETomorrowCheapestWindowAvgPriceSensor(coordinator, config_entry),
         RCETomorrowExpensiveWindowAvgPriceSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowAvgPriceSensor(coordinator, config_entry),
-        RCETodayLowPriceThresholdWindowStartSensor(coordinator, config_entry),
-        RCETodayLowPriceThresholdWindowEndSensor(coordinator, config_entry),
-        RCETomorrowLowPriceThresholdWindowStartSensor(coordinator, config_entry),
-        RCETomorrowLowPriceThresholdWindowEndSensor(coordinator, config_entry),
-        RCETodayHighPriceThresholdWindowStartSensor(coordinator, config_entry),
-        RCETodayHighPriceThresholdWindowEndSensor(coordinator, config_entry),
-        RCETomorrowHighPriceThresholdWindowStartSensor(coordinator, config_entry),
-        RCETomorrowHighPriceThresholdWindowEndSensor(coordinator, config_entry),
+        RCELowPriceThresholdWindowStartSensor(coordinator, config_entry),
+        RCELowPriceThresholdWindowEndSensor(coordinator, config_entry),
+        RCEHighPriceThresholdWindowStartSensor(coordinator, config_entry),
+        RCEHighPriceThresholdWindowEndSensor(coordinator, config_entry),
         RCETodayPeakHoursSensor(coordinator),
         RCETomorrowPeakHoursSensor(coordinator),
     ]

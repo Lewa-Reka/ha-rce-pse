@@ -8,8 +8,8 @@ from .custom_windows import (
     RCETodayExpensiveWindowBinarySensor,
     RCETodaySecondExpensiveWindowBinarySensor,
 )
-from .low_price_threshold import RCETodayLowPriceThresholdWindowActiveBinarySensor
-from .high_price_threshold import RCETodayHighPriceThresholdWindowActiveBinarySensor
+from .low_price_threshold import RCELowPriceThresholdWindowActiveBinarySensor
+from .high_price_threshold import RCEHighPriceThresholdWindowActiveBinarySensor
 
 __all__ = [
     "RCEBaseBinarySensor",
@@ -18,6 +18,6 @@ __all__ = [
     "RCETodayCheapestWindowBinarySensor",
     "RCETodayExpensiveWindowBinarySensor",
     "RCETodaySecondExpensiveWindowBinarySensor",
-    "RCETodayLowPriceThresholdWindowActiveBinarySensor",
-    "RCETodayHighPriceThresholdWindowActiveBinarySensor",
+    "RCELowPriceThresholdWindowActiveBinarySensor",
+    "RCEHighPriceThresholdWindowActiveBinarySensor",
 ] 
