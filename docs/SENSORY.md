@@ -65,15 +65,20 @@ Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md). Zakres przeszukiwania j
 
 - Odpowiednie sensory: tanie okno, drogie okno, drugie drogie okno (początek, koniec, średnia) z **Jutro** w nazwie (np. **Tanie Okno Jutro Początek**)
 
-### Okna poniżej progu ceny
+### Okna poniżej i powyżej progu ceny
 
-Przy ustawionym "Progu niskiej ceny sprzedaży":
+Przy ustawionym **progu niskiej ceny sprzedaży**:
 
 - **Cena Poniżej Progu Dzisiaj Początek** – początek pierwszego ciągłego okresu dzisiaj z ceną ≤ progu
 - **Cena Poniżej Progu Dzisiaj Koniec**
 - **Cena Poniżej Progu Jutro Początek/Koniec**
 
-Gdy w danym dniu nie ma takiego okresu, stan sensorów to "unknown"; integracja pozostaje dostępna.
+Przy ustawionym **progu wysokiej ceny sprzedaży** (odwrotna logika: pierwszy ciągły okres z ceną ≥ progu):
+
+- **Cena Powyżej Progu Dzisiaj Początek/Koniec**
+- **Cena Powyżej Progu Jutro Początek/Koniec**
+
+Gdy w danym dniu nie ma pasującego okresu, stan odpowiednich sensorów timestamp to "unknown"; integracja pozostaje dostępna.
 
 Sensory okien zwracają timestampy; do samej godziny użyj `timestamp_custom('%H:%M')` w szablonie.
 
@@ -93,7 +98,8 @@ Wskazują, czy **aktualny moment** jest w danym oknie cenowym (przydatne w autom
 - **Tanie okno aktywne** – `on`, gdy trwa skonfigurowane najtańsze okno (w obrębie jednego dnia; koniec zakresu 00:00 = do końca dnia)
 - **Drogie okno aktywne** – `on`, gdy trwa skonfigurowane najdroższe okno
 - **Drugie drogie okno aktywne** – `on`, gdy trwa drugie najdroższe okno
-- **Cena poniżej progu aktywna** – `on`, gdy trwa pierwszy ciągły okres dzisiaj z ceną ≤ progu
+- **Cena poniżej progu aktywna** – `on`, gdy trwa pierwszy ciągły okres dzisiaj z ceną ≤ progu niskiego
+- **Cena powyżej progu aktywna** – `on`, gdy trwa pierwszy ciągły okres dzisiaj z ceną ≥ progu wysokiego
 
 Dla automatyzacji „na koniec okna” korzystaj ze zmiany stanu binary sensora lub z sensora timestamp końca okna, zamiast sztywnej godziny 00:00.
 

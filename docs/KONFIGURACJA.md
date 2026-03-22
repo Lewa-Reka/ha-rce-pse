@@ -70,12 +70,21 @@ Sensor ceny sprzedaży prosumenta (`rce_pse_today_prosumer_selling_price`) zawsz
 - **Jednostka ceny** (domyślnie **PLN/MWh**): ta sama skala co w API PSE.  
 - **PLN/kWh**: wszystkie wartości cen w danych koordynatora są dzielone przez 1000 względem surowych danych z API (czyli z MWh na kWh energetycznie). Sensory pokazują kwoty zaokrąglone do dwóch miejsc po przecinku; w `raw_data` stosowana jest wyższa precyzja wewnętrzna (formatowanie liczb w integracji).
 
-### Próg niskiej ceny sprzedaży
+### Progi niskiej i wysokiej ceny sprzedaży
 
-Próg w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh), używany do wyznaczania „okna niskiej ceny” w dedykowanych sensorach. Pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory „Cena Poniżej Progu Dzisiaj/Jutro Początek/Koniec”; binary sensor „Cena poniżej progu aktywna” ma stan `on`, gdy trwa ten okres (dzisiaj). Gdy w danym dniu nie ma takiego okresu, sensory mają stan „unknown” (integracja działa normalnie).
+Oba progi są w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh). Działają jak lustro: niski próg szuka pierwszego ciągłego okresu z ceną **≤** progu, wysoki — pierwszego okresu z ceną **≥** progu (kwadrans po kwadransie, w kolejności czasu w danym dniu).
 
-- **Próg niskiej ceny sprzedaży**: zakres zależy od jednostki — przy PLN/MWh: -2000…2000; przy PLN/kWh: -2…2 (dopuszczalne wartości ujemne).  
+**Próg niskiej ceny sprzedaży** — pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory „Cena Poniżej Progu Dzisiaj/Jutro Początek/Koniec”; binary sensor „Cena poniżej progu aktywna” ma stan `on`, gdy trwa ten okres (dzisiaj).
+
+**Próg wysokiej ceny sprzedaży** — analogicznie sensory „Cena Powyżej Progu …” oraz binary „Cena powyżej progu aktywna” dla pierwszego okresu z ceną ≥ progu.
+
+Gdy w danym dniu nie ma pasującego okresu, odpowiednie sensory timestamp mają stan „unknown”; integracja działa normalnie.
+
+- **Próg niskiej ceny sprzedaży**: w formularzu zakres -3000…3000 (ta sama skala co jednostka ceny).  
   - *Domyślnie:* 0
+
+- **Próg wysokiej ceny sprzedaży**: ten sam zakres liczbowy.  
+  - *Domyślnie:* 3000 (zwykle poza typowymi cenami RCE, więc sensowny punkt startowy do ręcznego obniżenia progu)
 
 ## Zmiana ustawień
 
@@ -84,7 +93,7 @@ Próg w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh),
 3. Kliknij **Konfiguruj**
 4. Zmień parametry i zatwierdź **Zapisz**
 
-Integracja przeładuje się z nowymi ustawieniami. Po zmianie m.in. jednostki ceny encje mogą chwilowo być niedostępne; historia zapisana w recorderze nadal może zawierać stare próbki w poprzedniej skali przy tym samym `entity_id` — warto uwzględnić to w wykresach i automatyzacjach. Po przełączeniu PLN/MWh ↔ PLN/kWh zaktualizuj próg oraz ewentualne stałe liczby w automatyzacjach.
+Integracja przeładuje się z nowymi ustawieniami. Po zmianie m.in. jednostki ceny encje mogą chwilowo być niedostępne; historia zapisana w recorderze nadal może zawierać stare próbki w poprzedniej skali przy tym samym `entity_id` — warto uwzględnić to w wykresach i automatyzacjach. Po przełączeniu PLN/MWh ↔ PLN/kWh zaktualizuj progi niskiej i wysokiej ceny oraz ewentualne stałe liczby w automatyzacjach.
 
 ## Przykłady konfiguracji
 

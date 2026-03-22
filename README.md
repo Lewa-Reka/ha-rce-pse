@@ -44,7 +44,7 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 - Bieżąca cena energii: domyślnie okres godzinowy (średnia z kwadransów), opcjonalnie surowe kwadranse 15 min; dane historyczne i prognoza następnego okresu
 - Statystyki dzienne (średnia, min, max, mediana), porównanie dziś vs jutro
 - Definiowane przez użytkownika okna tanich i drogich godzin, sensory czasowe (timestampy)
-- Średnie ceny godzinowe domyślnie włączone (net-billing); próg niskiej ceny sprzedaży; opcjonalne ceny brutto
+- Średnie ceny godzinowe domyślnie włączone (net-billing); progi niskiej i wysokiej ceny sprzedaży; opcjonalne ceny brutto
 - Dane "jutro" są dostępne gdy tylko PSE je opublikuje, zwykle po 14:00
 
 Szczegóły: [Konfiguracja](docs/KONFIGURACJA.md), [Sensory](docs/SENSORY.md).
