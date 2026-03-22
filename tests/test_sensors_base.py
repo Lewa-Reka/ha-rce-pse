@@ -299,6 +299,37 @@ class TestPriceCalculator:
         window = PriceCalculator.find_first_window_below_threshold(data, 0.0)
         assert len(window) == 2
 
+    def test_find_first_window_above_threshold_empty_data(self):
+        assert PriceCalculator.find_first_window_above_threshold([], 100.0) == []
+
+    def test_find_first_window_above_threshold_all_below(self):
+        data = [
+            {"dtime": "2024-01-01 10:00:00", "period": "09:45 - 10:00", "rce_pln": "50.0"},
+            {"dtime": "2024-01-01 10:15:00", "period": "10:00 - 10:15", "rce_pln": "80.0"},
+        ]
+        assert PriceCalculator.find_first_window_above_threshold(data, 100.0) == []
+
+    def test_find_first_window_above_threshold_first_continuous_block(self):
+        data = [
+            {"dtime": "2024-01-01 10:00:00", "period": "09:45 - 10:00", "rce_pln": "350.0"},
+            {"dtime": "2024-01-01 10:15:00", "period": "10:00 - 10:15", "rce_pln": "360.0"},
+            {"dtime": "2024-01-01 10:30:00", "period": "10:15 - 10:30", "rce_pln": "50.0"},
+            {"dtime": "2024-01-01 14:00:00", "period": "13:45 - 14:00", "rce_pln": "500.0"},
+            {"dtime": "2024-01-01 14:15:00", "period": "14:00 - 14:15", "rce_pln": "510.0"},
+        ]
+        window = PriceCalculator.find_first_window_above_threshold(data, 300.0)
+        assert len(window) == 2
+        assert window[0]["rce_pln"] == "350.0"
+        assert window[1]["rce_pln"] == "360.0"
+
+    def test_find_first_window_above_threshold_at_boundary(self):
+        data = [
+            {"dtime": "2024-01-01 10:00:00", "period": "09:45 - 10:00", "rce_pln": "100.0"},
+            {"dtime": "2024-01-01 10:15:00", "period": "10:00 - 10:15", "rce_pln": "100.0"},
+        ]
+        window = PriceCalculator.find_first_window_above_threshold(data, 100.0)
+        assert len(window) == 2
+
 
 class TestRCEBaseSensor:
 

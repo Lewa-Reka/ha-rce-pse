@@ -128,7 +128,7 @@ class TestRCEPSEConfigFlow:
                 mock_create_entry.assert_called_once_with(title="RCE PSE", data=user_input)
 
     @pytest.mark.asyncio
-    async def test_config_flow_user_step_with_low_price_threshold(self, mock_hass):
+    async def test_config_flow_user_step_with_price_thresholds(self, mock_hass):
         flow = RCEConfigFlow()
         flow.hass = mock_hass
         flow.flow_id = "test_flow_id"
@@ -153,12 +153,14 @@ class TestRCEPSEConfigFlow:
                             "second_expensive_time_window_end": 10,
                             "second_expensive_window_duration_hours": 2,
                             "low_price_threshold": 50.0,
+                            "high_price_threshold": 400.0,
                         }
                         result = await flow.async_step_user(user_input=user_input)
                         assert result.get("type") == "create_entry"
                         mock_create_entry.assert_called_once()
                         call_data = mock_create_entry.call_args[1]["data"]
                         assert call_data.get("low_price_threshold") == 50.0
+                        assert call_data.get("high_price_threshold") == 400.0
 
     @pytest.mark.asyncio
     async def test_config_flow_user_step_nested_sections_stored_flat(self, mock_hass):

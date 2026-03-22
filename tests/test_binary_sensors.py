@@ -16,6 +16,9 @@ from custom_components.rce_pse.binary_sensors.custom_windows import (
 from custom_components.rce_pse.binary_sensors.low_price_threshold import (
     RCETodayLowPriceThresholdWindowActiveBinarySensor,
 )
+from custom_components.rce_pse.binary_sensors.high_price_threshold import (
+    RCETodayHighPriceThresholdWindowActiveBinarySensor,
+)
 
 
 class TestTodayPriceWindowBinarySensors:
@@ -471,6 +474,59 @@ class TestLowPriceThresholdWindowBinarySensor:
         mock_config_entry.data = {}
         mock_config_entry.options = {}
         sensor = RCETodayLowPriceThresholdWindowActiveBinarySensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_today_data") as mock_today_data:
+            mock_today_data.return_value = []
+            assert sensor.is_on is False
+
+
+class TestHighPriceThresholdWindowBinarySensor:
+
+    def test_high_price_threshold_window_binary_sensor_initialization(self, mock_coordinator):
+        mock_config_entry = Mock()
+        mock_config_entry.data = {"high_price_threshold": 3000.0}
+        mock_config_entry.options = {}
+        sensor = RCETodayHighPriceThresholdWindowActiveBinarySensor(mock_coordinator, mock_config_entry)
+        assert sensor._attr_unique_id == "rce_pse_today_high_price_threshold_window_active"
+        assert sensor._attr_icon == "mdi:clock-check"
+
+    def test_high_price_threshold_window_active_when_in_window(self, mock_coordinator):
+        mock_config_entry = Mock()
+        mock_config_entry.data = {"high_price_threshold": 200.0}
+        mock_config_entry.options = {}
+        sensor = RCETodayHighPriceThresholdWindowActiveBinarySensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_today_data") as mock_today_data:
+            mock_today_data.return_value = [
+                {"period": "02:00 - 02:15", "rce_pln": "250.0", "dtime": "2024-01-15 02:15:00"},
+                {"period": "02:15 - 02:30", "rce_pln": "260.0", "dtime": "2024-01-15 02:30:00"},
+            ]
+            with patch.object(sensor.calculator, "find_first_window_above_threshold") as mock_find:
+                mock_find.return_value = [
+                    {"period": "02:00 - 02:15", "rce_pln": "250.0"},
+                    {"period": "02:15 - 02:30", "rce_pln": "260.0"},
+                ]
+                with patch("custom_components.rce_pse.binary_sensors.high_price_threshold.dt_util") as mock_dt:
+                    mock_now = Mock()
+                    mock_now.replace.return_value = datetime(2024, 1, 15, 2, 10, 0)
+                    mock_dt.now.return_value = mock_now
+                    mock_dt.now.return_value.strftime.return_value = "2024-01-15"
+                    assert sensor.is_on is True
+
+    def test_high_price_threshold_window_inactive_when_no_window(self, mock_coordinator):
+        mock_config_entry = Mock()
+        mock_config_entry.data = {"high_price_threshold": 500.0}
+        mock_config_entry.options = {}
+        sensor = RCETodayHighPriceThresholdWindowActiveBinarySensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_today_data") as mock_today_data:
+            mock_today_data.return_value = [{"period": "10:00 - 10:15", "rce_pln": "100.0"}]
+            with patch.object(sensor.calculator, "find_first_window_above_threshold") as mock_find:
+                mock_find.return_value = []
+                assert sensor.is_on is False
+
+    def test_high_price_threshold_window_inactive_when_no_data(self, mock_coordinator):
+        mock_config_entry = Mock()
+        mock_config_entry.data = {}
+        mock_config_entry.options = {}
+        sensor = RCETodayHighPriceThresholdWindowActiveBinarySensor(mock_coordinator, mock_config_entry)
         with patch.object(sensor, "get_today_data") as mock_today_data:
             mock_today_data.return_value = []
             assert sensor.is_on is False

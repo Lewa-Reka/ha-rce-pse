@@ -40,6 +40,11 @@ from custom_components.rce_pse.sensors.low_price_threshold_windows import (
     RCETodayLowPriceThresholdWindowEndSensor,
     RCETomorrowLowPriceThresholdWindowStartSensor,
 )
+from custom_components.rce_pse.sensors.high_price_threshold_windows import (
+    RCETodayHighPriceThresholdWindowStartSensor,
+    RCETodayHighPriceThresholdWindowEndSensor,
+    RCETomorrowHighPriceThresholdWindowStartSensor,
+)
 
 TZ_WAW = ZoneInfo("Europe/Warsaw")
 
@@ -63,6 +68,7 @@ def mock_config_entry():
         "second_expensive_time_window_end": "10:00",
         "second_expensive_window_duration_hours": "02:00",
         "low_price_threshold": 0.0,
+        "high_price_threshold": 3000.0,
     }
     config_entry.options = {}
     return config_entry
@@ -692,5 +698,49 @@ class TestLowPriceThresholdWindowTimestampSensors:
 
     def test_tomorrow_low_price_threshold_window_start_no_data_returns_none(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_tomorrow_data", return_value=[]):
+            assert sensor.native_value is None
+
+
+class TestHighPriceThresholdWindowTimestampSensors:
+
+    def test_today_high_price_threshold_window_start_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayHighPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        assert sensor._attr_unique_id == "rce_pse_today_high_price_threshold_window_start"
+        assert sensor._attr_device_class == SensorDeviceClass.TIMESTAMP
+        assert sensor._attr_icon == "mdi:clock-start"
+
+    def test_today_high_price_threshold_window_start_with_window(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayHighPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_today_data") as mock_today:
+            mock_today.return_value = [{"period": "02:00 - 02:15", "rce_pln": "400.0"}]
+            with patch.object(sensor.calculator, "find_first_window_above_threshold") as mock_find:
+                mock_find.return_value = [{"period": "02:00 - 02:15", "rce_pln": "400.0"}]
+                timestamp = sensor.native_value
+                assert timestamp is not None
+                assert isinstance(timestamp, datetime)
+                assert timestamp.hour == 2
+                assert timestamp.minute == 0
+
+    def test_today_high_price_threshold_window_start_no_window(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayHighPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        with patch.object(sensor, "get_today_data") as mock_today:
+            mock_today.return_value = [{"period": "10:00 - 10:15", "rce_pln": "50.0"}]
+            with patch.object(sensor.calculator, "find_first_window_above_threshold") as mock_find:
+                mock_find.return_value = []
+                assert sensor.native_value is None
+
+    def test_today_high_price_threshold_window_end_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETodayHighPriceThresholdWindowEndSensor(mock_coordinator, mock_config_entry)
+        assert sensor._attr_unique_id == "rce_pse_today_high_price_threshold_window_end"
+        assert sensor._attr_icon == "mdi:clock-end"
+
+    def test_tomorrow_high_price_threshold_window_start_initialization(self, mock_coordinator, mock_config_entry):
+        sensor = RCETomorrowHighPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
+        assert sensor._attr_unique_id == "rce_pse_tomorrow_high_price_threshold_window_start"
+        assert sensor.available is True
+
+    def test_tomorrow_high_price_threshold_window_start_no_data_returns_none(self, mock_coordinator, mock_config_entry):
+        sensor = RCETomorrowHighPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
         with patch.object(sensor, "get_tomorrow_data", return_value=[]):
             assert sensor.native_value is None
