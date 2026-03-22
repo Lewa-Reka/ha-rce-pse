@@ -7,6 +7,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
+from .sensors.peak_hours import preload_peak_hours_translation_cache
 from .sensors import (
     RCETodayPeakHoursSensor,
     RCETomorrowPeakHoursSensor,
@@ -79,7 +80,8 @@ async def async_setup_entry(
 ) -> None:
     _LOGGER.debug("Setting up RCE PSE sensors for config entry: %s", config_entry.entry_id)
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
-    
+    await hass.async_add_executor_job(preload_peak_hours_translation_cache)
+
     sensors = [
         RCETodayMainSensor(coordinator),
         RCETodayProsumerSellingPriceSensor(coordinator),

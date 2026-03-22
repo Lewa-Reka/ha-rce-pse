@@ -2,10 +2,31 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
+from custom_components.rce_pse.sensors import peak_hours as peak_hours_module
 from custom_components.rce_pse.sensors.peak_hours import (
     RCETodayPeakHoursSensor,
     RCETomorrowPeakHoursSensor,
 )
+
+
+class TestPeakHoursTranslationPreload:
+
+    def test_preload_populates_cache_for_en_and_pl(self):
+        peak_hours_module._STATE_DISPLAY_CACHE.clear()
+        try:
+            peak_hours_module.preload_peak_hours_translation_cache()
+            for lang in ("en", "pl"):
+                for key in (
+                    "rce_pse_today_peak_hours",
+                    "rce_pse_tomorrow_peak_hours",
+                ):
+                    assert (lang, key) in peak_hours_module._STATE_DISPLAY_CACHE
+            en_today = peak_hours_module._STATE_DISPLAY_CACHE[
+                ("en", "rce_pse_today_peak_hours")
+            ]
+            assert en_today.get("normal_usage") == "Normal usage"
+        finally:
+            peak_hours_module._STATE_DISPLAY_CACHE.clear()
 
 
 class TestTodayPeakHoursSensor:

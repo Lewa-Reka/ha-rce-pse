@@ -38,6 +38,12 @@ def _load_state_display_names(lang: str, translation_key: str) -> dict[str, str]
     return result
 
 
+def preload_peak_hours_translation_cache() -> None:
+    for lang in ("en", "pl"):
+        for suffix in ("today_peak_hours", "tomorrow_peak_hours"):
+            _load_state_display_names(lang, f"rce_pse_{suffix}")
+
+
 def _pdgsz_records_to_hourly_state(records: list[dict]) -> dict[int, str]:
     result: dict[int, str] = {}
     for rec in records:
