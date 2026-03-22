@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 import pytest
 from unittest.mock import Mock, MagicMock
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -329,6 +332,86 @@ class TestPriceCalculator:
         ]
         window = PriceCalculator.find_first_window_above_threshold(data, 100.0)
         assert len(window) == 2
+
+    def test_find_all_windows_below_threshold_two_blocks(self):
+        data = [
+            {"dtime": "2024-01-01 10:00:00", "period": "09:45 - 10:00", "rce_pln": "50.0"},
+            {"dtime": "2024-01-01 10:15:00", "period": "10:00 - 10:15", "rce_pln": "60.0"},
+            {"dtime": "2024-01-01 10:30:00", "period": "10:15 - 10:30", "rce_pln": "300.0"},
+            {"dtime": "2024-01-01 14:00:00", "period": "13:45 - 14:00", "rce_pln": "0.0"},
+            {"dtime": "2024-01-01 14:15:00", "period": "14:00 - 14:15", "rce_pln": "10.0"},
+        ]
+        all_w = PriceCalculator.find_all_windows_below_threshold(data, 100.0)
+        assert len(all_w) == 2
+        assert len(all_w[0]) == 2
+        assert len(all_w[1]) == 2
+
+    def test_find_all_windows_above_threshold_two_blocks(self):
+        data = [
+            {"dtime": "2024-01-01 10:00:00", "period": "09:45 - 10:00", "rce_pln": "350.0"},
+            {"dtime": "2024-01-01 10:15:00", "period": "10:00 - 10:15", "rce_pln": "360.0"},
+            {"dtime": "2024-01-01 10:30:00", "period": "10:15 - 10:30", "rce_pln": "50.0"},
+            {"dtime": "2024-01-01 14:00:00", "period": "13:45 - 14:00", "rce_pln": "500.0"},
+            {"dtime": "2024-01-01 14:15:00", "period": "14:00 - 14:15", "rce_pln": "510.0"},
+        ]
+        all_w = PriceCalculator.find_all_windows_above_threshold(data, 300.0)
+        assert len(all_w) == 2
+
+    def test_find_first_delegates_to_find_all_below(self):
+        data = [
+            {"dtime": "2024-01-01 10:00:00", "period": "09:45 - 10:00", "rce_pln": "50.0"},
+            {"dtime": "2024-01-01 10:15:00", "period": "10:00 - 10:15", "rce_pln": "60.0"},
+        ]
+        first = PriceCalculator.find_first_window_below_threshold(data, 100.0)
+        all_w = PriceCalculator.find_all_windows_below_threshold(data, 100.0)
+        assert first == all_w[0]
+
+    def test_pick_nearest_below_prefers_active_window(self):
+        bd = "2024-01-15"
+        today = [
+            {"dtime": f"{bd} 02:15:00", "period": "02:00 - 02:15", "rce_pln": "50", "business_date": bd},
+            {"dtime": f"{bd} 02:30:00", "period": "02:15 - 02:30", "rce_pln": "60", "business_date": bd},
+        ]
+        now = datetime(2024, 1, 15, 2, 10, 0, tzinfo=ZoneInfo("Europe/Warsaw"))
+        w = PriceCalculator.pick_nearest_threshold_window(today, [], 100.0, True, now)
+        assert w is not None
+        assert w[0]["rce_pln"] == "50"
+
+    def test_pick_nearest_below_future_second_block_same_day(self):
+        bd = "2024-01-15"
+        today = [
+            {"dtime": f"{bd} 02:15:00", "period": "02:00 - 02:15", "rce_pln": "50", "business_date": bd},
+            {"dtime": f"{bd} 02:30:00", "period": "02:15 - 02:30", "rce_pln": "60", "business_date": bd},
+            {"dtime": f"{bd} 14:15:00", "period": "14:00 - 14:15", "rce_pln": "40", "business_date": bd},
+            {"dtime": f"{bd} 14:30:00", "period": "14:15 - 14:30", "rce_pln": "45", "business_date": bd},
+        ]
+        now = datetime(2024, 1, 15, 10, 0, 0, tzinfo=ZoneInfo("Europe/Warsaw"))
+        w = PriceCalculator.pick_nearest_threshold_window(today, [], 100.0, True, now)
+        assert w is not None
+        assert w[0]["rce_pln"] == "40"
+
+    def test_pick_nearest_below_uses_tomorrow_when_today_only_past(self):
+        bd_t = "2024-01-15"
+        bd_tm = "2024-01-16"
+        today = [
+            {"dtime": f"{bd_t} 02:15:00", "period": "02:00 - 02:15", "rce_pln": "50", "business_date": bd_t},
+        ]
+        tomorrow = [
+            {"dtime": f"{bd_tm} 10:15:00", "period": "10:00 - 10:15", "rce_pln": "40", "business_date": bd_tm},
+        ]
+        now = datetime(2024, 1, 15, 23, 0, 0, tzinfo=ZoneInfo("Europe/Warsaw"))
+        w = PriceCalculator.pick_nearest_threshold_window(today, tomorrow, 100.0, True, now)
+        assert w is not None
+        assert w[0]["business_date"] == bd_tm
+
+    def test_pick_nearest_below_none_when_all_past(self):
+        bd = "2024-01-15"
+        today = [
+            {"dtime": f"{bd} 02:15:00", "period": "02:00 - 02:15", "rce_pln": "50", "business_date": bd},
+        ]
+        now = datetime(2024, 1, 15, 5, 0, 0, tzinfo=ZoneInfo("Europe/Warsaw"))
+        w = PriceCalculator.pick_nearest_threshold_window(today, [], 100.0, True, now)
+        assert w is None
 
 
 class TestRCEBaseSensor:
