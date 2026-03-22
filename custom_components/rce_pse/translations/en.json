@@ -304,16 +304,16 @@
         "name": "Second Expensive Window Avg Price Tomorrow"
       },
       "rce_pse_low_price_threshold_window_start": {
-        "name": "Nearest Below-Threshold Window Start"
+        "name": "Price Below Threshold Start"
       },
       "rce_pse_low_price_threshold_window_end": {
-        "name": "Nearest Below-Threshold Window End"
+        "name": "Price Below Threshold End"
       },
       "rce_pse_high_price_threshold_window_start": {
-        "name": "Nearest Above-Threshold Window Start"
+        "name": "Price Above Threshold Start"
       },
       "rce_pse_high_price_threshold_window_end": {
-        "name": "Nearest Above-Threshold Window End"
+        "name": "Price Above Threshold End"
       }
     },
     "binary_sensor": {
@@ -333,10 +333,10 @@
         "name": "Second Expensive Window Active"
       },
       "rce_pse_low_price_threshold_window_active": {
-        "name": "Nearest Below-Threshold Window Active"
+        "name": "Price Below Threshold Active"
       },
       "rce_pse_high_price_threshold_window_active": {
-        "name": "Nearest Above-Threshold Window Active"
+        "name": "Price Above Threshold Active"
       }
     }
   }

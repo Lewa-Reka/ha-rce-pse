@@ -304,16 +304,16 @@
         "name": "Drugie Drogie Okno Średnia Cena Jutro"
       },
       "rce_pse_low_price_threshold_window_start": {
-        "name": "Najbliższe Okno Poniżej Progu Początek"
+        "name": "Cena Poniżej Progu Początek"
       },
       "rce_pse_low_price_threshold_window_end": {
-        "name": "Najbliższe Okno Poniżej Progu Koniec"
+        "name": "Cena Poniżej Progu Koniec"
       },
       "rce_pse_high_price_threshold_window_start": {
-        "name": "Najbliższe Okno Powyżej Progu Początek"
+        "name": "Cena Powyżej Progu Początek"
       },
       "rce_pse_high_price_threshold_window_end": {
-        "name": "Najbliższe Okno Powyżej Progu Koniec"
+        "name": "Cena Powyżej Progu Koniec"
       }
     },
     "binary_sensor": {
@@ -333,10 +333,10 @@
         "name": "Drugie Drogie Okno Aktywne"
       },
       "rce_pse_low_price_threshold_window_active": {
-        "name": "Najbliższe Okno Poniżej Progu Aktywne"
+        "name": "Cena Poniżej Progu Aktywna"
       },
       "rce_pse_high_price_threshold_window_active": {
-        "name": "Najbliższe Okno Powyżej Progu Aktywne"
+        "name": "Cena Powyżej Progu Aktywna"
       }
     }
   }
