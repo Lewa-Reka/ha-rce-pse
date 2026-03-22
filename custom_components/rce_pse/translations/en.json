@@ -303,29 +303,17 @@
       "rce_pse_tomorrow_second_expensive_window_avg_price": {
         "name": "Second Expensive Window Avg Price Tomorrow"
       },
-      "rce_pse_today_low_price_threshold_window_start": {
-        "name": "Below-Threshold Price Today Start"
+      "rce_pse_low_price_threshold_window_start": {
+        "name": "Nearest Below-Threshold Window Start"
       },
-      "rce_pse_today_low_price_threshold_window_end": {
-        "name": "Below-Threshold Price Today End"
+      "rce_pse_low_price_threshold_window_end": {
+        "name": "Nearest Below-Threshold Window End"
       },
-      "rce_pse_tomorrow_low_price_threshold_window_start": {
-        "name": "Below-Threshold Price Tomorrow Start"
+      "rce_pse_high_price_threshold_window_start": {
+        "name": "Nearest Above-Threshold Window Start"
       },
-      "rce_pse_tomorrow_low_price_threshold_window_end": {
-        "name": "Below-Threshold Price Tomorrow End"
-      },
-      "rce_pse_today_high_price_threshold_window_start": {
-        "name": "Above-Threshold Price Today Start"
-      },
-      "rce_pse_today_high_price_threshold_window_end": {
-        "name": "Above-Threshold Price Today End"
-      },
-      "rce_pse_tomorrow_high_price_threshold_window_start": {
-        "name": "Above-Threshold Price Tomorrow Start"
-      },
-      "rce_pse_tomorrow_high_price_threshold_window_end": {
-        "name": "Above-Threshold Price Tomorrow End"
+      "rce_pse_high_price_threshold_window_end": {
+        "name": "Nearest Above-Threshold Window End"
       }
     },
     "binary_sensor": {
@@ -344,11 +332,11 @@
       "rce_pse_today_second_expensive_window_active": {
         "name": "Second Expensive Window Active"
       },
-      "rce_pse_today_low_price_threshold_window_active": {
-        "name": "Below-Threshold Price Active"
+      "rce_pse_low_price_threshold_window_active": {
+        "name": "Nearest Below-Threshold Window Active"
       },
-      "rce_pse_today_high_price_threshold_window_active": {
-        "name": "Above-Threshold Price Active"
+      "rce_pse_high_price_threshold_window_active": {
+        "name": "Nearest Above-Threshold Window Active"
       }
     }
   }

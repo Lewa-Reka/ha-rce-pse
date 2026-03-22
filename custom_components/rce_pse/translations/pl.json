@@ -303,29 +303,17 @@
       "rce_pse_tomorrow_second_expensive_window_avg_price": {
         "name": "Drugie Drogie Okno Średnia Cena Jutro"
       },
-      "rce_pse_today_low_price_threshold_window_start": {
-        "name": "Cena Poniżej Progu Dzisiaj Początek"
+      "rce_pse_low_price_threshold_window_start": {
+        "name": "Najbliższe Okno Poniżej Progu Początek"
       },
-      "rce_pse_today_low_price_threshold_window_end": {
-        "name": "Cena Poniżej Progu Dzisiaj Koniec"
+      "rce_pse_low_price_threshold_window_end": {
+        "name": "Najbliższe Okno Poniżej Progu Koniec"
       },
-      "rce_pse_tomorrow_low_price_threshold_window_start": {
-        "name": "Cena Poniżej Progu Jutro Początek"
+      "rce_pse_high_price_threshold_window_start": {
+        "name": "Najbliższe Okno Powyżej Progu Początek"
       },
-      "rce_pse_tomorrow_low_price_threshold_window_end": {
-        "name": "Cena Poniżej Progu Jutro Koniec"
-      },
-      "rce_pse_today_high_price_threshold_window_start": {
-        "name": "Cena Powyżej Progu Dzisiaj Początek"
-      },
-      "rce_pse_today_high_price_threshold_window_end": {
-        "name": "Cena Powyżej Progu Dzisiaj Koniec"
-      },
-      "rce_pse_tomorrow_high_price_threshold_window_start": {
-        "name": "Cena Powyżej Progu Jutro Początek"
-      },
-      "rce_pse_tomorrow_high_price_threshold_window_end": {
-        "name": "Cena Powyżej Progu Jutro Koniec"
+      "rce_pse_high_price_threshold_window_end": {
+        "name": "Najbliższe Okno Powyżej Progu Koniec"
       }
     },
     "binary_sensor": {
@@ -344,11 +332,11 @@
       "rce_pse_today_second_expensive_window_active": {
         "name": "Drugie Drogie Okno Aktywne"
       },
-      "rce_pse_today_low_price_threshold_window_active": {
-        "name": "Cena Poniżej Progu Aktywna"
+      "rce_pse_low_price_threshold_window_active": {
+        "name": "Najbliższe Okno Poniżej Progu Aktywne"
       },
-      "rce_pse_today_high_price_threshold_window_active": {
-        "name": "Cena Powyżej Progu Aktywna"
+      "rce_pse_high_price_threshold_window_active": {
+        "name": "Najbliższe Okno Powyżej Progu Aktywne"
       }
     }
   }
