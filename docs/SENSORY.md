@@ -69,14 +69,14 @@ Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md). Zakres przeszukiwania j
 
 Przy ustawionym **progu niskiej ceny sprzedaży** (ciągłe okresy z ceną ≤ progu, kwadrans po kwadransie):
 
-- **Najbliższe okno poniżej progu Początek** – początek wybranego okna (patrz niżej)
-- **Najbliższe okno poniżej progu Koniec** – koniec tego samego okna
+- **Cena poniżej progu Początek** – początek wybranego okna (patrz niżej)
+- **Cena poniżej progu Koniec** – koniec tego samego okna
 
 Wybór okna: jeśli aktualnie trwa któreś takie okno (w danych dzisiaj lub jutro), pokazywane jest ono; w przeciwnym razie — okno z **najwcześniejszym początkiem** spośród okien, które jeszcze się nie zaczęły, uwzględniając zarówno dzisiejsze, jak i jutrzejsze rekordy w koordynatorze. Gdy jutro nie ma jeszcze danych w API, brane są tylko okna z dzisiaj.
 
 Przy ustawionym **progu wysokiej ceny sprzedaży** (odwrotna logika: ciągłe okresy z ceną ≥ progu):
 
-- **Najbliższe okno powyżej progu Początek/Koniec** – ta sama zasada wyboru co dla progu niskiego.
+- **Cena powyżej progu Początek/Koniec** – ta sama zasada wyboru co dla progu niskiego.
 
 Gdy nie ma trwającego ani przyszłego pasującego okna w dostępnych danych, stan odpowiednich sensorów timestamp to "unknown"; integracja pozostaje dostępna.
 
@@ -98,8 +98,8 @@ Wskazują, czy **aktualny moment** jest w danym oknie cenowym (przydatne w autom
 - **Tanie okno aktywne** – `on`, gdy trwa skonfigurowane najtańsze okno (w obrębie jednego dnia; koniec zakresu 00:00 = do końca dnia)
 - **Drogie okno aktywne** – `on`, gdy trwa skonfigurowane najdroższe okno
 - **Drugie drogie okno aktywne** – `on`, gdy trwa drugie najdroższe okno
-- **Najbliższe okno poniżej progu aktywne** – `on`, gdy trwa okno wybrane tą samą logiką co sensory timestamp początku/końca (najbliższe okno poniżej progu)
-- **Najbliższe okno powyżej progu aktywne** – `on`, gdy trwa okno wybrane dla progu wysokiego
+- **Cena poniżej progu aktywna** – `on`, gdy w danej chwili trwa okres z ceną ≤ progu niskiego (kwadrans po kwadransie w danych)
+- **Cena powyżej progu aktywna** – `on`, gdy w danej chwili trwa okres z ceną ≥ progu wysokiego
 
 Dla automatyzacji „na koniec okna” korzystaj ze zmiany stanu binary sensora lub z sensora timestamp końca okna, zamiast sztywnej godziny 00:00.
 
