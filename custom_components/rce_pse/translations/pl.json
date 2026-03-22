@@ -170,21 +170,7 @@
         "name": "Aktualna vs Średnia Dzisiaj"
       },
       "rce_pse_tomorrow_price": {
-        "name": "Cena Jutro",
-        "state_attributes": {
-          "last_update": {
-            "name": "Ostatnia aktualizacja"
-          },
-          "status": {
-            "name": "Status"
-          },
-          "data_points": {
-            "name": "Liczba punktów danych"
-          },
-          "prices": {
-            "name": "Ceny"
-          }
-        }
+        "name": "Cena Jutro"
       },
       "rce_pse_tomorrow_avg_price": {
         "name": "Średnia Cena Jutro"
@@ -250,38 +236,10 @@
         "name": "Najniższa Cena Jutro Koniec"
       },
       "rce_pse_today_peak_hours": {
-        "name": "Kompas Energetyczny Dzisiaj",
-        "state_attributes": {
-          "recommended_usage": {
-            "name": "Zalecane użytkowanie"
-          },
-          "normal_usage": {
-            "name": "Normalne użytkowanie"
-          },
-          "recommended_saving": {
-            "name": "Zalecane oszczędzanie"
-          },
-          "required_restriction": {
-            "name": "Wymagane ograniczanie"
-          }
-        }
+        "name": "Kompas Energetyczny Dzisiaj"
       },
       "rce_pse_tomorrow_peak_hours": {
-        "name": "Kompas Energetyczny Jutro",
-        "state_attributes": {
-          "recommended_usage": {
-            "name": "Zalecane użytkowanie"
-          },
-          "normal_usage": {
-            "name": "Normalne użytkowanie"
-          },
-          "recommended_saving": {
-            "name": "Zalecane oszczędzanie"
-          },
-          "required_restriction": {
-            "name": "Wymagane ograniczanie"
-          }
-        }
+        "name": "Kompas Energetyczny Jutro"
       },
       "rce_pse_today_second_expensive_window_start": {
         "name": "Drugie Drogie Okno Dzisiaj Początek"

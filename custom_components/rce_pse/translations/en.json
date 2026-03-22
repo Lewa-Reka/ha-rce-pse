@@ -170,21 +170,7 @@
         "name": "Current vs Average Today"
       },
       "rce_pse_tomorrow_price": {
-        "name": "Price Tomorrow",
-        "state_attributes": {
-          "last_update": {
-            "name": "Last update"
-          },
-          "status": {
-            "name": "Status"
-          },
-          "data_points": {
-            "name": "Data points"
-          },
-          "prices": {
-            "name": "Prices"
-          }
-        }
+        "name": "Price Tomorrow"
       },
       "rce_pse_tomorrow_avg_price": {
         "name": "Average Price Tomorrow"
@@ -250,38 +236,10 @@
         "name": "Lowest Price Tomorrow End"
       },
       "rce_pse_today_peak_hours": {
-        "name": "Energy Compass Today",
-        "state_attributes": {
-          "recommended_usage": {
-            "name": "Recommended usage"
-          },
-          "normal_usage": {
-            "name": "Normal usage"
-          },
-          "recommended_saving": {
-            "name": "Recommended saving"
-          },
-          "required_restriction": {
-            "name": "Required restriction"
-          }
-        }
+        "name": "Energy Compass Today"
       },
       "rce_pse_tomorrow_peak_hours": {
-        "name": "Energy Compass Tomorrow",
-        "state_attributes": {
-          "recommended_usage": {
-            "name": "Recommended usage"
-          },
-          "normal_usage": {
-            "name": "Normal usage"
-          },
-          "recommended_saving": {
-            "name": "Recommended saving"
-          },
-          "required_restriction": {
-            "name": "Required restriction"
-          }
-        }
+        "name": "Energy Compass Tomorrow"
       },
       "rce_pse_today_second_expensive_window_start": {
         "name": "Second Expensive Window Today Start"
