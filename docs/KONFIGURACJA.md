@@ -72,13 +72,13 @@ Sensor ceny sprzedaży prosumenta (`rce_pse_today_prosumer_selling_price`) zawsz
 
 ### Progi niskiej i wysokiej ceny sprzedaży
 
-Oba progi są w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh). Działają jak lustro: niski próg szuka pierwszego ciągłego okresu z ceną **≤** progu, wysoki — pierwszego okresu z ceną **≥** progu (kwadrans po kwadransie, w kolejności czasu w danym dniu).
+Oba progi są w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh). Działają jak lustro: niski próg wyznacza ciągłe okresy z ceną **≤** progu, wysoki — z ceną **≥** progu (kwadrans po kwadransie, w kolejności czasu w obrębie każdego dnia kalendarzowego w danych).
 
-**Próg niskiej ceny sprzedaży** — pierwszy ciągły okres w danym dniu z ceną ≤ progu pokazują sensory „Cena Poniżej Progu Dzisiaj/Jutro Początek/Koniec”; binary sensor „Cena poniżej progu aktywna” ma stan `on`, gdy trwa ten okres (dzisiaj).
+**Próg niskiej ceny sprzedaży** — sensory timestamp „Najbliższe okno poniżej progu” (początek/koniec) wskazują **najbliższe** takie okno względem bieżącej chwili: jeśli któreś okno właśnie trwa, pokazywane jest ono; w przeciwnym razie — okno z najwcześniejszym początkiem spośród przyszłych okien **dzisiaj i jutro** (jeśli w `raw_data` są już rekordy na jutro). Binary sensor „Najbliższe okno poniżej progu aktywne” ma stan `on`, gdy trwa właśnie to wybrane okno.
 
-**Próg wysokiej ceny sprzedaży** — analogicznie sensory „Cena Powyżej Progu …” oraz binary „Cena powyżej progu aktywna” dla pierwszego okresu z ceną ≥ progu.
+**Próg wysokiej ceny sprzedaży** — analogicznie sensory „Najbliższe okno powyżej progu” oraz binary „Najbliższe okno powyżej progu aktywne”.
 
-Gdy w danym dniu nie ma pasującego okresu, odpowiednie sensory timestamp mają stan „unknown”; integracja działa normalnie.
+Gdy nie ma ani trwającego, ani przyszłego pasującego okna w dostępnych danych (np. wszystkie okna już minęły albo brak kwadransów spełniających próg), odpowiednie sensory timestamp mają stan „unknown”; integracja działa normalnie. Brak jeszcze opublikowanych cen na jutro ogranicza wybór do okien z dzisiejszego dnia — tak jak przy innych sensorach zależnych od danych następnego dnia.
 
 - **Próg niskiej ceny sprzedaży**: w formularzu zakres -3000…3000 (ta sama skala co jednostka ceny).  
   - *Domyślnie:* 0
