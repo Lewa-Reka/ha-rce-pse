@@ -377,6 +377,17 @@ class TestPriceCalculator:
         assert w is not None
         assert w[0]["rce_pln"] == "50"
 
+    def test_pick_nearest_above_prefers_active_window(self):
+        bd = "2024-01-15"
+        today = [
+            {"dtime": f"{bd} 02:15:00", "period": "02:00 - 02:15", "rce_pln": "400", "business_date": bd},
+            {"dtime": f"{bd} 02:30:00", "period": "02:15 - 02:30", "rce_pln": "410", "business_date": bd},
+        ]
+        now = datetime(2024, 1, 15, 2, 10, 0, tzinfo=ZoneInfo("Europe/Warsaw"))
+        w = PriceCalculator.pick_nearest_threshold_window(today, [], 300.0, False, now)
+        assert w is not None
+        assert w[0]["rce_pln"] == "400"
+
     def test_pick_nearest_below_future_second_block_same_day(self):
         bd = "2024-01-15"
         today = [
