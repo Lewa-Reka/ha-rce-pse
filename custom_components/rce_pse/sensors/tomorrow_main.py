@@ -38,37 +38,24 @@ class RCETomorrowMainSensor(RCEPriceSensor):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
-        if not self.is_tomorrow_data_available():
-            now = dt_util.now()
+        tomorrow_data = self.get_tomorrow_data()
+        if not tomorrow_data:
             return {
-                "available_after": "14:00 CET",
+                "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
                 "status": "Data not available yet",
                 "data_points": 0,
                 "prices": [],
-                "current_hour": now.hour,
-                "current_minute": now.minute,
-                "current_time": now.isoformat(),
             }
-            
-        now = dt_util.now()
-        current_hour = now.hour
-        tomorrow_data = self.get_tomorrow_data()
         excluded_keys = {"rce_pln_neg_to_zero", "publication_ts"}
         sanitized_tomorrow_data = self.round_price_records_for_attributes(
             [{k: v for k, v in record.items() if k not in excluded_keys} for record in tomorrow_data]
         )
-        tomorrow_price_record = self.get_tomorrow_price_at_time(now)
         
         attributes = {
             "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
             "data_points": len(tomorrow_data),
             "prices": sanitized_tomorrow_data,
-            "available_after": "14:00 CET",
             "status": "Available",
-            "current_hour": current_hour,
-            "current_minute": now.minute,
-            "current_time": now.isoformat(),
-            "tomorrow_price_for_hour": self.round_price_dict_for_attributes(tomorrow_price_record),
         }
         
-        return attributes 
+        return attributes
