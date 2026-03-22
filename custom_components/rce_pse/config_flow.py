@@ -22,6 +22,7 @@ from .const import (
     CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     CONF_USE_HOURLY_PRICES,
     CONF_LOW_PRICE_THRESHOLD,
+    CONF_HIGH_PRICE_THRESHOLD,
     CONF_USE_GROSS_PRICES,
     CONF_PRICE_UNIT,
     DEFAULT_PRICE_UNIT,
@@ -36,6 +37,7 @@ from .const import (
     DEFAULT_USE_HOURLY_PRICES,
     DEFAULT_USE_GROSS_PRICES,
     DEFAULT_LOW_PRICE_THRESHOLD,
+    DEFAULT_HIGH_PRICE_THRESHOLD,
 )
 from .time_window import (
     duration_minutes_from_hhmm,
@@ -278,7 +280,18 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                     mode=selector.NumberSelectorMode.BOX,
                     unit_of_measurement="PLN",
                 )
-            )
+            ),
+            vol.Required(
+                CONF_HIGH_PRICE_THRESHOLD, default=_get(CONF_HIGH_PRICE_THRESHOLD, DEFAULT_HIGH_PRICE_THRESHOLD)
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=-3000,
+                    max=3000,
+                    step=0.01,
+                    mode=selector.NumberSelectorMode.BOX,
+                    unit_of_measurement="PLN",
+                )
+            ),
         }
     )
 

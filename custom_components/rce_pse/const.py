@@ -37,6 +37,7 @@ CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS: Final[str] = "second_expensive_wind
 CONF_WINDOW_DURATION_HOURS: Final[str] = "window_duration_hours"
 CONF_USE_HOURLY_PRICES: Final[str] = "use_hourly_prices"
 CONF_LOW_PRICE_THRESHOLD: Final[str] = "low_price_threshold"
+CONF_HIGH_PRICE_THRESHOLD: Final[str] = "high_price_threshold"
 CONF_USE_GROSS_PRICES: Final[str] = "use_gross_prices"
 CONF_PRICE_UNIT: Final[str] = "price_unit"
 
@@ -57,4 +58,5 @@ DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START: Final[str] = "06:00"
 DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END: Final[str] = "10:00"
 DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS: Final[str] = "02:00"
 DEFAULT_LOW_PRICE_THRESHOLD: Final[float] = 0.0
+DEFAULT_HIGH_PRICE_THRESHOLD: Final[float] = 1000.0
 DEFAULT_PRICE_UNIT: Final[str] = UNIT_PLN_MWH

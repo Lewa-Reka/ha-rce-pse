@@ -173,3 +173,34 @@ class PriceCalculator:
                     return current_window
                 current_window = []
         return current_window
+
+    @staticmethod
+    def find_first_window_above_threshold(data: list[dict], threshold: float) -> list[dict]:
+        if not data:
+            return []
+        sorted_data = sorted(data, key=lambda x: x.get("dtime", ""))
+        current_window: list[dict] = []
+        for record in sorted_data:
+            try:
+                price = float(record["rce_pln"])
+                if price < threshold:
+                    if current_window:
+                        return current_window
+                    current_window = []
+                    continue
+                if not current_window:
+                    current_window = [record]
+                    continue
+                prev_time = parse_pse_dtime(current_window[-1]["dtime"])
+                curr_time = parse_pse_dtime(record["dtime"])
+                if curr_time == prev_time + timedelta(minutes=15):
+                    current_window.append(record)
+                else:
+                    if current_window:
+                        return current_window
+                    current_window = [record]
+            except (ValueError, KeyError):
+                if current_window:
+                    return current_window
+                current_window = []
+        return current_window

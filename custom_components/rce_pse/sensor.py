@@ -40,6 +40,12 @@ from .sensors.low_price_threshold_windows import (
     RCETomorrowLowPriceThresholdWindowStartSensor,
     RCETomorrowLowPriceThresholdWindowEndSensor,
 )
+from .sensors.high_price_threshold_windows import (
+    RCETodayHighPriceThresholdWindowStartSensor,
+    RCETodayHighPriceThresholdWindowEndSensor,
+    RCETomorrowHighPriceThresholdWindowStartSensor,
+    RCETomorrowHighPriceThresholdWindowEndSensor,
+)
 from .sensors.custom_windows import (
     RCETodayCheapestWindowStartTimestampSensor,
     RCETodayCheapestWindowEndTimestampSensor,
@@ -120,6 +126,10 @@ async def async_setup_entry(
         RCETodayLowPriceThresholdWindowEndSensor(coordinator, config_entry),
         RCETomorrowLowPriceThresholdWindowStartSensor(coordinator, config_entry),
         RCETomorrowLowPriceThresholdWindowEndSensor(coordinator, config_entry),
+        RCETodayHighPriceThresholdWindowStartSensor(coordinator, config_entry),
+        RCETodayHighPriceThresholdWindowEndSensor(coordinator, config_entry),
+        RCETomorrowHighPriceThresholdWindowStartSensor(coordinator, config_entry),
+        RCETomorrowHighPriceThresholdWindowEndSensor(coordinator, config_entry),
         RCETodayPeakHoursSensor(coordinator),
         RCETomorrowPeakHoursSensor(coordinator),
     ]
