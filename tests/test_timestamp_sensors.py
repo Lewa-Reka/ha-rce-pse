@@ -285,15 +285,12 @@ class TestTomorrowMaxPriceTimestampSensors:
     def test_tomorrow_max_price_hour_start_timestamp_with_data(self, mock_coordinator_extended):
         sensor = RCETomorrowMaxPriceHourStartTimestampSensor(mock_coordinator_extended)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            assert timestamp.hour == 19
-            assert timestamp.minute == 0
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 19
+        assert timestamp.minute == 0
 
     def test_tomorrow_max_price_hour_start_timestamp_no_data(self, mock_coordinator):
         sensor = RCETomorrowMaxPriceHourStartTimestampSensor(mock_coordinator)
@@ -314,15 +311,12 @@ class TestTomorrowMaxPriceTimestampSensors:
     def test_tomorrow_max_price_hour_end_timestamp_with_data(self, mock_coordinator_extended):
         sensor = RCETomorrowMaxPriceHourEndTimestampSensor(mock_coordinator_extended)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            assert timestamp.hour == 20
-            assert timestamp.minute == 0
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 20
+        assert timestamp.minute == 0
 
 
 class TestTomorrowMinPriceTimestampSensors:
@@ -337,15 +331,12 @@ class TestTomorrowMinPriceTimestampSensors:
     def test_tomorrow_min_price_hour_start_timestamp_with_data(self, mock_coordinator_extended):
         sensor = RCETomorrowMinPriceHourStartTimestampSensor(mock_coordinator_extended)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            assert timestamp.hour == 14
-            assert timestamp.minute == 0
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 14
+        assert timestamp.minute == 0
 
     def test_tomorrow_min_price_hour_start_timestamp_no_data(self, mock_coordinator):
         sensor = RCETomorrowMinPriceHourStartTimestampSensor(mock_coordinator)
@@ -366,15 +357,12 @@ class TestTomorrowMinPriceTimestampSensors:
     def test_tomorrow_min_price_hour_end_timestamp_with_data(self, mock_coordinator_extended):
         sensor = RCETomorrowMinPriceHourEndTimestampSensor(mock_coordinator_extended)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            assert timestamp.hour == 15
-            assert timestamp.minute == 0
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        assert timestamp.hour == 15
+        assert timestamp.minute == 0
 
 
 class TestTodayCustomWindowTimestampSensors:
@@ -491,16 +479,13 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_cheapest_window_start_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
         sensor = RCETomorrowCheapestWindowStartTimestampSensor(mock_coordinator_extended, mock_config_entry)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            h, m = _local_hm(timestamp)
-            assert h == 13
-            assert m == 45
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        h, m = _local_hm(timestamp)
+        assert h == 13
+        assert m == 45
 
     def test_tomorrow_cheapest_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowCheapestWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
@@ -512,16 +497,13 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_cheapest_window_end_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
         sensor = RCETomorrowCheapestWindowEndTimestampSensor(mock_coordinator_extended, mock_config_entry)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            h, m = _local_hm(timestamp)
-            assert h == 15
-            assert m == 45
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        h, m = _local_hm(timestamp)
+        assert h == 15
+        assert m == 45
 
     def test_tomorrow_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
@@ -533,16 +515,13 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_expensive_window_start_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowStartTimestampSensor(mock_coordinator_extended, mock_config_entry)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            h, m = _local_hm(timestamp)
-            assert h == 19
-            assert m == 45
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        h, m = _local_hm(timestamp)
+        assert h == 19
+        assert m == 45
 
     def test_tomorrow_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowEndTimestampSensor(mock_coordinator, mock_config_entry)
@@ -554,16 +533,13 @@ class TestTomorrowCustomWindowTimestampSensors:
     def test_tomorrow_expensive_window_end_timestamp_with_data(self, mock_coordinator_extended, mock_config_entry):
         sensor = RCETomorrowExpensiveWindowEndTimestampSensor(mock_coordinator_extended, mock_config_entry)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
-            h, m = _local_hm(timestamp)
-            assert h == 21
-            assert m == 45
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
+        h, m = _local_hm(timestamp)
+        assert h == 21
+        assert m == 45
 
     def test_tomorrow_custom_window_timestamp_no_data(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowCheapestWindowStartTimestampSensor(mock_coordinator, mock_config_entry)
@@ -655,13 +631,10 @@ class TestSecondExpensiveWindowTimestampSensors:
     def test_tomorrow_second_expensive_window_start_with_data(self, mock_coordinator_extended, mock_config_entry):
         sensor = RCETomorrowSecondExpensiveWindowStartSensor(mock_coordinator_extended, mock_config_entry)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
 
     def test_tomorrow_second_expensive_window_end_sensor_initialization(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowSecondExpensiveWindowEndSensor(mock_coordinator, mock_config_entry)
@@ -673,13 +646,10 @@ class TestSecondExpensiveWindowTimestampSensors:
     def test_tomorrow_second_expensive_window_end_with_data(self, mock_coordinator_extended, mock_config_entry):
         sensor = RCETomorrowSecondExpensiveWindowEndSensor(mock_coordinator_extended, mock_config_entry)
         
-        with patch.object(sensor, "is_tomorrow_data_available") as mock_available:
-            mock_available.return_value = True
-            
-            timestamp = sensor.native_value
-            
-            assert timestamp is not None
-            assert isinstance(timestamp, datetime)
+        timestamp = sensor.native_value
+        
+        assert timestamp is not None
+        assert isinstance(timestamp, datetime)
 
 
 class TestLowPriceThresholdWindowTimestampSensors:
@@ -723,5 +693,4 @@ class TestLowPriceThresholdWindowTimestampSensors:
     def test_tomorrow_low_price_threshold_window_start_no_data_returns_none(self, mock_coordinator, mock_config_entry):
         sensor = RCETomorrowLowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
         with patch.object(sensor, "get_tomorrow_data", return_value=[]):
-            with patch.object(sensor, "is_tomorrow_data_available", return_value=True):
-                assert sensor.native_value is None
+            assert sensor.native_value is None
