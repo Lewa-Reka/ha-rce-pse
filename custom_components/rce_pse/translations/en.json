@@ -170,7 +170,21 @@
         "name": "Current vs Average Today"
       },
       "rce_pse_tomorrow_price": {
-        "name": "Price Tomorrow"
+        "name": "Price Tomorrow",
+        "state_attributes": {
+          "last_update": {
+            "name": "Last update"
+          },
+          "status": {
+            "name": "Status"
+          },
+          "data_points": {
+            "name": "Data points"
+          },
+          "prices": {
+            "name": "Prices"
+          }
+        }
       },
       "rce_pse_tomorrow_avg_price": {
         "name": "Average Price Tomorrow"

@@ -117,6 +117,6 @@ Po skonfigurowaniu okien integracja udostępnia m.in.:
 - Drugie Drogie Okno Dzisiaj Początek/Koniec, Drugie Drogie Okno Dzisiaj Średnia  
 
 **Jutro:**  
-- Odpowiednie sensory dla jutra (dane po 14:00 CET)
+- Odpowiednie sensory dla jutra (gdy w API są już rekordy na następny dzień)
 
 Sensory początku i końca okien zwracają **timestampy**; do wyświetlenia samej godziny (np. HH:MM) użyj szablonu z `timestamp_custom('%H:%M')`. Więcej: [Sensory](SENSORY.md), [Migracja do v2.0.0](MIGRACJA-V2.md).

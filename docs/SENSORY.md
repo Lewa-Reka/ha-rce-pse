@@ -6,7 +6,7 @@ Jednostka cen (PLN/MWh lub PLN/kWh) wynika z [konfiguracji](KONFIGURACJA.md) int
 
 - **Cena** – aktualna cena energii (atrybut: wszystkie ceny na dziś)
 - **Cena sprzedaży prosument** – rzeczywista cena sprzedaży w wybranej jednostce (ceny ujemne → 0, VAT 23%; przy PLN/kWh wartości odpowiadają podziałowi z PLN/MWh przez 1000)
-- **Cena jutro** – cena na jutro (dostępna po 14:00 CET), z atrybutem wszystkich cen na następny dzień
+- **Cena jutro** – cena z rekordów API na następny dzień (bez ukrywania danych przed ustaloną godziną)
 
 ## Sensory cen okresu
 
@@ -21,7 +21,7 @@ Jednostka cen (PLN/MWh lub PLN/kWh) wynika z [konfiguracji](KONFIGURACJA.md) int
 - **Mediana ceny dzisiaj**
 - **Aktualna vs średnia dzisiaj** – procentowa różnica między aktualną a średnią ceną
 
-## Statystyki jutro (po 14:00 CET)
+## Statystyki jutro (dane na następny dzień z API)
 
 - **Średnia cena jutro**, **Maksymalna/Minimalna/Mediana jutro**
 - **Jutro vs dzisiaj (średnia)** – procentowa różnica średnich
@@ -39,7 +39,7 @@ Wszystkie zwracają **timestamp** (datetime). Aby pokazać tylko godzinę (np. H
 Dane z raportu PSE „Godziny Szczytu” (API PDGSZ) – kiedy zalecane jest użytkowanie energii, a kiedy oszczędzanie.
 
 - **Kompas Energetyczny Dzisiaj** – stan: wartość tekstowa dla bieżącej godziny (np. „Zalecane użytkowanie”) lub brak danych jak przy sensorach „Jutro” (np. okna najniższej ceny) – wtedy stan „unknown”. Atrybut **values**: lista wpisów z API (tylko `dtime`, `usage_fcst`, `business_date`) z dodanymi `state` i `display_state` (klucz i tekst w języku interfejsu).
-- **Kompas Energetyczny Jutro** – to samo dla następnego dnia (dostępne po 14:00 CET); stan dla aktualnej godziny, ale dnia jutrzejszego (jak sensor „Cena Jutro”).
+- **Kompas Energetyczny Jutro** – to samo dla następnego dnia, gdy w API są rekordy PDGSZ z `business_date` jutra; stan jak przy „Cena Jutro”.
 
 Możliwe stany (wyświetlane jako tekst w języku interfejsu):
 
@@ -61,7 +61,7 @@ Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md). Zakres przeszukiwania j
 - **Drogie Okno Dzisiaj Początek/Koniec**, **Drogie Okno Dzisiaj Średnia**
 - **Drugie Drogie Okno Dzisiaj Początek/Koniec**, **Drugie Drogie Okno Dzisiaj Średnia**
 
-### Jutro (po 14:00 CET)
+### Jutro (dane następnego dnia z API)
 
 - Odpowiednie sensory: tanie okno, drogie okno, drugie drogie okno (początek, koniec, średnia) z **Jutro** w nazwie (np. **Tanie Okno Jutro Początek**)
 

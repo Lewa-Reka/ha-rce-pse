@@ -170,7 +170,21 @@
         "name": "Aktualna vs Średnia Dzisiaj"
       },
       "rce_pse_tomorrow_price": {
-        "name": "Cena Jutro"
+        "name": "Cena Jutro",
+        "state_attributes": {
+          "last_update": {
+            "name": "Ostatnia aktualizacja"
+          },
+          "status": {
+            "name": "Status"
+          },
+          "data_points": {
+            "name": "Liczba punktów danych"
+          },
+          "prices": {
+            "name": "Ceny"
+          }
+        }
       },
       "rce_pse_tomorrow_avg_price": {
         "name": "Średnia Cena Jutro"

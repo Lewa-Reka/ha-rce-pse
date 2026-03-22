@@ -45,7 +45,7 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 - Statystyki dzienne (średnia, min, max, mediana), porównanie dziś vs jutro
 - Definiowane przez użytkownika okna tanich i drogich godzin, sensory czasowe (timestampy)
 - Średnie ceny godzinowe domyślnie włączone (net-billing); próg niskiej ceny sprzedaży; opcjonalne ceny brutto
-- Dane "jutro" dostępne po 14:00 CET, odświeżanie co 30 min
+- Dane "jutro" są dostępne gdy tylko PSE je opublikuje, zwykle po 14:00
 
 Szczegóły: [Konfiguracja](docs/KONFIGURACJA.md), [Sensory](docs/SENSORY.md).
 
