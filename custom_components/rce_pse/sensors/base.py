@@ -49,25 +49,6 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
         
         return None
 
-    def get_current_price_data(self) -> dict | None:
-        if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
-            return None
-        
-        now = dt_util.now()
-        
-        for record in self.coordinator.data["raw_data"]:
-            try:
-                period_end = parse_pse_dtime(record["dtime"])
-                period_start = period_end - timedelta(minutes=15)
-                
-                if period_start <= now.replace(tzinfo=None) <= period_end:
-                    return record
-                    
-            except (ValueError, KeyError):
-                continue
-        
-        return None
-
     def get_price_at_future_period(self, periods_ahead: int) -> float | None:
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None

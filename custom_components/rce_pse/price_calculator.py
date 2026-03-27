@@ -9,6 +9,8 @@ from .time_window import (
     search_window_exclusive_end,
     search_window_inclusive_start,
     period_overlaps_search,
+    window_timestamp_bounds_from_records,
+    is_now_in_window,
 )
 
 
@@ -144,72 +146,74 @@ class PriceCalculator:
         return best_window
 
     @staticmethod
+    def _append_threshold_window(
+        windows: list[list[dict]],
+        current: list[dict],
+    ) -> None:
+        if current:
+            windows.append(current)
+
+    @staticmethod
     def find_all_windows_below_threshold(data: list[dict], threshold: float) -> list[list[dict]]:
-        if not data:
-            return []
-        sorted_data = sorted(data, key=lambda x: x.get("dtime", ""))
-        result: list[list[dict]] = []
-        current_window: list[dict] = []
-        for record in sorted_data:
+        windows: list[list[dict]] = []
+        current: list[dict] = []
+        for record in data:
             try:
-                price = float(record["rce_pln"])
-                if price > threshold:
-                    if current_window:
-                        result.append(current_window)
-                        current_window = []
-                    continue
-                if not current_window:
-                    current_window = [record]
-                    continue
-                prev_time = parse_pse_dtime(current_window[-1]["dtime"])
-                curr_time = parse_pse_dtime(record["dtime"])
-                if curr_time == prev_time + timedelta(minutes=15):
-                    current_window.append(record)
-                else:
-                    if current_window:
-                        result.append(current_window)
-                    current_window = [record]
+                ok = float(record["rce_pln"]) <= threshold
+            except (ValueError, KeyError, TypeError):
+                ok = False
+            if not ok:
+                PriceCalculator._append_threshold_window(windows, current)
+                current = []
+                continue
+            if not current:
+                current = [record]
+                continue
+            try:
+                prev_end = parse_pse_dtime(current[-1]["dtime"])
+                curr_end = parse_pse_dtime(record["dtime"])
             except (ValueError, KeyError):
-                if current_window:
-                    result.append(current_window)
-                    current_window = []
-        if current_window:
-            result.append(current_window)
-        return result
+                PriceCalculator._append_threshold_window(windows, current)
+                current = [record]
+                continue
+            if curr_end == prev_end + timedelta(minutes=15):
+                current.append(record)
+            else:
+                PriceCalculator._append_threshold_window(windows, current)
+                current = [record]
+        PriceCalculator._append_threshold_window(windows, current)
+        return windows
 
     @staticmethod
     def find_all_windows_above_threshold(data: list[dict], threshold: float) -> list[list[dict]]:
-        if not data:
-            return []
-        sorted_data = sorted(data, key=lambda x: x.get("dtime", ""))
-        result: list[list[dict]] = []
-        current_window: list[dict] = []
-        for record in sorted_data:
+        windows: list[list[dict]] = []
+        current: list[dict] = []
+        for record in data:
             try:
-                price = float(record["rce_pln"])
-                if price < threshold:
-                    if current_window:
-                        result.append(current_window)
-                        current_window = []
-                    continue
-                if not current_window:
-                    current_window = [record]
-                    continue
-                prev_time = parse_pse_dtime(current_window[-1]["dtime"])
-                curr_time = parse_pse_dtime(record["dtime"])
-                if curr_time == prev_time + timedelta(minutes=15):
-                    current_window.append(record)
-                else:
-                    if current_window:
-                        result.append(current_window)
-                    current_window = [record]
+                ok = float(record["rce_pln"]) >= threshold
+            except (ValueError, KeyError, TypeError):
+                ok = False
+            if not ok:
+                PriceCalculator._append_threshold_window(windows, current)
+                current = []
+                continue
+            if not current:
+                current = [record]
+                continue
+            try:
+                prev_end = parse_pse_dtime(current[-1]["dtime"])
+                curr_end = parse_pse_dtime(record["dtime"])
             except (ValueError, KeyError):
-                if current_window:
-                    result.append(current_window)
-                    current_window = []
-        if current_window:
-            result.append(current_window)
-        return result
+                PriceCalculator._append_threshold_window(windows, current)
+                current = [record]
+                continue
+            if curr_end == prev_end + timedelta(minutes=15):
+                current.append(record)
+            else:
+                PriceCalculator._append_threshold_window(windows, current)
+                current = [record]
+        PriceCalculator._append_threshold_window(windows, current)
+        return windows
 
     @staticmethod
     def find_first_window_below_threshold(data: list[dict], threshold: float) -> list[dict]:
@@ -222,57 +226,31 @@ class PriceCalculator:
         return all_w[0] if all_w else []
 
     @staticmethod
-    def threshold_window_bounds_naive(window: list[dict]) -> tuple[datetime, datetime] | None:
-        if not window:
-            return None
-        try:
-            bd = window[0].get("business_date")
-            if not bd:
-                return None
-            start_time_str = window[0]["period"].split(" - ")[0]
-            end_time_str = window[-1]["period"].split(" - ")[1]
-            start = datetime.strptime(f"{bd} {start_time_str}:00", "%Y-%m-%d %H:%M:%S")
-            end = datetime.strptime(f"{bd} {end_time_str}:00", "%Y-%m-%d %H:%M:%S")
-            return start, end
-        except (ValueError, KeyError, IndexError):
-            return None
-
-    @staticmethod
     def pick_nearest_threshold_window(
-        today_data: list[dict],
-        tomorrow_data: list[dict],
+        today: list[dict],
+        tomorrow: list[dict],
         threshold: float,
-        below: bool,
+        is_below: bool,
         now: datetime,
     ) -> list[dict] | None:
-        find_all = (
-            PriceCalculator.find_all_windows_below_threshold
-            if below
-            else PriceCalculator.find_all_windows_above_threshold
-        )
-        candidates: list[list[dict]] = []
-        if today_data:
-            candidates.extend(find_all(today_data, threshold))
-        if tomorrow_data:
-            candidates.extend(find_all(tomorrow_data, threshold))
-        if not candidates:
-            return None
+        combined = list(today) + list(tomorrow)
+        if is_below:
+            windows = PriceCalculator.find_all_windows_below_threshold(combined, threshold)
+        else:
+            windows = PriceCalculator.find_all_windows_above_threshold(combined, threshold)
         now_naive = now.replace(tzinfo=None) if now.tzinfo else now
-        timed: list[tuple[list[dict], datetime, datetime]] = []
-        for w in candidates:
-            bounds = PriceCalculator.threshold_window_bounds_naive(w)
+        for w in windows:
+            bounds = window_timestamp_bounds_from_records(w)
             if bounds is None:
                 continue
-            start, end = bounds
-            timed.append((w, start, end))
-        if not timed:
-            return None
-        active = [t for t in timed if t[1] <= now_naive < t[2]]
-        if active:
-            active.sort(key=lambda t: t[1])
-            return active[0][0]
-        future = [t for t in timed if now_naive < t[1]]
-        if future:
-            future.sort(key=lambda t: t[1])
-            return future[0][0]
+            ws, we = bounds
+            if is_now_in_window(now_naive, ws, we):
+                return w
+        for w in windows:
+            bounds = window_timestamp_bounds_from_records(w)
+            if bounds is None:
+                continue
+            ws, _we = bounds
+            if ws > now_naive:
+                return w
         return None

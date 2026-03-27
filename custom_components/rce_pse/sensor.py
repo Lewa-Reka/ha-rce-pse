@@ -35,14 +35,6 @@ from .sensors import (
     RCETomorrowMedianPriceSensor,
     RCETomorrowTodayAvgComparisonSensor,
 )
-from .sensors.low_price_threshold_windows import (
-    RCELowPriceThresholdWindowStartSensor,
-    RCELowPriceThresholdWindowEndSensor,
-)
-from .sensors.high_price_threshold_windows import (
-    RCEHighPriceThresholdWindowStartSensor,
-    RCEHighPriceThresholdWindowEndSensor,
-)
 from .sensors.custom_windows import (
     RCETodayCheapestWindowStartTimestampSensor,
     RCETodayCheapestWindowEndTimestampSensor,
@@ -64,6 +56,12 @@ from .sensors.window_avg_price import (
     RCETomorrowCheapestWindowAvgPriceSensor,
     RCETomorrowExpensiveWindowAvgPriceSensor,
     RCETomorrowSecondExpensiveWindowAvgPriceSensor,
+)
+from .sensors.price_threshold_windows import (
+    RCEHighPriceThresholdWindowEndSensor,
+    RCEHighPriceThresholdWindowStartSensor,
+    RCELowPriceThresholdWindowEndSensor,
+    RCELowPriceThresholdWindowStartSensor,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -120,12 +118,12 @@ async def async_setup_entry(
         RCETomorrowCheapestWindowAvgPriceSensor(coordinator, config_entry),
         RCETomorrowExpensiveWindowAvgPriceSensor(coordinator, config_entry),
         RCETomorrowSecondExpensiveWindowAvgPriceSensor(coordinator, config_entry),
+        RCETodayPeakHoursSensor(coordinator),
+        RCETomorrowPeakHoursSensor(coordinator),
         RCELowPriceThresholdWindowStartSensor(coordinator, config_entry),
         RCELowPriceThresholdWindowEndSensor(coordinator, config_entry),
         RCEHighPriceThresholdWindowStartSensor(coordinator, config_entry),
         RCEHighPriceThresholdWindowEndSensor(coordinator, config_entry),
-        RCETodayPeakHoursSensor(coordinator),
-        RCETomorrowPeakHoursSensor(coordinator),
     ]
     
     _LOGGER.debug("Adding %d RCE PSE sensors to Home Assistant", len(sensors))

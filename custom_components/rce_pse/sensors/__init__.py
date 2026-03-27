@@ -32,6 +32,12 @@ from .tomorrow_hours import (
     RCETomorrowMinPriceHourEndTimestampSensor,
 )
 from .peak_hours import RCETodayPeakHoursSensor, RCETomorrowPeakHoursSensor
+from .price_threshold_windows import (
+    RCEHighPriceThresholdWindowEndSensor,
+    RCEHighPriceThresholdWindowStartSensor,
+    RCELowPriceThresholdWindowEndSensor,
+    RCELowPriceThresholdWindowStartSensor,
+)
 
 __all__ = [
     "RCEBaseSensor",
@@ -60,4 +66,8 @@ __all__ = [
     "RCETomorrowTodayAvgComparisonSensor",
     "RCETodayPeakHoursSensor",
     "RCETomorrowPeakHoursSensor",
+    "RCELowPriceThresholdWindowStartSensor",
+    "RCELowPriceThresholdWindowEndSensor",
+    "RCEHighPriceThresholdWindowStartSensor",
+    "RCEHighPriceThresholdWindowEndSensor",
 ] 

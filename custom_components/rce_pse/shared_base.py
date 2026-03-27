@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
+from .time_window import parse_pse_dtime
 from .const import (
     CONF_PRICE_UNIT,
     DEFAULT_PRICE_UNIT,
@@ -84,6 +85,20 @@ class RCEBaseCommonEntity(CoordinatorEntity):
             record for record in self.coordinator.data["raw_data"]
             if record.get("business_date") == tomorrow
         ]
+
+    def get_current_price_data(self) -> dict | None:
+        if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
+            return None
+        now = dt_util.now()
+        for record in self.coordinator.data["raw_data"]:
+            try:
+                period_end = parse_pse_dtime(record["dtime"])
+                period_start = period_end - timedelta(minutes=15)
+                if period_start <= now.replace(tzinfo=None) <= period_end:
+                    return record
+            except (ValueError, KeyError):
+                continue
+        return None
 
     def get_today_pdgsz_data(self) -> list[dict]:
         if not self.coordinator.data:
