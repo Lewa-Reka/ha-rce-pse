@@ -78,6 +78,8 @@ Przy ustawionym **progu wysokiej ceny sprzedaży** (odwrotna logika: ciągłe ok
 
 - **Cena powyżej progu Początek/Koniec** – ta sama zasada wyboru co dla progu niskiego.
 
+**Binary „Cena poniżej progu aktywna” / „Cena powyżej progu aktywna”** — stan `on`, gdy aktualna cena (jak w sensorze **Cena**) jest odpowiednio ≤ progowi niskiemu lub ≥ progowi wysokiemu; nie zależy od logiki okien timestampów.
+
 Gdy nie ma trwającego ani przyszłego pasującego okna w dostępnych danych, stan odpowiednich sensorów timestamp to "unknown"; integracja pozostaje dostępna.
 
 Sensory okien zwracają timestampy; do samej godziny użyj `timestamp_custom('%H:%M')` w szablonie.

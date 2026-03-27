@@ -74,9 +74,9 @@ Sensor ceny sprzedaży prosumenta (`rce_pse_today_prosumer_selling_price`) zawsz
 
 Oba progi są w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh). Działają jak lustro: niski próg wyznacza ciągłe okresy z ceną **≤** progu, wysoki — z ceną **≥** progu (kwadrans po kwadransie, w kolejności czasu w obrębie każdego dnia kalendarzowego w danych).
 
-**Próg niskiej ceny sprzedaży** — sensory timestamp „Cena poniżej progu” (początek/koniec) wskazują okno względem bieżącej chwili: jeśli któreś okno (z ceną ≤ progu) właśnie trwa, pokazywane jest ono; w przeciwnym razie — okno z najwcześniejszym początkiem spośród przyszłych okien **dzisiaj i jutro** (jeśli w `raw_data` są już rekordy na jutro). Binary sensor „Cena poniżej progu aktywna” ma stan `on` tylko wtedy, gdy aktualny kwadrans jest w takim oknie.
+**Próg niskiej ceny sprzedaży** — sensory timestamp „Cena poniżej progu” (początek/koniec) wskazują okno względem bieżącej chwili: jeśli któreś okno (z ceną ≤ progu) właśnie trwa, pokazywane jest ono; w przeciwnym razie — okno z najwcześniejszym początkiem spośród przyszłych okien **dzisiaj i jutro** (jeśli w `raw_data` są już rekordy na jutro). Binary sensor „Cena poniżej progu aktywna” ma stan `on`, gdy **aktualna cena** (ta sama wartość co główny sensor „Cena”) jest **≤** progowi.
 
-**Próg wysokiej ceny sprzedaży** — analogicznie sensory „Cena powyżej progu” (początek/koniec) oraz binary „Cena powyżej progu aktywna”.
+**Próg wysokiej ceny sprzedaży** — analogicznie sensory „Cena powyżej progu” (początek/koniec); binary „Cena powyżej progu aktywna” ma stan `on`, gdy aktualna cena jest **≥** progowi.
 
 Gdy nie ma ani trwającego, ani przyszłego pasującego okna w dostępnych danych (np. wszystkie okna już minęły albo brak kwadransów spełniających próg), odpowiednie sensory timestamp mają stan „unknown”; integracja działa normalnie. Brak jeszcze opublikowanych cen na jutro ogranicza wybór do okien z dzisiejszego dnia — tak jak przy innych sensorach zależnych od danych następnego dnia.
 
