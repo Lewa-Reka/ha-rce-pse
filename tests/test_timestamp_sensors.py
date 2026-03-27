@@ -668,7 +668,12 @@ class TestLowPriceThresholdWindowTimestampSensors:
         sensor = RCELowPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
         bd = "2024-01-15"
         fake_window = [
-            {"period": "02:00 - 02:15", "rce_pln": "0.0", "business_date": bd},
+            {
+                "dtime": f"{bd} 02:15:00",
+                "period": "02:00 - 02:15",
+                "rce_pln": "0.0",
+                "business_date": bd,
+            },
         ]
         with patch.object(sensor, "nearest_window", return_value=fake_window):
             timestamp = sensor.native_value
@@ -698,7 +703,12 @@ class TestHighPriceThresholdWindowTimestampSensors:
         sensor = RCEHighPriceThresholdWindowStartSensor(mock_coordinator, mock_config_entry)
         bd = "2024-01-15"
         fake_window = [
-            {"period": "02:00 - 02:15", "rce_pln": "400.0", "business_date": bd},
+            {
+                "dtime": f"{bd} 02:15:00",
+                "period": "02:00 - 02:15",
+                "rce_pln": "400.0",
+                "business_date": bd,
+            },
         ]
         with patch.object(sensor, "nearest_window", return_value=fake_window):
             timestamp = sensor.native_value
