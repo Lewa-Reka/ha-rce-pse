@@ -386,7 +386,7 @@ class TestTodayCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 12
+        assert h == 11
         assert m == 45
 
     def test_today_cheapest_window_start_timestamp_no_optimal_window(self, mock_coordinator, mock_config_entry):
@@ -413,7 +413,7 @@ class TestTodayCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 14
+        assert h == 13
         assert m == 45
 
     def test_today_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
@@ -431,7 +431,7 @@ class TestTodayCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 20
+        assert h == 19
         assert m == 45
 
     def test_today_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
@@ -449,7 +449,7 @@ class TestTodayCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 22
+        assert h == 21
         assert m == 45
 
     def test_custom_window_timestamp_invalid_datetime(self, mock_coordinator, mock_config_entry):
@@ -488,7 +488,7 @@ class TestTomorrowCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 13
+        assert h == 12
         assert m == 45
 
     def test_tomorrow_cheapest_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
@@ -506,7 +506,7 @@ class TestTomorrowCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 15
+        assert h == 14
         assert m == 45
 
     def test_tomorrow_expensive_window_start_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
@@ -524,7 +524,7 @@ class TestTomorrowCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 19
+        assert h == 18
         assert m == 45
 
     def test_tomorrow_expensive_window_end_timestamp_sensor_initialization(self, mock_coordinator, mock_config_entry):
@@ -542,7 +542,7 @@ class TestTomorrowCustomWindowTimestampSensors:
         assert timestamp is not None
         assert isinstance(timestamp, datetime)
         h, m = _local_hm(timestamp)
-        assert h == 21
+        assert h == 20
         assert m == 45
 
     def test_tomorrow_custom_window_timestamp_no_data(self, mock_coordinator, mock_config_entry):

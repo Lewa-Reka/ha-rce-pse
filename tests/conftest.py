@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 from unittest.mock import AsyncMock, Mock, patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from homeassistant.core import HomeAssistant
@@ -9,6 +10,15 @@ from homeassistant.util import dt as dt_util
 from homeassistant.helpers.frame import _hass
 
 from custom_components.rce_pse.coordinator import RCEPSEDataUpdateCoordinator
+
+
+@pytest.fixture(autouse=True)
+def homeassistant_default_timezone_europe_warsaw():
+    tz_waw = ZoneInfo("Europe/Warsaw")
+    previous = dt_util.get_default_time_zone()
+    dt_util.set_default_time_zone(tz_waw)
+    yield
+    dt_util.set_default_time_zone(previous)
 
 
 def _mock_get_config_value(key, default):
