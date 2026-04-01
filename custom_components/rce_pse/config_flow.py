@@ -51,7 +51,7 @@ from .const import (
     DEFAULT_LOW_PRICE_THRESHOLD,
     DEFAULT_HIGH_PRICE_THRESHOLD,
 )
-from .options import OPTION_DEFAULTS, with_option_defaults
+from .options import with_option_defaults
 from .time_window import (
     duration_minutes_from_hhmm,
     is_search_end_end_of_day,
