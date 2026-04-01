@@ -36,6 +36,12 @@ CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS: Final[str] = "second_expensive_wind
 
 CONF_WINDOW_DURATION_HOURS: Final[str] = "window_duration_hours"
 CONF_USE_HOURLY_PRICES: Final[str] = "use_hourly_prices"
+CONF_LITE_MODE: Final[str] = "lite_mode"
+CONF_ENABLE_CHEAPEST_WINDOW: Final[str] = "enable_cheapest_window"
+CONF_ENABLE_EXPENSIVE_WINDOW: Final[str] = "enable_expensive_window"
+CONF_ENABLE_SECOND_EXPENSIVE_WINDOW: Final[str] = "enable_second_expensive_window"
+CONF_ENABLE_LOW_PRICE_THRESHOLD: Final[str] = "enable_low_price_threshold"
+CONF_ENABLE_HIGH_PRICE_THRESHOLD: Final[str] = "enable_high_price_threshold"
 CONF_LOW_PRICE_THRESHOLD: Final[str] = "low_price_threshold"
 CONF_HIGH_PRICE_THRESHOLD: Final[str] = "high_price_threshold"
 CONF_USE_GROSS_PRICES: Final[str] = "use_gross_prices"
@@ -52,6 +58,12 @@ DEFAULT_TIME_WINDOW_START: Final[str] = "00:00"
 DEFAULT_TIME_WINDOW_END: Final[str] = "00:00"
 DEFAULT_WINDOW_DURATION_HOURS: Final[str] = "02:00"
 DEFAULT_USE_HOURLY_PRICES: Final[bool] = False
+DEFAULT_LITE_MODE: Final[bool] = False
+DEFAULT_ENABLE_CHEAPEST_WINDOW: Final[bool] = True
+DEFAULT_ENABLE_EXPENSIVE_WINDOW: Final[bool] = True
+DEFAULT_ENABLE_SECOND_EXPENSIVE_WINDOW: Final[bool] = True
+DEFAULT_ENABLE_LOW_PRICE_THRESHOLD: Final[bool] = True
+DEFAULT_ENABLE_HIGH_PRICE_THRESHOLD: Final[bool] = True
 DEFAULT_USE_GROSS_PRICES: Final[bool] = False
 
 DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START: Final[str] = "06:00"

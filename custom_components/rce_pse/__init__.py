@@ -9,7 +9,11 @@ import homeassistant.helpers.config_validation as cv
 
 from .const import DOMAIN
 from .coordinator import RCEPSEDataUpdateCoordinator
-from .config_flow import migrate_legacy_time_values, migrate_price_unit_in_mapping
+from .config_flow import (
+    migrate_legacy_time_values,
+    migrate_option_defaults,
+    migrate_price_unit_in_mapping,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,17 +24,32 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     if config_entry.version < 2:
-        data = migrate_price_unit_in_mapping(migrate_legacy_time_values(config_entry.data))
-        options = migrate_price_unit_in_mapping(
-            migrate_legacy_time_values(config_entry.options)
-            if config_entry.options
-            else {}
+        data = migrate_option_defaults(
+            migrate_price_unit_in_mapping(migrate_legacy_time_values(config_entry.data))
+        )
+        options = migrate_option_defaults(
+            migrate_price_unit_in_mapping(
+                migrate_legacy_time_values(config_entry.options)
+                if config_entry.options
+                else {}
+            )
         )
         hass.config_entries.async_update_entry(
             config_entry,
             data=data,
             options=options,
-            version=2,
+            version=3,
+            minor_version=0,
+        )
+        return True
+    if config_entry.version < 3:
+        data = migrate_option_defaults(config_entry.data)
+        options = migrate_option_defaults(config_entry.options if config_entry.options else {})
+        hass.config_entries.async_update_entry(
+            config_entry,
+            data=data,
+            options=options,
+            version=3,
             minor_version=0,
         )
         return True

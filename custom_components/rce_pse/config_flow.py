@@ -14,6 +14,11 @@ from .const import (
     CONF_CHEAPEST_TIME_WINDOW_START,
     CONF_CHEAPEST_TIME_WINDOW_END,
     CONF_CHEAPEST_WINDOW_DURATION_HOURS,
+    CONF_ENABLE_CHEAPEST_WINDOW,
+    CONF_ENABLE_EXPENSIVE_WINDOW,
+    CONF_ENABLE_HIGH_PRICE_THRESHOLD,
+    CONF_ENABLE_LOW_PRICE_THRESHOLD,
+    CONF_ENABLE_SECOND_EXPENSIVE_WINDOW,
     CONF_EXPENSIVE_TIME_WINDOW_START,
     CONF_EXPENSIVE_TIME_WINDOW_END,
     CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
@@ -21,10 +26,17 @@ from .const import (
     CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
     CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
     CONF_USE_HOURLY_PRICES,
+    CONF_LITE_MODE,
     CONF_LOW_PRICE_THRESHOLD,
     CONF_HIGH_PRICE_THRESHOLD,
     CONF_USE_GROSS_PRICES,
     CONF_PRICE_UNIT,
+    DEFAULT_ENABLE_CHEAPEST_WINDOW,
+    DEFAULT_ENABLE_EXPENSIVE_WINDOW,
+    DEFAULT_ENABLE_HIGH_PRICE_THRESHOLD,
+    DEFAULT_ENABLE_LOW_PRICE_THRESHOLD,
+    DEFAULT_ENABLE_SECOND_EXPENSIVE_WINDOW,
+    DEFAULT_LITE_MODE,
     DEFAULT_PRICE_UNIT,
     UNIT_PLN_KWH,
     UNIT_PLN_MWH,
@@ -39,6 +51,7 @@ from .const import (
     DEFAULT_LOW_PRICE_THRESHOLD,
     DEFAULT_HIGH_PRICE_THRESHOLD,
 )
+from .options import OPTION_DEFAULTS, with_option_defaults
 from .time_window import (
     duration_minutes_from_hhmm,
     is_search_end_end_of_day,
@@ -54,6 +67,7 @@ SECTION_PRICING = "pricing"
 SECTION_CHEAPEST_WINDOW = "cheapest_window"
 SECTION_EXPENSIVE_WINDOW = "expensive_window"
 SECTION_SECOND_EXPENSIVE_WINDOW = "second_expensive_window"
+SECTION_THRESHOLDS = "thresholds"
 
 SECTION_KEYS = frozenset(
     {
@@ -61,6 +75,7 @@ SECTION_KEYS = frozenset(
         SECTION_CHEAPEST_WINDOW,
         SECTION_EXPENSIVE_WINDOW,
         SECTION_SECOND_EXPENSIVE_WINDOW,
+        SECTION_THRESHOLDS,
     }
 )
 
@@ -82,6 +97,39 @@ WINDOW_END_KEYS = frozenset(
         CONF_EXPENSIVE_TIME_WINDOW_END,
         CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
     }
+)
+
+WINDOW_VALIDATION_CONFIG = (
+    (
+        CONF_ENABLE_CHEAPEST_WINDOW,
+        DEFAULT_ENABLE_CHEAPEST_WINDOW,
+        CONF_CHEAPEST_TIME_WINDOW_START,
+        DEFAULT_TIME_WINDOW_START,
+        CONF_CHEAPEST_TIME_WINDOW_END,
+        DEFAULT_TIME_WINDOW_END,
+        CONF_CHEAPEST_WINDOW_DURATION_HOURS,
+        DEFAULT_WINDOW_DURATION_HOURS,
+    ),
+    (
+        CONF_ENABLE_EXPENSIVE_WINDOW,
+        DEFAULT_ENABLE_EXPENSIVE_WINDOW,
+        CONF_EXPENSIVE_TIME_WINDOW_START,
+        DEFAULT_TIME_WINDOW_START,
+        CONF_EXPENSIVE_TIME_WINDOW_END,
+        DEFAULT_TIME_WINDOW_END,
+        CONF_EXPENSIVE_WINDOW_DURATION_HOURS,
+        DEFAULT_WINDOW_DURATION_HOURS,
+    ),
+    (
+        CONF_ENABLE_SECOND_EXPENSIVE_WINDOW,
+        DEFAULT_ENABLE_SECOND_EXPENSIVE_WINDOW,
+        CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
+        DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START,
+        CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
+        DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
+        CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+        DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+    ),
 )
 
 
@@ -115,6 +163,10 @@ def migrate_legacy_time_values(data: Mapping[str, Any]) -> dict[str, Any]:
             else:
                 out[key] = f"{iv:02d}:00"
     return out
+
+
+def migrate_option_defaults(data: Mapping[str, Any]) -> dict[str, Any]:
+    return with_option_defaults(data)
 
 
 def _start_time_select_options() -> list[dict[str, str]]:
@@ -191,33 +243,24 @@ def _search_span_minutes(start_hhmm: str, end_hhmm: str) -> int:
 
 
 def _time_window_errors(flat: Mapping[str, Any]) -> dict[str, str]:
-    pairs = (
-        (
-            flat.get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
-            flat.get(CONF_CHEAPEST_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END),
-            flat.get(CONF_CHEAPEST_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS),
-        ),
-        (
-            flat.get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
-            flat.get(CONF_EXPENSIVE_TIME_WINDOW_END, DEFAULT_TIME_WINDOW_END),
-            flat.get(CONF_EXPENSIVE_WINDOW_DURATION_HOURS, DEFAULT_WINDOW_DURATION_HOURS),
-        ),
-        (
-            flat.get(
-                CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
-                DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_START,
-            ),
-            flat.get(
-                CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
-                DEFAULT_SECOND_EXPENSIVE_TIME_WINDOW_END,
-            ),
-            flat.get(
-                CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
-                DEFAULT_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
-            ),
-        ),
-    )
-    for start, end, duration in pairs:
+    if flat.get(CONF_LITE_MODE, DEFAULT_LITE_MODE):
+        return {}
+
+    for (
+        enable_key,
+        enable_default,
+        start_key,
+        start_default,
+        end_key,
+        end_default,
+        duration_key,
+        duration_default,
+    ) in WINDOW_VALIDATION_CONFIG:
+        if not flat.get(enable_key, enable_default):
+            continue
+        start = flat.get(start_key, start_default)
+        end = flat.get(end_key, end_default)
+        duration = flat.get(duration_key, duration_default)
         ns = normalize_hhmm(str(start))
         ne = normalize_hhmm(str(end))
         if not is_valid_quarter_step(ns):
@@ -242,6 +285,8 @@ def _price_unit_select_options() -> list[dict[str, str]]:
     ]
 
 def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
+    current_data = with_option_defaults(current_data)
+
     def _get(key: str, default: Any) -> Any:
         v = current_data.get(key, default)
         if isinstance(v, int) and key in TIME_KEYS:
@@ -257,6 +302,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
     pricing_inner = vol.Schema(
         {
             vol.Optional(
+                CONF_LITE_MODE, default=_get(CONF_LITE_MODE, DEFAULT_LITE_MODE)
+            ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
+            vol.Optional(
                 CONF_USE_HOURLY_PRICES, default=_get(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
             ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
             vol.Optional(
@@ -270,33 +318,15 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                     mode=selector.SelectSelectorMode.DROPDOWN,
                 )
             ),
-            vol.Required(
-                CONF_LOW_PRICE_THRESHOLD, default=_get(CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=-3000,
-                    max=3000,
-                    step=0.01,
-                    mode=selector.NumberSelectorMode.BOX,
-                    unit_of_measurement="PLN",
-                )
-            ),
-            vol.Required(
-                CONF_HIGH_PRICE_THRESHOLD, default=_get(CONF_HIGH_PRICE_THRESHOLD, DEFAULT_HIGH_PRICE_THRESHOLD)
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=-3000,
-                    max=3000,
-                    step=0.01,
-                    mode=selector.NumberSelectorMode.BOX,
-                    unit_of_measurement="PLN",
-                )
-            ),
         }
     )
 
     cheapest_inner = vol.Schema(
         {
+            vol.Optional(
+                CONF_ENABLE_CHEAPEST_WINDOW,
+                default=_get(CONF_ENABLE_CHEAPEST_WINDOW, DEFAULT_ENABLE_CHEAPEST_WINDOW),
+            ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
             vol.Required(
                 CONF_CHEAPEST_TIME_WINDOW_START,
                 default=_get(CONF_CHEAPEST_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
@@ -329,6 +359,10 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
 
     expensive_inner = vol.Schema(
         {
+            vol.Optional(
+                CONF_ENABLE_EXPENSIVE_WINDOW,
+                default=_get(CONF_ENABLE_EXPENSIVE_WINDOW, DEFAULT_ENABLE_EXPENSIVE_WINDOW),
+            ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
             vol.Required(
                 CONF_EXPENSIVE_TIME_WINDOW_START,
                 default=_get(CONF_EXPENSIVE_TIME_WINDOW_START, DEFAULT_TIME_WINDOW_START),
@@ -361,6 +395,13 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
 
     second_expensive_inner = vol.Schema(
         {
+            vol.Optional(
+                CONF_ENABLE_SECOND_EXPENSIVE_WINDOW,
+                default=_get(
+                    CONF_ENABLE_SECOND_EXPENSIVE_WINDOW,
+                    DEFAULT_ENABLE_SECOND_EXPENSIVE_WINDOW,
+                ),
+            ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
             vol.Required(
                 CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
                 default=_get(
@@ -400,6 +441,47 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
         }
     )
 
+    thresholds_inner = vol.Schema(
+        {
+            vol.Optional(
+                CONF_ENABLE_LOW_PRICE_THRESHOLD,
+                default=_get(
+                    CONF_ENABLE_LOW_PRICE_THRESHOLD, DEFAULT_ENABLE_LOW_PRICE_THRESHOLD
+                ),
+            ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
+            vol.Required(
+                CONF_LOW_PRICE_THRESHOLD,
+                default=_get(CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=-3000,
+                    max=3000,
+                    step=0.01,
+                    mode=selector.NumberSelectorMode.BOX,
+                    unit_of_measurement="PLN",
+                )
+            ),
+            vol.Optional(
+                CONF_ENABLE_HIGH_PRICE_THRESHOLD,
+                default=_get(
+                    CONF_ENABLE_HIGH_PRICE_THRESHOLD, DEFAULT_ENABLE_HIGH_PRICE_THRESHOLD
+                ),
+            ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
+            vol.Required(
+                CONF_HIGH_PRICE_THRESHOLD,
+                default=_get(CONF_HIGH_PRICE_THRESHOLD, DEFAULT_HIGH_PRICE_THRESHOLD),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=-3000,
+                    max=3000,
+                    step=0.01,
+                    mode=selector.NumberSelectorMode.BOX,
+                    unit_of_measurement="PLN",
+                )
+            ),
+        }
+    )
+
     return vol.Schema(
         {
             vol.Required(SECTION_PRICING): section(pricing_inner, {"collapsed": False}),
@@ -408,6 +490,7 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
             vol.Required(SECTION_SECOND_EXPENSIVE_WINDOW): section(
                 second_expensive_inner, {"collapsed": True}
             ),
+            vol.Required(SECTION_THRESHOLDS): section(thresholds_inner, {"collapsed": True}),
         }
     )
 
@@ -417,7 +500,7 @@ CONFIG_SCHEMA = _rce_form_schema({})
 
 class RCEConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
 
-    VERSION = 2
+    VERSION = 3
     MINOR_VERSION = 0
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 

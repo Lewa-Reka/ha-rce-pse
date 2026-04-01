@@ -8,28 +8,28 @@
           "pricing": {
             "name": "Podstawowe ustawienia",
             "data": {
+              "lite_mode": "Tryb Lite",
               "price_unit": "Jednostka",
               "use_hourly_prices": "Średnie ceny godzinowe",
-              "use_gross_prices": "Ceny brutto (z VAT)",
-              "low_price_threshold": "Próg niskiej ceny",
-              "high_price_threshold": "Próg wysokiej ceny"
+              "use_gross_prices": "Ceny brutto (z VAT)"
             },
             "data_description": {
+              "lite_mode": "Publikuje tylko sensory aktualnej ceny i ceny jutro wraz z atrybutami zawierającymi wszystkie ceny na dany dzień. Wszystkie statystyki, sensory okresów, Kompas Energetyczny, okna własne, sensory progów oraz wszystkie binary sensory są wyłączone.",
               "price_unit": "Jednostka dla wszystkich sensorów",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
-              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
-              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\"",
-              "high_price_threshold": "Używany przez sensory \"Cena Powyżej Progu\""
+              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach"
             }
           },
           "cheapest_window": {
             "name": "Okno tanich godzin",
             "data": {
+              "enable_cheapest_window": "Włącz okno tanich godzin",
               "cheapest_time_window_start": "Początek przeszukiwania",
               "cheapest_time_window_end": "Koniec przeszukiwania",
               "cheapest_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
+              "enable_cheapest_window": "Po wyłączeniu integracja nie publikuje sensorów taniego okna i nie wykonuje obliczeń dla tej funkcji.",
               "cheapest_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
               "cheapest_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
               "cheapest_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
@@ -38,11 +38,13 @@
           "expensive_window": {
             "name": "Okno drogich godzin",
             "data": {
+              "enable_expensive_window": "Włącz okno drogich godzin",
               "expensive_time_window_start": "Początek przeszukiwania",
               "expensive_time_window_end": "Koniec przeszukiwania",
               "expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
+              "enable_expensive_window": "Po wyłączeniu integracja nie publikuje sensorów drogiego okna i nie wykonuje obliczeń dla tej funkcji.",
               "expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
               "expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
               "expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
@@ -51,14 +53,31 @@
           "second_expensive_window": {
             "name": "Drugie okno drogich godzin",
             "data": {
+              "enable_second_expensive_window": "Włącz drugie okno drogich godzin",
               "second_expensive_time_window_start": "Początek przeszukiwania",
               "second_expensive_time_window_end": "Koniec przeszukiwania",
               "second_expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
+              "enable_second_expensive_window": "Po wyłączeniu integracja nie publikuje sensorów drugiego drogiego okna i nie wykonuje obliczeń dla tej funkcji.",
               "second_expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
               "second_expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
               "second_expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
+            }
+          },
+          "thresholds": {
+            "name": "Progi cenowe",
+            "data": {
+              "enable_low_price_threshold": "Włącz próg niskiej ceny",
+              "low_price_threshold": "Próg niskiej ceny",
+              "enable_high_price_threshold": "Włącz próg wysokiej ceny",
+              "high_price_threshold": "Próg wysokiej ceny"
+            },
+            "data_description": {
+              "enable_low_price_threshold": "Po wyłączeniu integracja nie publikuje sensorów ceny poniżej progu i nie wykonuje obliczeń dla tej funkcji.",
+              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\".",
+              "enable_high_price_threshold": "Po wyłączeniu integracja nie publikuje sensorów ceny powyżej progu i nie wykonuje obliczeń dla tej funkcji.",
+              "high_price_threshold": "Używany przez sensory \"Cena Powyżej Progu\"."
             }
           }
         }
@@ -82,28 +101,28 @@
           "pricing": {
             "name": "Podstawowe ustawienia",
             "data": {
+              "lite_mode": "Tryb Lite",
               "price_unit": "Jednostka",
               "use_hourly_prices": "Średnie ceny godzinowe",
-              "use_gross_prices": "Ceny brutto (z VAT)",
-              "low_price_threshold": "Próg niskiej ceny",
-              "high_price_threshold": "Próg wysokiej ceny"
+              "use_gross_prices": "Ceny brutto (z VAT)"
             },
             "data_description": {
+              "lite_mode": "Publikuje tylko sensory aktualnej ceny i ceny jutro. Wszystkie statystyki, sensory okresów, Kompas Energetyczny, okna własne, sensory progów oraz wszystkie binary sensory są wyłączone.",
               "price_unit": "UWAGA! Po zmianie, statystyki mogą mieszać starą i nową jednostkę. Po przełączeniu zaktualizuj automatyzacje oraz progi niskiej i wysokiej ceny.",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
-              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach",
-              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\"",
-              "high_price_threshold": "Używany przez sensory \"Cena Powyżej Progu\""
+              "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach"
             }
           },
           "cheapest_window": {
             "name": "Okno tanich godzin",
             "data": {
+              "enable_cheapest_window": "Włącz okno tanich godzin",
               "cheapest_time_window_start": "Początek przeszukiwania",
               "cheapest_time_window_end": "Koniec przeszukiwania",
               "cheapest_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
+              "enable_cheapest_window": "Po wyłączeniu integracja nie publikuje sensorów taniego okna i nie wykonuje obliczeń dla tej funkcji.",
               "cheapest_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
               "cheapest_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
               "cheapest_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
@@ -112,11 +131,13 @@
           "expensive_window": {
             "name": "Okno drogich godzin",
             "data": {
+              "enable_expensive_window": "Włącz okno drogich godzin",
               "expensive_time_window_start": "Początek przeszukiwania",
               "expensive_time_window_end": "Koniec przeszukiwania",
               "expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
+              "enable_expensive_window": "Po wyłączeniu integracja nie publikuje sensorów drogiego okna i nie wykonuje obliczeń dla tej funkcji.",
               "expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
               "expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
               "expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
@@ -125,14 +146,31 @@
           "second_expensive_window": {
             "name": "Drugie okno drogich godzin",
             "data": {
+              "enable_second_expensive_window": "Włącz drugie okno drogich godzin",
               "second_expensive_time_window_start": "Początek przeszukiwania",
               "second_expensive_time_window_end": "Koniec przeszukiwania",
               "second_expensive_window_duration_hours": "Długość poszukiwanego okna"
             },
             "data_description": {
+              "enable_second_expensive_window": "Po wyłączeniu integracja nie publikuje sensorów drugiego drogiego okna i nie wykonuje obliczeń dla tej funkcji.",
               "second_expensive_time_window_start": "Początek zakresu przeszukiwania. Tylko w obrębie jednego dnia kalendarzowego.",
               "second_expensive_time_window_end": "Koniec zakresu przeszukiwania. Wartość 00:00 oznacza koniec tego samego dnia kalendarzowego.",
               "second_expensive_window_duration_hours": "Długość szukanego ciągłego okna. Nie może być dłuższa niż wybrany zakres przeszukiwania."
+            }
+          },
+          "thresholds": {
+            "name": "Progi cenowe",
+            "data": {
+              "enable_low_price_threshold": "Włącz próg niskiej ceny",
+              "low_price_threshold": "Próg niskiej ceny",
+              "enable_high_price_threshold": "Włącz próg wysokiej ceny",
+              "high_price_threshold": "Próg wysokiej ceny"
+            },
+            "data_description": {
+              "enable_low_price_threshold": "Po wyłączeniu integracja nie publikuje sensorów ceny poniżej progu i nie wykonuje obliczeń dla tej funkcji.",
+              "low_price_threshold": "Używany przez sensory \"Cena Poniżej Progu\".",
+              "enable_high_price_threshold": "Po wyłączeniu integracja nie publikuje sensorów ceny powyżej progu i nie wykonuje obliczeń dla tej funkcji.",
+              "high_price_threshold": "Używany przez sensory \"Cena Powyżej Progu\"."
             }
           }
         }

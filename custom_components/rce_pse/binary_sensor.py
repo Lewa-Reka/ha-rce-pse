@@ -7,6 +7,14 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
+from .options import (
+    is_cheapest_window_enabled,
+    is_expensive_window_enabled,
+    is_high_price_threshold_enabled,
+    is_lite_mode,
+    is_low_price_threshold_enabled,
+    is_second_expensive_window_enabled,
+)
 from .binary_sensors import (
     RCETodayMinPriceWindowBinarySensor,
     RCETodayMaxPriceWindowBinarySensor,
@@ -27,16 +35,37 @@ async def async_setup_entry(
 ) -> None:
     _LOGGER.debug("Setting up RCE PSE binary sensors for config entry: %s", config_entry.entry_id)
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
-    
-    binary_sensors = [
-        RCETodayMinPriceWindowBinarySensor(coordinator),
-        RCETodayMaxPriceWindowBinarySensor(coordinator),
-        RCETodayCheapestWindowBinarySensor(coordinator, config_entry),
-        RCETodayExpensiveWindowBinarySensor(coordinator, config_entry),
-        RCETodaySecondExpensiveWindowBinarySensor(coordinator, config_entry),
-        RCELowPriceThresholdWindowActiveBinarySensor(coordinator, config_entry),
-        RCEHighPriceThresholdWindowActiveBinarySensor(coordinator, config_entry),
-    ]
+
+    binary_sensors = []
+
+    if not is_lite_mode(config_entry):
+        binary_sensors.extend(
+            [
+                RCETodayMinPriceWindowBinarySensor(coordinator),
+                RCETodayMaxPriceWindowBinarySensor(coordinator),
+            ]
+        )
+
+        if is_cheapest_window_enabled(config_entry):
+            binary_sensors.append(RCETodayCheapestWindowBinarySensor(coordinator, config_entry))
+
+        if is_expensive_window_enabled(config_entry):
+            binary_sensors.append(RCETodayExpensiveWindowBinarySensor(coordinator, config_entry))
+
+        if is_second_expensive_window_enabled(config_entry):
+            binary_sensors.append(
+                RCETodaySecondExpensiveWindowBinarySensor(coordinator, config_entry)
+            )
+
+        if is_low_price_threshold_enabled(config_entry):
+            binary_sensors.append(
+                RCELowPriceThresholdWindowActiveBinarySensor(coordinator, config_entry)
+            )
+
+        if is_high_price_threshold_enabled(config_entry):
+            binary_sensors.append(
+                RCEHighPriceThresholdWindowActiveBinarySensor(coordinator, config_entry)
+            )
     
     _LOGGER.debug("Adding %d RCE PSE binary sensors to Home Assistant", len(binary_sensors))
     async_add_entities(binary_sensors)

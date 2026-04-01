@@ -8,28 +8,28 @@
           "pricing": {
             "name": "Basic settings",
             "data": {
+              "lite_mode": "Lite mode",
               "price_unit": "Price unit",
               "use_hourly_prices": "Hourly average prices",
-              "use_gross_prices": "Gross prices (with VAT)",
-              "low_price_threshold": "Low sell price threshold",
-              "high_price_threshold": "High sell price threshold"
+              "use_gross_prices": "Gross prices (with VAT)"
             },
             "data_description": {
+              "lite_mode": "Publishes only the current price and tomorrow price sensors. All statistics, period sensors, peak-hour sensors, custom windows, threshold sensors and all binary sensors are disabled.",
               "price_unit": "Unit for all price sensors",
               "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
-              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations",
-              "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors.",
-              "high_price_threshold": "Used by the \"Above-Threshold Price\" sensors."
+              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations"
             }
           },
           "cheapest_window": {
             "name": "Cheap time window",
             "data": {
+              "enable_cheapest_window": "Enable cheap window",
               "cheapest_time_window_start": "Time window start",
               "cheapest_time_window_end": "Time window end",
               "cheapest_window_duration_hours": "Search window duration"
             },
             "data_description": {
+              "enable_cheapest_window": "When disabled, the integration does not publish cheap-window sensors and does not calculate this window.",
               "cheapest_time_window_start": "Start of the search range. Same calendar day only.",
               "cheapest_time_window_end": "End of the search range. Use 00:00 here to mean end of that calendar day.",
               "cheapest_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
@@ -38,11 +38,13 @@
           "expensive_window": {
             "name": "Expensive time window",
             "data": {
+              "enable_expensive_window": "Enable expensive window",
               "expensive_time_window_start": "Time window start",
               "expensive_time_window_end": "Time window end",
               "expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
+              "enable_expensive_window": "When disabled, the integration does not publish expensive-window sensors and does not calculate this window.",
               "expensive_time_window_start": "Start of the search range. Same calendar day only.",
               "expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
               "expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
@@ -51,14 +53,31 @@
           "second_expensive_window": {
             "name": "Second expensive time window",
             "data": {
+              "enable_second_expensive_window": "Enable second expensive window",
               "second_expensive_time_window_start": "Time window start",
               "second_expensive_time_window_end": "Time window end",
               "second_expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
+              "enable_second_expensive_window": "When disabled, the integration does not publish second-expensive-window sensors and does not calculate this window.",
               "second_expensive_time_window_start": "Start of the search range. Same calendar day only.",
               "second_expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
               "second_expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
+            }
+          },
+          "thresholds": {
+            "name": "Price thresholds",
+            "data": {
+              "enable_low_price_threshold": "Enable low price threshold",
+              "low_price_threshold": "Low sell price threshold",
+              "enable_high_price_threshold": "Enable high price threshold",
+              "high_price_threshold": "High sell price threshold"
+            },
+            "data_description": {
+              "enable_low_price_threshold": "When disabled, the integration does not publish below-threshold sensors and does not calculate this threshold.",
+              "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors.",
+              "enable_high_price_threshold": "When disabled, the integration does not publish above-threshold sensors and does not calculate this threshold.",
+              "high_price_threshold": "Used by the \"Above-Threshold Price\" sensors."
             }
           }
         }
@@ -82,28 +101,28 @@
           "pricing": {
             "name": "Basic settings",
             "data": {
+              "lite_mode": "Lite mode",
               "price_unit": "Price unit",
               "use_hourly_prices": "Hourly average prices",
-              "use_gross_prices": "Gross prices (with VAT)",
-              "low_price_threshold": "Low sell price threshold",
-              "high_price_threshold": "High sell price threshold"
+              "use_gross_prices": "Gross prices (with VAT)"
             },
             "data_description": {
+              "lite_mode": "Publishes only the current price and tomorrow price sensors with attributes containing all prices for that day. All statistics, period sensors, peak-hour sensors, custom windows, threshold sensors and all binary sensors are disabled.",
               "price_unit": "Unit for all price sensors. WARNING! After changing, statistics may mix old and new units. Update automations and the low and high price thresholds when switching between PLN/MWh and PLN/kWh",
               "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
-              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations",
-              "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors.",
-              "high_price_threshold": "Used by the \"Above-Threshold Price\" sensors."
+              "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations"
             }
           },
           "cheapest_window": {
             "name": "Cheap time window",
             "data": {
+              "enable_cheapest_window": "Enable cheap window",
               "cheapest_time_window_start": "Time window start",
               "cheapest_time_window_end": "Time window end",
               "cheapest_window_duration_hours": "Search window duration"
             },
             "data_description": {
+              "enable_cheapest_window": "When disabled, the integration does not publish cheap-window sensors and does not calculate this window.",
               "cheapest_time_window_start": "Start of the search range. Same calendar day only.",
               "cheapest_time_window_end": "End of the search range. Use 00:00 here to mean end of that calendar day.",
               "cheapest_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
@@ -112,11 +131,13 @@
           "expensive_window": {
             "name": "Expensive time window",
             "data": {
+              "enable_expensive_window": "Enable expensive window",
               "expensive_time_window_start": "Time window start",
               "expensive_time_window_end": "Time window end",
               "expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
+              "enable_expensive_window": "When disabled, the integration does not publish expensive-window sensors and does not calculate this window.",
               "expensive_time_window_start": "Start of the search range. Same calendar day only.",
               "expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
               "expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
@@ -125,14 +146,31 @@
           "second_expensive_window": {
             "name": "Second expensive time window",
             "data": {
+              "enable_second_expensive_window": "Enable second expensive window",
               "second_expensive_time_window_start": "Time window start",
               "second_expensive_time_window_end": "Time window end",
               "second_expensive_window_duration_hours": "Search window duration"
             },
             "data_description": {
+              "enable_second_expensive_window": "When disabled, the integration does not publish second-expensive-window sensors and does not calculate this window.",
               "second_expensive_time_window_start": "Start of the search range. Same calendar day only.",
               "second_expensive_time_window_end": "End of the search range. Value 00:00 means end of that calendar day.",
               "second_expensive_window_duration_hours": "Length of the continuous window to find. Must fit inside the search range."
+            }
+          },
+          "thresholds": {
+            "name": "Price thresholds",
+            "data": {
+              "enable_low_price_threshold": "Enable low price threshold",
+              "low_price_threshold": "Low sell price threshold",
+              "enable_high_price_threshold": "Enable high price threshold",
+              "high_price_threshold": "High sell price threshold"
+            },
+            "data_description": {
+              "enable_low_price_threshold": "When disabled, the integration does not publish below-threshold sensors and does not calculate this threshold.",
+              "low_price_threshold": "Used by the \"Below-Threshold Price\" sensors.",
+              "enable_high_price_threshold": "When disabled, the integration does not publish above-threshold sensors and does not calculate this threshold.",
+              "high_price_threshold": "Used by the \"Above-Threshold Price\" sensors."
             }
           }
         }

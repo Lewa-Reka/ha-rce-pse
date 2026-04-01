@@ -2,6 +2,8 @@
 
 Jednostka cen (PLN/MWh lub PLN/kWh) wynika z [konfiguracji](KONFIGURACJA.md) integracji; sensory cenowe używają tej samej jednostki. Wyświetlane kwoty są zaokrąglane do dwóch miejsc po przecinku.
 
+Po włączeniu trybu Lite dostępne pozostają wyłącznie sensory **Cena** i **Cena jutro**. Wszystkie sekcje poniżej są wtedy wyłączone i nie publikują encji.
+
 ## Sensory główne
 
 - **Cena** – aktualna cena energii (atrybut: wszystkie ceny na dziś)
@@ -53,6 +55,8 @@ Możliwe stany (wyświetlane jako tekst w języku interfejsu):
 ## Sensory konfigurowalnych okien czasowych
 
 Zależą od ustawień w [Konfiguracja](KONFIGURACJA.md). Zakres przeszukiwania jest w formacie **HH:MM** (skok 15 minut); **00:00** jako **koniec** zakresu oznacza koniec tego samego dnia kalendarzowego w danych PSE, a nie północ na początku dnia. Timestamp **końca** okna odpowiada końcowi ostatniego kwadransu w wybranym bloku (nie „00:00” jako godzina tego samego dnia w błędnym sensie).
+
+Jeśli przełącznik danego okna albo progu jest wyłączony, odpowiadające mu sensory i binary sensory nie są tworzone.
 
 ### Dzisiaj
 

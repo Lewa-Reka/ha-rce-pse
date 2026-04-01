@@ -1,12 +1,26 @@
 # Konfiguracja
 
-Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. Ustawienia są pogrupowane w sekcje (ceny, okna najtańszych i najdroższych godzin, drugi szczyt cenowy), żeby łatwiej było nawigować po formularzu.
+Po zainstalowaniu integracji możesz ją skonfigurować w interfejsie Home Assistant. Ustawienia są pogrupowane w sekcje (ustawienia podstawowe, okna najtańszych i najdroższych godzin, drugi szczyt cenowy, progi cenowe), żeby łatwiej było nawigować po formularzu.
 
 ## Opcje konfiguracji
+
+### Tryb Lite
+
+Tryb Lite upraszcza integrację do absolutnego minimum. Po jego włączeniu publikowane są tylko dwa sensory:
+
+- **Cena**
+- **Cena jutro**
+
+W tym trybie integracja nie publikuje żadnych innych sensorów ani binary sensorów. Obejmuje to statystyki, sensory poprzedniego i następnego okresu, Kompas Energetyczny, wszystkie okna konfigurowalne, wszystkie sensory progów cenowych oraz wszystkie binary sensory. Wyłączenie tych funkcji oznacza też brak ich obliczeń.
+
+- **Tryb Lite**: *domyślnie* wyłączony
 
 ### Ustawienia najtańszych godzin
 
 Określają, w jakim przedziale szukać najbardziej ekonomicznych okresów. Wartości są w formacie **HH:MM** ze skokiem **15 minut** (00, 15, 30, 45). Zakres przeszukiwania dotyczy **jednego dnia kalendarzowego** — nie da się ustawić jednego ciągłego okna „od wieczora do rana następnego dnia” (np. 22:00–06:00); takie scenariusze rozwiązuj dwoma osobnymi zakresami lub inną logiką w automatyzacji.
+
+- **Włącz okno tanich godzin**: *domyślnie* tak  
+  - *Po wyłączeniu:* integracja nie publikuje sensorów taniego okna ani odpowiadającego binary sensora i nie wykonuje obliczeń dla tej funkcji
 
 - **Początek przeszukiwania** (HH:MM): od której chwili szukać najtańszego ciągłego okna  
   - *Domyślnie:* 00:00  
@@ -25,6 +39,8 @@ Określają, w jakim przedziale szukać najbardziej ekonomicznych okresów. Wart
 
 Określają wyszukiwanie najdroższych okresów (np. do unikania szczytu). Te same zasady co wyżej: **HH:MM**, skok 15 minut, koniec **00:00** = koniec dnia.
 
+- **Włącz okno drogich godzin**: *domyślnie* tak  
+  - *Po wyłączeniu:* integracja nie publikuje sensorów drogiego okna ani odpowiadającego binary sensora i nie wykonuje obliczeń dla tej funkcji
 - **Początek przeszukiwania** – *domyślnie* 00:00  
 - **Koniec przeszukiwania** – *domyślnie* 00:00 (cały dzień)  
 - **Długość poszukiwanego okna** – *domyślnie* 02:00
@@ -33,6 +49,8 @@ Określają wyszukiwanie najdroższych okresów (np. do unikania szczytu). Te sa
 
 Osobne okno do wyznaczenia drugiego szczytu (np. poranek vs wieczór):
 
+- **Włącz drugie okno drogich godzin**: *domyślnie* tak  
+  - *Po wyłączeniu:* integracja nie publikuje sensorów drugiego drogiego okna ani odpowiadającego binary sensora i nie wykonuje obliczeń dla tej funkcji
 - **Początek przeszukiwania** – *domyślnie* 06:00  
 - **Koniec przeszukiwania** – *domyślnie* 10:00  
 - **Długość poszukiwanego okna** – *domyślnie* 02:00
@@ -74,15 +92,21 @@ Sensor ceny sprzedaży prosumenta (`rce_pse_today_prosumer_selling_price`) zawsz
 
 Oba progi są w **tej samej jednostce co wybrana jednostka ceny** (PLN/MWh lub PLN/kWh). Działają jak lustro: niski próg wyznacza ciągłe okresy z ceną **≤** progu, wysoki — z ceną **≥** progu (kwadrans po kwadransie, w kolejności czasu w obrębie każdego dnia kalendarzowego w danych).
 
+Konfiguracja progów jest zebrana w osobnej sekcji formularza. Każdy próg ma własny przełącznik, więc można niezależnie włączyć lub wyłączyć logikę dla ceny poniżej progu i ceny powyżej progu.
+
 **Próg niskiej ceny sprzedaży** — sensory timestamp „Cena poniżej progu” (początek/koniec) wskazują okno względem bieżącej chwili: jeśli któreś okno (z ceną ≤ progu) właśnie trwa, pokazywane jest ono; w przeciwnym razie — okno z najwcześniejszym początkiem spośród przyszłych okien **dzisiaj i jutro** (jeśli w `raw_data` są już rekordy na jutro). Binary sensor „Cena poniżej progu aktywna” ma stan `on`, gdy **aktualna cena** (ta sama wartość co główny sensor „Cena”) jest **≤** progowi.
 
 **Próg wysokiej ceny sprzedaży** — analogicznie sensory „Cena powyżej progu” (początek/koniec); binary „Cena powyżej progu aktywna” ma stan `on`, gdy aktualna cena jest **≥** progowi.
 
 Gdy nie ma ani trwającego, ani przyszłego pasującego okna w dostępnych danych (np. wszystkie okna już minęły albo brak kwadransów spełniających próg), odpowiednie sensory timestamp mają stan „unknown”; integracja działa normalnie. Brak jeszcze opublikowanych cen na jutro ogranicza wybór do okien z dzisiejszego dnia — tak jak przy innych sensorach zależnych od danych następnego dnia.
 
+- **Włącz próg niskiej ceny**: *domyślnie* tak  
+  - *Po wyłączeniu:* integracja nie publikuje sensorów „Cena poniżej progu” ani odpowiadającego binary sensora i nie wykonuje obliczeń dla tej funkcji
 - **Próg niskiej ceny sprzedaży**: w formularzu zakres -3000…3000 (ta sama skala co jednostka ceny).  
   - *Domyślnie:* 0
 
+- **Włącz próg wysokiej ceny**: *domyślnie* tak  
+  - *Po wyłączeniu:* integracja nie publikuje sensorów „Cena powyżej progu” ani odpowiadającego binary sensora i nie wykonuje obliczeń dla tej funkcji
 - **Próg wysokiej ceny sprzedaży**: ten sam zakres liczbowy.  
   - *Domyślnie:* 3000 (zwykle poza typowymi cenami RCE, więc sensowny punkt startowy do ręcznego obniżenia progu)
 
@@ -118,7 +142,7 @@ Integracja przeładuje się z nowymi ustawieniami. Po zmianie m.in. jednostki ce
 
 ## Dodatkowe sensory przy własnych oknach
 
-Po skonfigurowaniu okien integracja udostępnia m.in.:
+Po skonfigurowaniu i włączeniu okien integracja udostępnia m.in.:
 
 **Dzisiaj:**  
 - Tanie Okno Dzisiaj Początek/Koniec, Tanie Okno Dzisiaj Średnia  
