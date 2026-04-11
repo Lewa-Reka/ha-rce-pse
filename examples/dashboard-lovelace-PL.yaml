@@ -1,0 +1,509 @@
+views:
+  - title: Ceny Energii
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 📊 Ceny Energii - 48h
+              show_states: true
+              colorize_states: true
+            grid_options:
+              columns: 24
+            graph_span: 48h
+            cache: true
+            experimental:
+              color_threshold: true
+            span:
+              start: day
+            yaxis:
+              - id: price
+                decimals: 0
+                apex_config:
+                  title:
+                    text: Cena [PLN/MWh]
+                    style:
+                      fontWeight: 400
+            apex_config:
+              chart:
+                height: 300
+              dataLabels:
+                enabled: false
+              stroke:
+                width: 6
+                curve: monotoneCubic
+              tooltip:
+                enabled: true
+                theme: dark
+                x:
+                  format: dd MMM HH:mm
+              annotations:
+                yaxis:
+                  - "y": 200
+                    borderColor: "#10B981"
+                    strokeDashArray: 4
+                    label:
+                      text: Nieskie ceny
+                      style:
+                        color: "#FFFFFF"
+                        background: "#059669"
+                        fontWeight: bold
+                  - "y": 600
+                    borderColor: "#F97316"
+                    strokeDashArray: 4
+                    label:
+                      text: Wysokie ceny
+                      style:
+                        color: "#FFFFFF"
+                        background: "#C2410C"
+                        fontWeight: bold
+            series:
+              - entity: sensor.rce_pse_cena
+                attribute: prices
+                name: Cena bieżąca
+                yaxis_id: price
+                type: line
+                color: "#F59E0B"
+                time_delta: "-15min"
+                stroke_width: 0
+                opacity: 1
+                extend_to: false
+                color_threshold:
+                  - value: -100
+                    color: "#3B82F6"
+                  - value: 0
+                    color: "#06B6D4"
+                  - value: 200
+                    color: "#10B981"
+                  - value: 400
+                    color: "#FBBF24"
+                  - value: 600
+                    color: "#F97316"
+                  - value: 800
+                    color: "#EF4444"
+                data_generator: |
+                  return entity.attributes.prices.map((entry) => {
+                    return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+                  });
+                show:
+                  extremas: true
+                  in_header: after_now
+                  legend_value: false
+              - entity: sensor.rce_pse_cena_jutro
+                attribute: prices
+                name: Cena jutro
+                yaxis_id: price
+                type: line
+                color: "#8B5CF6"
+                time_delta: "-15min"
+                stroke_width: 0
+                opacity: 0.7
+                extend_to: end
+                color_threshold:
+                  - value: -100
+                    color: "#3B82F6"
+                  - value: 0
+                    color: "#06B6D4"
+                  - value: 200
+                    color: "#10B981"
+                  - value: 400
+                    color: "#FBBF24"
+                  - value: 600
+                    color: "#F97316"
+                  - value: 800
+                    color: "#EF4444"
+                data_generator: |
+                  return entity.attributes.prices.map((entry) => {
+                    return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+                  });
+                show:
+                  extremas: true
+                  in_header: false
+                  legend_value: false
+              - entity: sensor.rce_pse_cena_sprzedazy_prosument
+                name: Cena sprzedaży (prosument)
+                yaxis_id: price
+                type: line
+                color: "#27AE60"
+                stroke_width: 1
+                extend_to: end
+                show:
+                  in_chart: false
+                  legend_value: true
+                  in_header: raw
+              - entity: sensor.rce_pse_srednia_cena_dzisiaj
+                name: Średnia dzisiaj
+                yaxis_id: price
+                type: line
+                color: "#3498DB"
+                stroke_width: 1
+                extend_to: end
+                show:
+                  in_chart: false
+                  legend_value: true
+                  in_header: raw
+              - entity: sensor.rce_pse_jutro_vs_dzisiaj_srednia
+                name: Jutro vs Dzisiaj (średnia)
+                yaxis_id: price
+                type: line
+                color: "#0D9488"
+                stroke_width: 1
+                extend_to: end
+                show:
+                  in_chart: false
+                  legend_value: true
+                  in_header: raw
+            now:
+              show: true
+              label: Teraz
+              color: "#06B6D4"
+        column_span: 2
+      - type: grid
+        column_span: 1
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: heading
+                heading: Dziś
+                heading_style: title
+                badges:
+                  - type: entity
+                    show_state: true
+                    show_icon: true
+                    entity: binary_sensor.rce_pse_drugie_drogie_okno_aktywne
+                    color: state
+                    name: Drogie rano
+                  - type: entity
+                    entity: binary_sensor.rce_pse_drogie_okno_aktywne
+                    show_state: true
+                    show_icon: true
+                    color: state
+                    name: Drogie wieczór
+                  - type: entity
+                    entity: binary_sensor.rce_pse_tanie_okno_aktywne
+                    show_state: true
+                    show_icon: true
+                    color: state
+                    name: Tanie
+              - type: markdown
+                text_only: true
+                card_size: 2
+                entity_id:
+                  - sensor.rce_pse_cena
+                content: >
+                  <table role="presentation">
+
+                  <tr>
+
+                  <td width="40"><ha-icon
+                  icon="mdi:calendar-today"></ha-icon></td>
+
+                  <td><h1>{{ as_timestamp(now()) | timestamp_custom('%d.%m.%Y',
+                  local=True) }}</h1></td>
+
+                  </tr>
+
+                  </table>
+              - type: tile
+                entity: sensor.rce_pse_srednia_cena_dzisiaj
+                name: Średnia dziś
+                icon: mdi:chart-timeline-variant-shimmer
+                color: cyan
+                vertical: true
+              - type: grid
+                square: false
+                columns: 2
+                cards:
+                  - type: tile
+                    entity: sensor.rce_pse_minimalna_cena_dzisiaj
+                    name: Min
+                    icon: mdi:arrow-collapse-down
+                    color: green
+                  - type: tile
+                    entity: sensor.rce_pse_maksymalna_cena_dzisiaj
+                    name: Max
+                    icon: mdi:arrow-collapse-up
+                    color: red
+                  - type: tile
+                    entity: sensor.rce_pse_mediana_cen_dzisiaj
+                    name: Mediana
+                    icon: mdi:chart-bell-curve
+                    color: amber
+                  - type: tile
+                    entity: sensor.rce_pse_aktualna_vs_srednia_dzisiaj
+                    name: vs średnia
+                    icon: mdi:percent
+                    color: primary
+              - type: markdown
+                text_only: true
+                card_size: 4
+                entity_id:
+                  - sensor.rce_pse_drugie_drogie_okno_dzisiaj_poczatek
+                  - sensor.rce_pse_drugie_drogie_okno_dzisiaj_koniec
+                  - sensor.rce_pse_drugie_drogie_okno_srednia_cena_dzisiaj
+                  - sensor.rce_pse_drogie_okno_dzisiaj_poczatek
+                  - sensor.rce_pse_drogie_okno_dzisiaj_koniec
+                  - sensor.rce_pse_drogie_okno_srednia_cena_dzisiaj
+                  - sensor.rce_pse_tanie_okno_dzisiaj_poczatek
+                  - sensor.rce_pse_tanie_okno_dzisiaj_koniec
+                  - sensor.rce_pse_tanie_okno_srednia_cena_dzisiaj
+                  - sensor.rce_pse_cena
+                content: |
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in ['unknown','unavailable','none',''] and v is not none %}{{ as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{% else %}—{% endif %}{% endmacro %}
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e) %}{% if a not in ['unknown','unavailable','none',''] and b not in ['unknown','unavailable','none',''] and a is not none and b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{% endmacro %}
+                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else %}—{% endif %}{% endmacro %}
+                  {% set uom = state_attr('sensor.rce_pse_cena', 'unit_of_measurement') or 'PLN/MWh' %}
+                  <table role="presentation" style="width:100%;border-collapse:collapse;font-size:0.92em;line-height:1.22;">
+                  <tr>
+                  <td style="width:32px;padding:0 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-up"></ha-icon></td>
+                  <td style="padding:0 0 3px 0;"><strong>Drogie rano</strong> {{ w('sensor.rce_pse_drugie_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drugie_drogie_okno_dzisiaj_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_dzisiaj') }} {{ uom }}</span></td>
+                  </tr>
+                  <tr>
+                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-down"></ha-icon></td>
+                  <td style="padding:2px 0 3px 0;"><strong>Drogie wieczór</strong> {{ w('sensor.rce_pse_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drogie_okno_dzisiaj_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drogie_okno_srednia_cena_dzisiaj') }} {{ uom }}</span></td>
+                  </tr>
+                  <tr>
+                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:leaf-circle"></ha-icon></td>
+                  <td style="padding:2px 0 0 0;"><strong>Tanie</strong> {{ w('sensor.rce_pse_tanie_okno_dzisiaj_poczatek','sensor.rce_pse_tanie_okno_dzisiaj_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_tanie_okno_srednia_cena_dzisiaj') }} {{ uom }}</span></td>
+                  </tr>
+                  </table>
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    text_only: true
+                    card_size: 3
+                    show_empty: false
+                    entity_id:
+                      - sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek
+                      - sensor.rce_pse_najnizsza_cena_dzisiaj_koniec
+                      - sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek
+                      - sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec
+                    content: >
+                      {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                      ['unknown','unavailable','none',''] and v is not none %}{{
+                      as_timestamp(v) | timestamp_custom('%H:%M', local=True)
+                      }}{% else %}—{% endif %}{% endmacro %}
+
+                      {% macro w(s,e) %}{% set a = states(s) %}{% set b =
+                      states(e) %}{% if a not in
+                      ['unknown','unavailable','none',''] and b not in
+                      ['unknown','unavailable','none',''] and a is not none and
+                      b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif
+                      %}{% endmacro %}
+
+                      {% if
+                      has_value('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek')
+                      or
+                      has_value('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek')
+                      %}
+
+                      <table role="presentation">
+
+                      <tr>
+
+                      <td width="40"><ha-icon
+                      icon="mdi:chart-scatter-plot"></ha-icon></td>
+
+                      <td>
+
+                      <h3>PSE · okresy ekstremów</h3>
+
+                      <p><strong>Najniższa cena:</strong> {{
+                      w('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek','sensor.rce_pse_najnizsza_cena_dzisiaj_koniec')
+                      }}</p>
+
+                      <p><strong>Najwyższa cena:</strong> {{
+                      w('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek','sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec')
+                      }}</p>
+
+                      </td>
+
+                      </tr>
+
+                      </table>
+
+                      {% endif %}
+                  - type: tile
+                    entity: sensor.rce_pse_kompas_energetyczny_dzisiaj
+                    name: Kompas energetyczny
+                    icon: mdi:compass-outline
+                    color: purple
+                    vertical: true
+      - type: grid
+        column_span: 1
+        cards:
+          - type: vertical-stack
+            visibility:
+              - condition: state
+                entity: sensor.rce_pse_cena_jutro
+                state_not: unavailable
+              - condition: state
+                entity: sensor.rce_pse_cena_jutro
+                state_not: unknown
+            cards:
+              - type: heading
+                heading: Jutro
+                heading_style: title
+              - type: markdown
+                text_only: true
+                card_size: 2
+                entity_id:
+                  - sensor.rce_pse_cena_jutro
+                  - sensor.rce_pse_cena
+                content: >
+                  <table role="presentation">
+
+                  <tr>
+
+                  <td width="44"><ha-icon
+                  icon="mdi:calendar-arrow-right"></ha-icon></td>
+
+                  <td><h1>{{ as_timestamp(now() + timedelta(days=1)) |
+                  timestamp_custom('%d.%m.%Y', local=True) }}</h1></td>
+
+                  </tr>
+
+                  </table>
+              - type: tile
+                entity: sensor.rce_pse_srednia_cena_jutro
+                name: Średnia jutro
+                icon: mdi:chart-timeline-variant-shimmer
+                color: purple
+                vertical: true
+              - type: grid
+                square: false
+                columns: 2
+                cards:
+                  - type: tile
+                    entity: sensor.rce_pse_minimalna_cena_jutro
+                    name: Min
+                    icon: mdi:arrow-collapse-down
+                    color: green
+                  - type: tile
+                    entity: sensor.rce_pse_maksymalna_cena_jutro
+                    name: Max
+                    icon: mdi:arrow-collapse-up
+                    color: red
+                  - type: tile
+                    entity: sensor.rce_pse_mediana_cen_jutro
+                    name: Mediana
+                    icon: mdi:chart-bell-curve
+                    color: amber
+                  - type: tile
+                    entity: sensor.rce_pse_jutro_vs_dzisiaj_srednia
+                    name: Jutro vs śr. dziś
+                    icon: mdi:delta
+                    color: teal
+              - type: markdown
+                text_only: true
+                card_size: 4
+                entity_id:
+                  - sensor.rce_pse_drugie_drogie_okno_jutro_poczatek
+                  - sensor.rce_pse_drugie_drogie_okno_jutro_koniec
+                  - sensor.rce_pse_drugie_drogie_okno_srednia_cena_jutro
+                  - sensor.rce_pse_drogie_okno_jutro_poczatek
+                  - sensor.rce_pse_drogie_okno_jutro_koniec
+                  - sensor.rce_pse_drogie_okno_srednia_cena_jutro
+                  - sensor.rce_pse_tanie_okno_jutro_poczatek
+                  - sensor.rce_pse_tanie_okno_jutro_koniec
+                  - sensor.rce_pse_tanie_okno_srednia_cena_jutro
+                  - sensor.rce_pse_cena
+                content: |
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in ['unknown','unavailable','none',''] and v is not none %}{{ as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{% else %}—{% endif %}{% endmacro %}
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e) %}{% if a not in ['unknown','unavailable','none',''] and b not in ['unknown','unavailable','none',''] and a is not none and b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{% endmacro %}
+                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else %}—{% endif %}{% endmacro %}
+                  {% set uom = state_attr('sensor.rce_pse_cena', 'unit_of_measurement') or 'PLN/MWh' %}
+                  <table role="presentation" style="width:100%;border-collapse:collapse;font-size:0.92em;line-height:1.22;">
+                  <tr>
+                  <td style="width:32px;padding:0 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-up"></ha-icon></td>
+                  <td style="padding:0 0 3px 0;"><strong>Drogie rano</strong> {{ w('sensor.rce_pse_drugie_drogie_okno_jutro_poczatek','sensor.rce_pse_drugie_drogie_okno_jutro_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_jutro') }} {{ uom }}</span></td>
+                  </tr>
+                  <tr>
+                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-down"></ha-icon></td>
+                  <td style="padding:2px 0 3px 0;"><strong>Drogie wieczór</strong> {{ w('sensor.rce_pse_drogie_okno_jutro_poczatek','sensor.rce_pse_drogie_okno_jutro_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drogie_okno_srednia_cena_jutro') }} {{ uom }}</span></td>
+                  </tr>
+                  <tr>
+                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:leaf-circle"></ha-icon></td>
+                  <td style="padding:2px 0 0 0;"><strong>Tanie</strong> {{ w('sensor.rce_pse_tanie_okno_jutro_poczatek','sensor.rce_pse_tanie_okno_jutro_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_tanie_okno_srednia_cena_jutro') }} {{ uom }}</span></td>
+                  </tr>
+                  </table>
+              - type: vertical-stack
+                cards:
+                  - type: markdown
+                    text_only: true
+                    card_size: 3
+                    show_empty: false
+                    entity_id:
+                      - sensor.rce_pse_najnizsza_cena_jutro_poczatek
+                      - sensor.rce_pse_najnizsza_cena_jutro_koniec
+                      - sensor.rce_pse_najwyzsza_cena_jutro_poczatek
+                      - sensor.rce_pse_najwyzsza_cena_jutro_koniec
+                    content: >
+                      {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                      ['unknown','unavailable','none',''] and v is not none %}{{
+                      as_timestamp(v) | timestamp_custom('%H:%M', local=True)
+                      }}{% else %}—{% endif %}{% endmacro %}
+
+                      {% macro w(s,e) %}{% set a = states(s) %}{% set b =
+                      states(e) %}{% if a not in
+                      ['unknown','unavailable','none',''] and b not in
+                      ['unknown','unavailable','none',''] and a is not none and
+                      b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif
+                      %}{% endmacro %}
+
+                      {% if
+                      has_value('sensor.rce_pse_najnizsza_cena_jutro_poczatek')
+                      or
+                      has_value('sensor.rce_pse_najwyzsza_cena_jutro_poczatek')
+                      %}
+
+                      <table role="presentation">
+
+                      <tr>
+
+                      <td width="40"><ha-icon
+                      icon="mdi:chart-scatter-plot"></ha-icon></td>
+
+                      <td>
+
+                      <h3>PSE · okresy ekstremów</h3>
+
+                      <p><strong>Najniższa cena:</strong> {{
+                      w('sensor.rce_pse_najnizsza_cena_jutro_poczatek','sensor.rce_pse_najnizsza_cena_jutro_koniec')
+                      }}</p>
+
+                      <p><strong>Najwyższa cena:</strong> {{
+                      w('sensor.rce_pse_najwyzsza_cena_jutro_poczatek','sensor.rce_pse_najwyzsza_cena_jutro_koniec')
+                      }}</p>
+
+                      </td>
+
+                      </tr>
+
+                      </table>
+
+                      {% endif %}
+                  - type: tile
+                    entity: sensor.rce_pse_kompas_energetyczny_jutro
+                    name: Kompas energetyczny
+                    icon: mdi:compass-outline
+                    color: purple
+                    vertical: true
+          - type: markdown
+            text_only: true
+            card_size: 3
+            entity_id:
+              - sensor.rce_pse_cena_jutro
+            content: >
+              > **Publikacja danych na jutro (PSE)**  
+
+              > Ceny na kolejny dzień są zwykle dostępne **po godzinie 14:00**.
+              Do tego czasu encje „jutro” mogą mieć stan `unknown` /
+              `unavailable`.
+            visibility:
+              - condition: state
+                entity: sensor.rce_pse_cena_jutro
+                state: unknown

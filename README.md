@@ -39,6 +39,14 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 3. Ustaw opcje cenowe, tryb Lite, okna czasowe i progi cenowe (szczegóły: [Konfiguracja](docs/KONFIGURACJA.md))
 4. **Zapisz**
 
+### Przykładowy dashboard Lovelace
+
+![Przykładowy pulpit Lovelace](examples/img/dashboard-lovelace-PL.png)
+
+Kompletny widok (wykres 48h, kolumny Dziś i Jutro) jest w repozytorium jako [examples/dashboard-lovelace-PL.yaml](examples/dashboard-lovelace-PL.yaml). Wymaga karty **ApexCharts Card** z HACS oraz widoku typu **Sekcje**.
+
+Instrukcja importu, wymagania i dopasowanie `entity_id`: [Przykładowy dashboard Lovelace](docs/DASHBOARD-LOVELACE.md).
+
 ## Funkcje
 
 - Bieżąca cena energii: domyślnie okres godzinowy (średnia z kwadransów), opcjonalnie surowe kwadranse 15 min; dane historyczne i prognoza następnego okresu
@@ -57,7 +65,7 @@ Okna tanich/drogich godzin ustawia się w **HH:MM** (skok 15 minut); **00:00** p
 
 - [Konfiguracja](docs/KONFIGURACJA.md) – opcje, przykłady, rekonfiguracja
 - [Sensory](docs/SENSORY.md) – lista sensorów i binary sensorów
-- [Przykłady kart](docs/PRZYKLADY-KART.md) – karty dashboardu (ApexCharts, podstawowy przegląd)
+- [Przykładowy dashboard Lovelace](docs/DASHBOARD-LOVELACE.md) – gotowy widok YAML, ApexCharts, sekcje Dziś/Jutro
 - [Debugowanie](docs/DEBUGOWANIE.md) – logowanie debugowe
 - [Źródło danych](docs/ZRODLO-DANYCH.md) – API PSE, interwał, dostępność
 - [Migracja do v2.0.0](docs/MIGRACJA-V2.md) – zmiany niekompatybilne wstecz i porady migracji
