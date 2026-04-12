@@ -133,9 +133,9 @@ views:
                 show:
                   in_chart: false
                   legend_value: true
-                  in_header: raw
-              - entity: sensor.rce_pse_srednia_cena_dzisiaj
-                name: Średnia dzisiaj
+                  in_header: true
+              - entity: sensor.rce_pse_aktualna_vs_srednia_dzisiaj
+                name: Teraz / Średnia
                 yaxis_id: price
                 type: line
                 color: "#3498DB"
@@ -144,9 +144,9 @@ views:
                 show:
                   in_chart: false
                   legend_value: true
-                  in_header: raw
+                  in_header: true
               - entity: sensor.rce_pse_jutro_vs_dzisiaj_srednia
-                name: Jutro vs Dzisiaj (średnia)
+                name: Jutro / Dzisiaj
                 yaxis_id: price
                 type: line
                 color: "#0D9488"
@@ -155,7 +155,8 @@ views:
                 show:
                   in_chart: false
                   legend_value: true
-                  in_header: raw
+                  in_header: true
+                  null_in_header: false
             now:
               show: true
               label: Teraz
@@ -169,25 +170,26 @@ views:
               - type: heading
                 heading: Dziś
                 heading_style: title
+                icon: mdi:white-balance-sunny
                 badges:
                   - type: entity
                     show_state: true
                     show_icon: true
                     entity: binary_sensor.rce_pse_drugie_drogie_okno_aktywne
                     color: state
-                    name: Drogie rano
+                    name: Trwa poranne drogie okno
                   - type: entity
+                    show_state: true
+                    show_icon: true
                     entity: binary_sensor.rce_pse_drogie_okno_aktywne
-                    show_state: true
-                    show_icon: true
                     color: state
-                    name: Drogie wieczór
+                    name: Trwa wieczorne drogie okno
                   - type: entity
-                    entity: binary_sensor.rce_pse_tanie_okno_aktywne
                     show_state: true
                     show_icon: true
+                    entity: binary_sensor.rce_pse_tanie_okno_aktywne
                     color: state
-                    name: Tanie
+                    name: Trwa tanie okno
               - type: markdown
                 text_only: true
                 card_size: 2
@@ -198,7 +200,7 @@ views:
 
                   <tr>
 
-                  <td width="40"><ha-icon
+                  <td width="44"><ha-icon
                   icon="mdi:calendar-today"></ha-icon></td>
 
                   <td><h1>{{ as_timestamp(now()) | timestamp_custom('%d.%m.%Y',
@@ -207,14 +209,17 @@ views:
                   </tr>
 
                   </table>
+          - type: vertical-stack
+            cards:
               - type: tile
-                entity: sensor.rce_pse_srednia_cena_dzisiaj
-                name: Średnia dziś
-                icon: mdi:chart-timeline-variant-shimmer
-                color: cyan
+                entity: sensor.rce_pse_aktualna_vs_srednia_dzisiaj
+                name: Teraz / Średnia
+                icon: mdi:percent
+                color: primary
                 vertical: true
-              - type: grid
-                square: false
+                features_position: bottom
+              - square: false
+                type: grid
                 columns: 2
                 cards:
                   - type: tile
@@ -228,18 +233,20 @@ views:
                     icon: mdi:arrow-collapse-up
                     color: red
                   - type: tile
+                    entity: sensor.rce_pse_srednia_cena_dzisiaj
+                    name: Średnia dzisiaj
+                    icon: mdi:chart-timeline-variant-shimmer
+                    color: "#F59E0B"
+                    vertical: false
+                    features_position: bottom
+                  - type: tile
                     entity: sensor.rce_pse_mediana_cen_dzisiaj
                     name: Mediana
                     icon: mdi:chart-bell-curve
                     color: amber
-                  - type: tile
-                    entity: sensor.rce_pse_aktualna_vs_srednia_dzisiaj
-                    name: vs średnia
-                    icon: mdi:percent
-                    color: primary
               - type: markdown
                 text_only: true
-                card_size: 4
+                card_size: 8
                 entity_id:
                   - sensor.rce_pse_drugie_drogie_okno_dzisiaj_poczatek
                   - sensor.rce_pse_drugie_drogie_okno_dzisiaj_koniec
@@ -251,108 +258,132 @@ views:
                   - sensor.rce_pse_tanie_okno_dzisiaj_koniec
                   - sensor.rce_pse_tanie_okno_srednia_cena_dzisiaj
                   - sensor.rce_pse_cena
-                content: |
-                  {% macro t(x) %}{% set v = states(x) %}{% if v not in ['unknown','unavailable','none',''] and v is not none %}{{ as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{% else %}—{% endif %}{% endmacro %}
-                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e) %}{% if a not in ['unknown','unavailable','none',''] and b not in ['unknown','unavailable','none',''] and a is not none and b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{% endmacro %}
-                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else %}—{% endif %}{% endmacro %}
-                  {% set uom = state_attr('sensor.rce_pse_cena', 'unit_of_measurement') or 'PLN/MWh' %}
-                  <table role="presentation" style="width:100%;border-collapse:collapse;font-size:0.92em;line-height:1.22;">
-                  <tr>
-                  <td style="width:32px;padding:0 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-up"></ha-icon></td>
-                  <td style="padding:0 0 3px 0;"><strong>Drogie rano</strong> {{ w('sensor.rce_pse_drugie_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drugie_drogie_okno_dzisiaj_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_dzisiaj') }} {{ uom }}</span></td>
-                  </tr>
-                  <tr>
-                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-down"></ha-icon></td>
-                  <td style="padding:2px 0 3px 0;"><strong>Drogie wieczór</strong> {{ w('sensor.rce_pse_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drogie_okno_dzisiaj_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drogie_okno_srednia_cena_dzisiaj') }} {{ uom }}</span></td>
-                  </tr>
-                  <tr>
-                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:leaf-circle"></ha-icon></td>
-                  <td style="padding:2px 0 0 0;"><strong>Tanie</strong> {{ w('sensor.rce_pse_tanie_okno_dzisiaj_poczatek','sensor.rce_pse_tanie_okno_dzisiaj_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_tanie_okno_srednia_cena_dzisiaj') }} {{ uom }}</span></td>
-                  </tr>
-                  </table>
-              - type: vertical-stack
-                cards:
-                  - type: markdown
-                    text_only: true
-                    card_size: 3
-                    show_empty: false
-                    entity_id:
-                      - sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek
-                      - sensor.rce_pse_najnizsza_cena_dzisiaj_koniec
-                      - sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek
-                      - sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec
-                    content: >
-                      {% macro t(x) %}{% set v = states(x) %}{% if v not in
-                      ['unknown','unavailable','none',''] and v is not none %}{{
-                      as_timestamp(v) | timestamp_custom('%H:%M', local=True)
-                      }}{% else %}—{% endif %}{% endmacro %}
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
 
-                      {% macro w(s,e) %}{% set a = states(s) %}{% set b =
-                      states(e) %}{% if a not in
-                      ['unknown','unavailable','none',''] and b not in
-                      ['unknown','unavailable','none',''] and a is not none and
-                      b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif
-                      %}{% endmacro %}
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
 
-                      {% if
-                      has_value('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek')
-                      or
-                      has_value('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek')
-                      %}
+                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else
+                  %}—{% endif %}{% endmacro %}
 
-                      <table role="presentation">
+                  {% set uom = state_attr('sensor.rce_pse_cena',
+                  'unit_of_measurement') or 'PLN/MWh' %}
 
-                      <tr>
+                  <h2>OKNA CENOWE</h2>
 
-                      <td width="40"><ha-icon
-                      icon="mdi:chart-scatter-plot"></ha-icon></td>
+                  <ha-alert alert-type="success" style="display:block;margin:0 0
+                  8px 0;">
 
-                      <td>
+                  <div>Drogie poranne okno</div>
 
-                      <h3>PSE · okresy ekstremów</h3>
+                  <strong>{{
+                  w('sensor.rce_pse_drugie_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drugie_drogie_okno_dzisiaj_koniec')
+                  }}</strong>
 
-                      <p><strong>Najniższa cena:</strong> {{
-                      w('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek','sensor.rce_pse_najnizsza_cena_dzisiaj_koniec')
-                      }}</p>
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_dzisiaj') }}
+                  {{ uom }}</div>
 
-                      <p><strong>Najwyższa cena:</strong> {{
-                      w('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek','sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec')
-                      }}</p>
+                  </ha-alert>
 
-                      </td>
+                  <ha-alert alert-type="success" style="display:block;margin:0 0
+                  8px 0;">
 
-                      </tr>
+                  <div>Drogie wieczorne okno</div>
 
-                      </table>
+                  <strong>{{
+                  w('sensor.rce_pse_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drogie_okno_dzisiaj_koniec')
+                  }}</strong>
 
-                      {% endif %}
-                  - type: tile
-                    entity: sensor.rce_pse_kompas_energetyczny_dzisiaj
-                    name: Kompas energetyczny
-                    icon: mdi:compass-outline
-                    color: purple
-                    vertical: true
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drogie_okno_srednia_cena_dzisiaj') }} {{ uom
+                  }}</div>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="warning">
+
+                  <div>Tanie okno</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_tanie_okno_dzisiaj_poczatek','sensor.rce_pse_tanie_okno_dzisiaj_koniec')
+                  }}</strong>
+
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_tanie_okno_srednia_cena_dzisiaj') }} {{ uom
+                  }}</div>
+
+                  </ha-alert>
+              - type: markdown
+                text_only: true
+                card_size: 5
+                show_empty: false
+                entity_id:
+                  - sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek
+                  - sensor.rce_pse_najnizsza_cena_dzisiaj_koniec
+                  - sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek
+                  - sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
+
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
+
+                  {% if
+                  has_value('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek') or
+                  has_value('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek') %}
+
+                  <h2>EKSTREMA</h2>
+
+                  <ha-alert alert-type="info" style="display:block;margin:0 0
+                  8px 0;">
+
+                  <div>Najniższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek','sensor.rce_pse_najnizsza_cena_dzisiaj_koniec')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="error">
+
+                  <div>Najwyższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek','sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  {% endif %}
       - type: grid
         column_span: 1
         cards:
           - type: vertical-stack
-            visibility:
-              - condition: state
-                entity: sensor.rce_pse_cena_jutro
-                state_not: unavailable
-              - condition: state
-                entity: sensor.rce_pse_cena_jutro
-                state_not: unknown
             cards:
               - type: heading
                 heading: Jutro
                 heading_style: title
+                icon: mdi:weather-night-partly-cloudy
               - type: markdown
                 text_only: true
                 card_size: 2
                 entity_id:
                   - sensor.rce_pse_cena_jutro
-                  - sensor.rce_pse_cena
                 content: >
                   <table role="presentation">
 
@@ -367,12 +398,22 @@ views:
                   </tr>
 
                   </table>
+          - type: vertical-stack
+            visibility:
+              - condition: state
+                entity: sensor.rce_pse_cena_jutro
+                state_not: unavailable
+              - condition: state
+                entity: sensor.rce_pse_cena_jutro
+                state_not: unknown
+            cards:
               - type: tile
-                entity: sensor.rce_pse_srednia_cena_jutro
-                name: Średnia jutro
-                icon: mdi:chart-timeline-variant-shimmer
-                color: purple
+                entity: sensor.rce_pse_jutro_vs_dzisiaj_srednia
+                name: Jutro / Dzisiaj
+                icon: mdi:delta
+                color: teal
                 vertical: true
+                features_position: bottom
               - type: grid
                 square: false
                 columns: 2
@@ -388,18 +429,20 @@ views:
                     icon: mdi:arrow-collapse-up
                     color: red
                   - type: tile
+                    entity: sensor.rce_pse_srednia_cena_jutro
+                    name: Średnia jutro
+                    icon: mdi:chart-timeline-variant-shimmer
+                    color: "#8B5CF6"
+                    vertical: false
+                    features_position: bottom
+                  - type: tile
                     entity: sensor.rce_pse_mediana_cen_jutro
                     name: Mediana
                     icon: mdi:chart-bell-curve
                     color: amber
-                  - type: tile
-                    entity: sensor.rce_pse_jutro_vs_dzisiaj_srednia
-                    name: Jutro vs śr. dziś
-                    icon: mdi:delta
-                    color: teal
               - type: markdown
                 text_only: true
-                card_size: 4
+                card_size: 8
                 entity_id:
                   - sensor.rce_pse_drugie_drogie_okno_jutro_poczatek
                   - sensor.rce_pse_drugie_drogie_okno_jutro_koniec
@@ -411,87 +454,118 @@ views:
                   - sensor.rce_pse_tanie_okno_jutro_koniec
                   - sensor.rce_pse_tanie_okno_srednia_cena_jutro
                   - sensor.rce_pse_cena
-                content: |
-                  {% macro t(x) %}{% set v = states(x) %}{% if v not in ['unknown','unavailable','none',''] and v is not none %}{{ as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{% else %}—{% endif %}{% endmacro %}
-                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e) %}{% if a not in ['unknown','unavailable','none',''] and b not in ['unknown','unavailable','none',''] and a is not none and b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{% endmacro %}
-                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else %}—{% endif %}{% endmacro %}
-                  {% set uom = state_attr('sensor.rce_pse_cena', 'unit_of_measurement') or 'PLN/MWh' %}
-                  <table role="presentation" style="width:100%;border-collapse:collapse;font-size:0.92em;line-height:1.22;">
-                  <tr>
-                  <td style="width:32px;padding:0 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-up"></ha-icon></td>
-                  <td style="padding:0 0 3px 0;"><strong>Drogie rano</strong> {{ w('sensor.rce_pse_drugie_drogie_okno_jutro_poczatek','sensor.rce_pse_drugie_drogie_okno_jutro_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_jutro') }} {{ uom }}</span></td>
-                  </tr>
-                  <tr>
-                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:weather-sunset-down"></ha-icon></td>
-                  <td style="padding:2px 0 3px 0;"><strong>Drogie wieczór</strong> {{ w('sensor.rce_pse_drogie_okno_jutro_poczatek','sensor.rce_pse_drogie_okno_jutro_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_drogie_okno_srednia_cena_jutro') }} {{ uom }}</span></td>
-                  </tr>
-                  <tr>
-                  <td style="padding:2px 6px 0 0;vertical-align:top;line-height:1.1;"><ha-icon icon="mdi:leaf-circle"></ha-icon></td>
-                  <td style="padding:2px 0 0 0;"><strong>Tanie</strong> {{ w('sensor.rce_pse_tanie_okno_jutro_poczatek','sensor.rce_pse_tanie_okno_jutro_koniec') }} <span style="opacity:0.75;">śr. {{ p('sensor.rce_pse_tanie_okno_srednia_cena_jutro') }} {{ uom }}</span></td>
-                  </tr>
-                  </table>
-              - type: vertical-stack
-                cards:
-                  - type: markdown
-                    text_only: true
-                    card_size: 3
-                    show_empty: false
-                    entity_id:
-                      - sensor.rce_pse_najnizsza_cena_jutro_poczatek
-                      - sensor.rce_pse_najnizsza_cena_jutro_koniec
-                      - sensor.rce_pse_najwyzsza_cena_jutro_poczatek
-                      - sensor.rce_pse_najwyzsza_cena_jutro_koniec
-                    content: >
-                      {% macro t(x) %}{% set v = states(x) %}{% if v not in
-                      ['unknown','unavailable','none',''] and v is not none %}{{
-                      as_timestamp(v) | timestamp_custom('%H:%M', local=True)
-                      }}{% else %}—{% endif %}{% endmacro %}
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
 
-                      {% macro w(s,e) %}{% set a = states(s) %}{% set b =
-                      states(e) %}{% if a not in
-                      ['unknown','unavailable','none',''] and b not in
-                      ['unknown','unavailable','none',''] and a is not none and
-                      b is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif
-                      %}{% endmacro %}
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
 
-                      {% if
-                      has_value('sensor.rce_pse_najnizsza_cena_jutro_poczatek')
-                      or
-                      has_value('sensor.rce_pse_najwyzsza_cena_jutro_poczatek')
-                      %}
+                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else
+                  %}—{% endif %}{% endmacro %}
 
-                      <table role="presentation">
+                  {% set uom = state_attr('sensor.rce_pse_cena',
+                  'unit_of_measurement') or 'PLN/MWh' %}
 
-                      <tr>
+                  <h2>OKNA CENOWE</h2>
 
-                      <td width="40"><ha-icon
-                      icon="mdi:chart-scatter-plot"></ha-icon></td>
+                  <ha-alert alert-type="success" style="display:block;margin:0 0
+                  8px 0;">
 
-                      <td>
+                  <div>Drogie poranne okno</div>
 
-                      <h3>PSE · okresy ekstremów</h3>
+                  <strong>{{
+                  w('sensor.rce_pse_drugie_drogie_okno_jutro_poczatek','sensor.rce_pse_drugie_drogie_okno_jutro_koniec')
+                  }}</strong>
 
-                      <p><strong>Najniższa cena:</strong> {{
-                      w('sensor.rce_pse_najnizsza_cena_jutro_poczatek','sensor.rce_pse_najnizsza_cena_jutro_koniec')
-                      }}</p>
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_jutro') }}
+                  {{ uom }}</div>
 
-                      <p><strong>Najwyższa cena:</strong> {{
-                      w('sensor.rce_pse_najwyzsza_cena_jutro_poczatek','sensor.rce_pse_najwyzsza_cena_jutro_koniec')
-                      }}</p>
+                  </ha-alert>
 
-                      </td>
+                  <ha-alert alert-type="success" style="display:block;margin:0 0
+                  8px 0;">
 
-                      </tr>
+                  <div>Drogie wieczorne okno</div>
 
-                      </table>
+                  <strong>{{
+                  w('sensor.rce_pse_drogie_okno_jutro_poczatek','sensor.rce_pse_drogie_okno_jutro_koniec')
+                  }}</strong>
 
-                      {% endif %}
-                  - type: tile
-                    entity: sensor.rce_pse_kompas_energetyczny_jutro
-                    name: Kompas energetyczny
-                    icon: mdi:compass-outline
-                    color: purple
-                    vertical: true
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drogie_okno_srednia_cena_jutro') }} {{ uom
+                  }}</div>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="warning">
+
+                  <div>Tanie okno</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_tanie_okno_jutro_poczatek','sensor.rce_pse_tanie_okno_jutro_koniec')
+                  }}</strong>
+
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_tanie_okno_srednia_cena_jutro') }} {{ uom
+                  }}</div>
+
+                  </ha-alert>
+              - type: markdown
+                text_only: true
+                card_size: 5
+                show_empty: false
+                entity_id:
+                  - sensor.rce_pse_najnizsza_cena_jutro_poczatek
+                  - sensor.rce_pse_najnizsza_cena_jutro_koniec
+                  - sensor.rce_pse_najwyzsza_cena_jutro_poczatek
+                  - sensor.rce_pse_najwyzsza_cena_jutro_koniec
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
+
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
+
+                  {% if
+                  has_value('sensor.rce_pse_najnizsza_cena_jutro_poczatek') or
+                  has_value('sensor.rce_pse_najwyzsza_cena_jutro_poczatek') %}
+
+                  <h2>EKSTREMA</h2>
+
+                  <ha-alert alert-type="info" style="display:block;margin:0 0
+                  8px 0;">
+
+                  <div>Najniższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_najnizsza_cena_jutro_poczatek','sensor.rce_pse_najnizsza_cena_jutro_koniec')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="error">
+
+                  <div>Najwyższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_najwyzsza_cena_jutro_poczatek','sensor.rce_pse_najwyzsza_cena_jutro_koniec')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  {% endif %}
           - type: markdown
             text_only: true
             card_size: 3
@@ -507,3 +581,4 @@ views:
               - condition: state
                 entity: sensor.rce_pse_cena_jutro
                 state: unknown
+    cards: []
