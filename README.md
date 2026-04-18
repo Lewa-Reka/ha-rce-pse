@@ -4,7 +4,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/lewa-reka/ha-rce-pse?style=for-the-badge)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/lewa-reka/ha-rce-pse/tests.yml?style=for-the-badge)
 [![hacs_downloads](https://img.shields.io/github/downloads/lewa-reka/ha-rce-pse/latest/total?style=for-the-badge)](https://github.com/lewa-reka/ha-rce-pse/releases/latest)
-[![License: GNU AGPL v3](https://img.shields.io/badge/License-GNU%20AGPL%20v3-blue?style=for-the-badge)](https://www.gnu.org/licenses/agpl-3.0.html)
+[![License: AGPL-3.0-or-later](https://img.shields.io/badge/License-AGPL--3.0--or--later-blue?style=for-the-badge)](https://spdx.org/licenses/AGPL-3.0-or-later.html)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lewa-reka/ha-rce-pse?style=for-the-badge)
 ![Maintenance](https://img.shields.io/maintenance/yes/2222?style=for-the-badge)
 
@@ -73,7 +73,7 @@ Okna tanich/drogich godzin ustawia się w **HH:MM** (skok 15 minut); **00:00** p
 
 ## Licencja
 
-Projekt na licencji [GNU Affero General Public License w wersji 3](https://www.gnu.org/licenses/agpl-3.0.html) (AGPL-3.0) – pełny tekst w pliku [LICENSE](LICENSE).
+Projekt na licencji [GNU Affero General Public License w wersji 3 lub nowszej](https://spdx.org/licenses/AGPL-3.0-or-later.html) (SPDX: `AGPL-3.0-or-later`) – pełny tekst w pliku [LICENSE](LICENSE).
 
 ## Współpraca
 
