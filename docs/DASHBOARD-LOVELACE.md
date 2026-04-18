@@ -1,6 +1,6 @@
 # Przykładowy dashboard Lovelace
 
-W katalogu [examples/](../examples/) znajduje się gotowy widok Lovelace pod polską instalację Home Assistant: wykres cen 48h, podsumowanie **Dziś** i **Jutro** (kafelki, okna tanich i drogich godzin, PSE, kompas energetyczny).
+W katalogu [examples/](../examples/) znajduje się przykładowy plik Lovelace z **dwoma widokami**: **Ceny Energii** (wykres 48h, podsumowanie Dziś/Jutro, okna cenowe itd.) oraz **Kompas Energetyczny** (`path: kompas-energetyczny`) — siatka godzin PDGSZ **4 kolumny × 6 wierszy**, legenda alertów, sensory `sensor.rce_pse_kompas_energetyczny_dzisiaj` / `sensor.rce_pse_kompas_energetyczny_jutro` (jak w reszcie przykładu: polskie `entity_id`; przy domyślnych ID integracji `sensor.rce_pse_today_peak_hours` / `…_tomorrow_peak_hours` zmień encje w HA lub w YAML).
 
 ![Przykładowy dashboard](../examples/img/dashboard-lovelace-PL.png)
 
@@ -16,7 +16,7 @@ W katalogu [examples/](../examples/) znajduje się gotowy widok Lovelace pod pol
 
 1. **Ustawienia** → **Pulpity** → wybierz pulpit lub utwórz nowy.
 2. **Trzy kropki** przy pulpicie → **Edytuj pulpit** → **Raw configuration editor** (lub dodaj widok i przejdź do edycji YAML widoku).
-3. Wklej zawartość pliku `examples/dashboard-lovelace-PL.yaml` jako **jeden widok** (np. pod `views:` wklejasz element listy zaczynający się od `- title: Ceny Energii`), albo scal z istniejącą strukturą `views:` ręcznie, jeśli masz już inne widoki.
+3. Wklej zawartość pliku `examples/dashboard-lovelace-PL.yaml` pod `views:` (oba wpisy listy: **Ceny Energii** i **Kompas Energetyczny**) albo scal wybrane widoki z istniejącą konfiguracją `views:` ręcznie.
 
 Po zapisaniu odśwież przeglądarkę. Jeśli Home Assistant zgłosi błąd składni YAML, sprawdź wcięcia — kopiowanie z edytora z numerami linii bywa zdradliwe.
 
