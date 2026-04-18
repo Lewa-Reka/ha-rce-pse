@@ -1,5 +1,7 @@
 # Wersja 2.0.0 – zmiany niekompatybilne wstecz i migracja
 
+**Licencja:** od wersji 2.0.0 kod jest na [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html) (AGPL-3.0). Wcześniejsze wydania były na Apache License 2.0. Pełny tekst licencji: plik [LICENSE](../LICENSE) w repozytorium.
+
 W wersji 2.0.0 wprowadzono istotne zmiany w sensorach: sensory związane z czasem zwracają wyłącznie **timestampy** (datetime). Usunięto sensory tekstowe (np. godzina jako `"11:00"`) oraz sensory zwracające zakresy jako tekst (np. `"11:00 - 12:00"`). W interfejsie nazwy wyświetlane pozostały zrozumiałe (bez dopisku "Timestamp" w nazwie).
 
 Poniżej: co usunięto, co zastąpić i jak zaktualizować automatyzacje oraz szablony.
