@@ -53,6 +53,18 @@ Plik korzysta z polskich `entity_id`. Przy HA po angielsku podmień identyfikato
 3. Ustaw opcje cenowe, tryb Lite, okna czasowe i progi cenowe.
 4. **Zapisz**.
 
+## Spis treści
+
+- [Konfiguracja](#konfiguracja)
+- [Sensory](#sensory)
+- [Kompas Energetyczny (PDGSZ)](#kompas-energetyczny-pdgsz)
+- [Binary sensory](#binary-sensory)
+- [Debugowanie](#debugowanie)
+- [Źródło danych](#źródło-danych)
+- [Migracja z v1.x do v2.0.0](docs/MIGRACJA-V2.md)
+- [Licencja](#licencja)
+- [Współpraca](#współpraca)
+
 ## Konfiguracja
 
 Formularz konfiguracji dzieli się na sekcje: podstawowe ustawienia, okno tanich godzin, okno drogich godzin, drugie okno drogich godzin, progi cenowe.
