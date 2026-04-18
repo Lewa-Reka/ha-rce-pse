@@ -774,26 +774,22 @@ views:
               `unavailable`.
             visibility:
               - condition: state
-                entity: sensor.rce_pse_cena_jutro
+                entity: sensor.rce_pse_kompas_energetyczny_jutro
                 state: unknown
       - type: grid
         column_span: 2
         cards:
           - type: markdown
-            text_only: true
-            entity_id:
-              - sensor.rce_pse_kompas_energetyczny_dzisiaj
             content: >
               <b>MOŻLIWE ALERTY UŻYTKOWANIA PRĄDU:</b>
 
               <font color="#236B11" size="7">&#9632;</font>&nbsp; Zalecane
-              użytkowanie
-
-              <font color="#98C21D" size="7">&#9632;</font>&nbsp; Normalne
-              użytkowanie
-
-              <font color="#F2C433" size="7">&#9632;</font>&nbsp; Zalecane
-              oszczędzanie
-
-              <font color="#E42314" size="7">&#9632;</font>&nbsp; Wymagane
+              użytkowanie  <font color="#98C21D" size="7">&#9632;</font>&nbsp;
+              Normalne użytkowanie  <font color="#F2C433"
+              size="7">&#9632;</font>&nbsp; Zalecane oszczędzanie <font
+              color="#E42314" size="7">&#9632;</font>&nbsp; Wymagane
               ograniczanie
+            text_only: true
+            grid_options:
+              columns: 24
+              rows: auto
