@@ -188,13 +188,22 @@ views:
                   </table>
           - type: vertical-stack
             cards:
-              - type: tile
-                entity: sensor.rce_pse_aktualna_vs_srednia_dzisiaj
-                name: Teraz / Średnia
-                icon: mdi:percent
-                color: primary
-                vertical: true
-                features_position: bottom
+              - type: markdown
+                card_size: 2
+                entity_id:
+                  - sensor.rce_pse_aktualna_vs_srednia_dzisiaj
+                content: >
+                  {% macro trend_block(entity_id, title) %}<center><b>{{ title
+                  }}</b><br><br>{% if not has_value(entity_id) %}—{% else %}{%
+                  set v = states(entity_id) | float %}{% if v > 0 %}<font
+                  color="#10B981" size="5">&#9650; {{ (v | abs) | round(1)
+                  }}</font> %{% elif v < 0 %}<font color="#EF4444" size="5">&#9660;
+                  {{ (v | abs) | round(1) }}</font> %{% else %}<font
+                  color="#94A3B8" size="5">= {{ (v | abs) | round(1) }}</font>
+                  %{% endif %}{% endif %}</center>{% endmacro %}
+
+                  {{ trend_block('sensor.rce_pse_aktualna_vs_srednia_dzisiaj',
+                  'Teraz / Średnia') }}
               - square: false
                 type: grid
                 columns: 2
@@ -255,8 +264,7 @@ views:
 
                   <h2>OKNA CENOWE</h2>
 
-                  <ha-alert alert-type="success" style="display:block;margin:0 0
-                  8px 0;">
+                  <ha-alert alert-type="success">
 
                   <div>Drogie poranne okno</div>
 
@@ -270,8 +278,7 @@ views:
 
                   </ha-alert>
 
-                  <ha-alert alert-type="success" style="display:block;margin:0 0
-                  8px 0;">
+                  <ha-alert alert-type="success">
 
                   <div>Drogie wieczorne okno</div>
 
@@ -325,8 +332,7 @@ views:
 
                   <h2>EKSTREMA</h2>
 
-                  <ha-alert alert-type="info" style="display:block;margin:0 0
-                  8px 0;">
+                  <ha-alert alert-type="info">
 
                   <div>Najniższa cena</div>
 
@@ -384,13 +390,22 @@ views:
                 entity: sensor.rce_pse_cena_jutro
                 state_not: unknown
             cards:
-              - type: tile
-                entity: sensor.rce_pse_jutro_vs_dzisiaj_srednia
-                name: Jutro / Dzisiaj
-                icon: mdi:delta
-                color: teal
-                vertical: true
-                features_position: bottom
+              - type: markdown
+                card_size: 2
+                entity_id:
+                  - sensor.rce_pse_jutro_vs_dzisiaj_srednia
+                content: >
+                  {% macro trend_block(entity_id, title) %}<center><b>{{ title
+                  }}</b><br><br>{% if not has_value(entity_id) %}—{% else %}{%
+                  set v = states(entity_id) | float %}{% if v > 0 %}<font
+                  color="#10B981" size="5">&#9650; {{ (v | abs) | round(1)
+                  }}</font> %{% elif v < 0 %}<font color="#EF4444" size="5">&#9660;
+                  {{ (v | abs) | round(1) }}</font> %{% else %}<font
+                  color="#94A3B8" size="5">= {{ (v | abs) | round(1) }}</font>
+                  %{% endif %}{% endif %}</center>{% endmacro %}
+
+                  {{ trend_block('sensor.rce_pse_jutro_vs_dzisiaj_srednia',
+                  'Jutro / Dzisiaj') }}
               - type: grid
                 square: false
                 columns: 2
@@ -451,8 +466,7 @@ views:
 
                   <h2>OKNA CENOWE</h2>
 
-                  <ha-alert alert-type="success" style="display:block;margin:0 0
-                  8px 0;">
+                  <ha-alert alert-type="success">
 
                   <div>Drogie poranne okno</div>
 
@@ -466,8 +480,7 @@ views:
 
                   </ha-alert>
 
-                  <ha-alert alert-type="success" style="display:block;margin:0 0
-                  8px 0;">
+                  <ha-alert alert-type="success">
 
                   <div>Drogie wieczorne okno</div>
 
@@ -521,8 +534,7 @@ views:
 
                   <h2>EKSTREMA</h2>
 
-                  <ha-alert alert-type="info" style="display:block;margin:0 0
-                  8px 0;">
+                  <ha-alert alert-type="info">
 
                   <div>Najniższa cena</div>
 
