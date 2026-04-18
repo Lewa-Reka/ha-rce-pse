@@ -169,9 +169,6 @@ views:
                     name: Trwa tanie okno
               - type: markdown
                 text_only: true
-                card_size: 2
-                entity_id:
-                  - sensor.rce_pse_cena
                 content: >
                   <table role="presentation">
 
@@ -189,9 +186,6 @@ views:
           - type: vertical-stack
             cards:
               - type: markdown
-                card_size: 2
-                entity_id:
-                  - sensor.rce_pse_aktualna_vs_srednia_dzisiaj
                 content: >
                   {% macro trend_block(entity_id, title) %}<center><b>{{ title
                   }}</b><br>{% if not has_value(entity_id) %}—{% else %}{% set v
@@ -232,18 +226,6 @@ views:
                     color: amber
               - type: markdown
                 text_only: true
-                card_size: 8
-                entity_id:
-                  - sensor.rce_pse_drugie_drogie_okno_dzisiaj_poczatek
-                  - sensor.rce_pse_drugie_drogie_okno_dzisiaj_koniec
-                  - sensor.rce_pse_drugie_drogie_okno_srednia_cena_dzisiaj
-                  - sensor.rce_pse_drogie_okno_dzisiaj_poczatek
-                  - sensor.rce_pse_drogie_okno_dzisiaj_koniec
-                  - sensor.rce_pse_drogie_okno_srednia_cena_dzisiaj
-                  - sensor.rce_pse_tanie_okno_dzisiaj_poczatek
-                  - sensor.rce_pse_tanie_okno_dzisiaj_koniec
-                  - sensor.rce_pse_tanie_okno_srednia_cena_dzisiaj
-                  - sensor.rce_pse_cena
                 content: >
                   {% macro t(x) %}{% set v = states(x) %}{% if v not in
                   ['unknown','unavailable','none',''] and v is not none %}{{
@@ -307,13 +289,6 @@ views:
                   </ha-alert>
               - type: markdown
                 text_only: true
-                card_size: 5
-                show_empty: false
-                entity_id:
-                  - sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek
-                  - sensor.rce_pse_najnizsza_cena_dzisiaj_koniec
-                  - sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek
-                  - sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec
                 content: >
                   {% macro t(x) %}{% set v = states(x) %}{% if v not in
                   ['unknown','unavailable','none',''] and v is not none %}{{
@@ -388,9 +363,6 @@ views:
                 state_not: unknown
             cards:
               - type: markdown
-                card_size: 2
-                entity_id:
-                  - sensor.rce_pse_jutro_vs_dzisiaj_srednia
                 content: >
                   {% macro trend_block(entity_id, title) %}<center><b>{{ title
                   }}</b><br>{% if not has_value(entity_id) %}—{% else %}{% set v
@@ -431,18 +403,6 @@ views:
                     color: amber
               - type: markdown
                 text_only: true
-                card_size: 8
-                entity_id:
-                  - sensor.rce_pse_drugie_drogie_okno_jutro_poczatek
-                  - sensor.rce_pse_drugie_drogie_okno_jutro_koniec
-                  - sensor.rce_pse_drugie_drogie_okno_srednia_cena_jutro
-                  - sensor.rce_pse_drogie_okno_jutro_poczatek
-                  - sensor.rce_pse_drogie_okno_jutro_koniec
-                  - sensor.rce_pse_drogie_okno_srednia_cena_jutro
-                  - sensor.rce_pse_tanie_okno_jutro_poczatek
-                  - sensor.rce_pse_tanie_okno_jutro_koniec
-                  - sensor.rce_pse_tanie_okno_srednia_cena_jutro
-                  - sensor.rce_pse_cena
                 content: >
                   {% macro t(x) %}{% set v = states(x) %}{% if v not in
                   ['unknown','unavailable','none',''] and v is not none %}{{
@@ -506,13 +466,6 @@ views:
                   </ha-alert>
               - type: markdown
                 text_only: true
-                card_size: 5
-                show_empty: false
-                entity_id:
-                  - sensor.rce_pse_najnizsza_cena_jutro_poczatek
-                  - sensor.rce_pse_najnizsza_cena_jutro_koniec
-                  - sensor.rce_pse_najwyzsza_cena_jutro_poczatek
-                  - sensor.rce_pse_najwyzsza_cena_jutro_koniec
                 content: >
                   {% macro t(x) %}{% set v = states(x) %}{% if v not in
                   ['unknown','unavailable','none',''] and v is not none %}{{
@@ -597,9 +550,6 @@ views:
           - type: vertical-stack
             cards:
               - type: markdown
-                card_size: 18
-                entity_id:
-                  - sensor.rce_pse_kompas_energetyczny_dzisiaj
                 content: >
                   {% macro compass_cell(entity_id, hour) -%}
 
