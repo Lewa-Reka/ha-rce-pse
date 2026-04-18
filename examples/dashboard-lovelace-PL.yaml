@@ -262,7 +262,7 @@ views:
                   {% set uom = state_attr('sensor.rce_pse_cena',
                   'unit_of_measurement') or 'PLN/MWh' %}
 
-                  <h2>Okna cenowe użytkownika</h2>
+                  <h2>Okna użytkownika</h2>
 
                   <ha-alert alert-type="success">
 
@@ -461,7 +461,7 @@ views:
                   {% set uom = state_attr('sensor.rce_pse_cena',
                   'unit_of_measurement') or 'PLN/MWh' %}
 
-                  <h2>Okna cenowe użytkownika</h2>
+                  <h2>Okna użytkownika</h2>
 
                   <ha-alert alert-type="success">
 
