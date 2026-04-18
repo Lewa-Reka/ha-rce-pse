@@ -508,7 +508,7 @@ views:
           - type: markdown
             text_only: true
             content: >
-              > **Publikacja danych na jutro (PSE)**  
+              > **Publikacja danych na jutro (PSE)**
 
               > Ceny na kolejny dzień są zwykle dostępne **po godzinie 14:00**.
               Do tego czasu encje „jutro” mogą mieć stan `unknown` /
@@ -767,7 +767,7 @@ views:
           - type: markdown
             text_only: true
             content: >
-              > **Publikacja Kompasu Energetycznego na jutro (PSE)**  
+              > **Publikacja Kompasu Energetycznego na jutro (PSE)**
 
               > Godziny na kolejny dzień są zwykle dostępne **przed godziną
               17:00**. Do tego czasu encje „jutro” mogą mieć stan `unknown` /
@@ -787,7 +787,7 @@ views:
               <b>MOŻLIWE ALERTY UŻYTKOWANIA PRĄDU:</b>
 
               <font color="#236B11" size="7">&#9632;</font>&nbsp; Zalecane
-              użytkowanie 
+              użytkowanie
 
               <font color="#98C21D" size="7">&#9632;</font>&nbsp; Normalne
               użytkowanie
