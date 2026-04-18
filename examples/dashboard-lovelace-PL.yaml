@@ -194,7 +194,7 @@ views:
                   - sensor.rce_pse_aktualna_vs_srednia_dzisiaj
                 content: >
                   {% macro trend_block(entity_id, title) %}<center><b>{{ title
-                  }}</b><br><br>{% if not has_value(entity_id) %}—{% else %}{%
+                  }}</b><br>{% if not has_value(entity_id) %}—{% else %}{%
                   set v = states(entity_id) | float %}{% if v > 0 %}<font
                   color="#10B981" size="5">&#9650; {{ (v | abs) | round(1)
                   }}</font> %{% elif v < 0 %}<font color="#EF4444" size="5">&#9660;
@@ -262,7 +262,7 @@ views:
                   {% set uom = state_attr('sensor.rce_pse_cena',
                   'unit_of_measurement') or 'PLN/MWh' %}
 
-                  <h2>OKNA CENOWE</h2>
+                  <h2>Okna cenowe użytkownika</h2>
 
                   <ha-alert alert-type="success">
 
@@ -330,7 +330,7 @@ views:
                   has_value('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek') or
                   has_value('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek') %}
 
-                  <h2>EKSTREMA</h2>
+                  <h2>Najdroższy i najtańszy okres</h2>
 
                   <ha-alert alert-type="info">
 
@@ -396,7 +396,7 @@ views:
                   - sensor.rce_pse_jutro_vs_dzisiaj_srednia
                 content: >
                   {% macro trend_block(entity_id, title) %}<center><b>{{ title
-                  }}</b><br><br>{% if not has_value(entity_id) %}—{% else %}{%
+                  }}</b><br>{% if not has_value(entity_id) %}—{% else %}{%
                   set v = states(entity_id) | float %}{% if v > 0 %}<font
                   color="#10B981" size="5">&#9650; {{ (v | abs) | round(1)
                   }}</font> %{% elif v < 0 %}<font color="#EF4444" size="5">&#9660;
@@ -464,7 +464,7 @@ views:
                   {% set uom = state_attr('sensor.rce_pse_cena',
                   'unit_of_measurement') or 'PLN/MWh' %}
 
-                  <h2>OKNA CENOWE</h2>
+                  <h2>Okna cenowe użytkownika</h2>
 
                   <ha-alert alert-type="success">
 
@@ -532,7 +532,7 @@ views:
                   has_value('sensor.rce_pse_najnizsza_cena_jutro_poczatek') or
                   has_value('sensor.rce_pse_najwyzsza_cena_jutro_poczatek') %}
 
-                  <h2>EKSTREMA</h2>
+                  <h2>Najdroższy i najtańszy okres</h2>
 
                   <ha-alert alert-type="info">
 
