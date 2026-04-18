@@ -134,29 +134,6 @@ views:
                   in_chart: false
                   legend_value: true
                   in_header: true
-              - entity: sensor.rce_pse_aktualna_vs_srednia_dzisiaj
-                name: Teraz / Średnia
-                yaxis_id: price
-                type: line
-                color: "#3498DB"
-                stroke_width: 1
-                extend_to: end
-                show:
-                  in_chart: false
-                  legend_value: true
-                  in_header: true
-              - entity: sensor.rce_pse_jutro_vs_dzisiaj_srednia
-                name: Jutro / Dzisiaj
-                yaxis_id: price
-                type: line
-                color: "#0D9488"
-                stroke_width: 1
-                extend_to: end
-                show:
-                  in_chart: false
-                  legend_value: true
-                  in_header: true
-                  null_in_header: false
             now:
               show: true
               label: Teraz
