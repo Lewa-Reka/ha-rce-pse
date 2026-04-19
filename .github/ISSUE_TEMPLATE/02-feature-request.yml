@@ -1,7 +1,10 @@
+---
 name: Propozycja funkcjonalności
 description: Zaproponuj nową funkcjonalność lub usprawnienie integracji RCE PSE
 title: "[Feature]: "
-labels: [ "enhancement", "triage" ]
+labels:
+  - enhancement
+  - triage
 body:
   - type: markdown
     attributes:

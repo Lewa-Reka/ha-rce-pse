@@ -1,7 +1,10 @@
+---
 name: Zgłoś błąd
 description: Zgłoś błąd w integracji RCE PSE dla Home Assistant
 title: "[Bug]: "
-labels: [ "bug", "triage" ]
+labels:
+  - bug
+  - triage
 body:
   - type: markdown
     attributes:
@@ -65,7 +68,7 @@ body:
         Wklej istotne logi z Home Assistant. Instrukcja włączenia logów debug znajduje się w sekcji **Debugowanie** w [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md).
 
         Pole jest opcjonalne, ale logi znacząco przyspieszają diagnozę.
-      render: txt
+      render: shell
       placeholder: |
         2026-04-19 14:05:12.345 DEBUG (MainThread) [custom_components.rce_pse] ...
 
