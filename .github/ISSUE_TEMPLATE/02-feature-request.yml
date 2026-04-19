@@ -1,7 +1,7 @@
 name: Propozycja funkcjonalności
 description: Zaproponuj nową funkcjonalność lub usprawnienie integracji RCE PSE
 title: "[Feature]: "
-labels: ["enhancement", "triage"]
+labels: [ "enhancement", "triage" ]
 body:
   - type: markdown
     attributes:
@@ -47,10 +47,10 @@ body:
     attributes:
       label: Wersja integracji której używasz
       description: |
-        Aktualna wersja integracji RCE PSE (np. `v2.3.1`). Pomaga zweryfikować czy funkcjonalność nie istnieje już w nowszej wersji.
+        Aktualna wersja integracji RCE PSE (np. `v2.0.0`). Pomaga zweryfikować czy funkcjonalność nie istnieje już w nowszej wersji.
 
         Lista wydań: [Releases](https://github.com/Lewa-Reka/ha-rce-pse/releases).
-      placeholder: np. v2.3.1
+      placeholder: np. v2.0.0
 
   - type: textarea
     id: additional
@@ -64,7 +64,11 @@ body:
     attributes:
       label: Potwierdzenie
       options:
-        - label: Przeczytałem/am [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) i sprawdziłem/am, że proponowana funkcjonalność nie jest już dostępna.
+        - label: Przeczytałem/am
+            [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md)
+            i sprawdziłem/am, że proponowana funkcjonalność nie jest już
+            dostępna.
           required: true
-        - label: Sprawdziłem/am istniejące (otwarte i zamknięte) zgłoszenia i podobna propozycja nie została jeszcze złożona.
+        - label: Sprawdziłem/am istniejące (otwarte i zamknięte) zgłoszenia i podobna
+            propozycja nie została jeszcze złożona.
           required: true

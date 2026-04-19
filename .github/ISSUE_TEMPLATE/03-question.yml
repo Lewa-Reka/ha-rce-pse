@@ -1,7 +1,7 @@
 name: Pytanie / pomoc
 description: Zadaj pytanie dotyczące konfiguracji, użycia lub działania integracji RCE PSE
-title: "[Pytanie]: "
-labels: ["question", "triage"]
+title: "[Question]: "
+labels: [ "question", "triage" ]
 body:
   - type: markdown
     attributes:
@@ -43,8 +43,8 @@ body:
     attributes:
       label: Wersja integracji RCE PSE
       description: |
-        Wersja integracji której używasz (np. `v2.3.1`). Lista wydań: [Releases](https://github.com/Lewa-Reka/ha-rce-pse/releases).
-      placeholder: np. v2.3.1
+        Wersja integracji której używasz (np. `v2.0.0`). Lista wydań: [Releases](https://github.com/Lewa-Reka/ha-rce-pse/releases).
+      placeholder: v2.0.0
     validations:
       required: true
 
@@ -54,7 +54,7 @@ body:
       label: Wersja Home Assistant
       description: |
         Wersja Home Assistant (Ustawienia → Informacje).
-      placeholder: np. 2026.4.0
+      placeholder: 2026.4.0
     validations:
       required: true
 

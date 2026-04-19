@@ -1,14 +1,14 @@
 name: Zgłoś błąd
 description: Zgłoś błąd w integracji RCE PSE dla Home Assistant
 title: "[Bug]: "
-labels: ["bug", "triage"]
+labels: [ "bug", "triage" ]
 body:
   - type: markdown
     attributes:
       value: |
         ## Zanim założysz zgłoszenie
 
-        Dziękujemy za poświęcony czas! Aby przyspieszyć analizę problemu, prosimy o zapoznanie się z dokumentacją:
+        Dziękujemy za poświęcony czas! Przed zgłoszeniem problemu, sprawdź:
 
         - [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) — pełna dokumentacja integracji, sekcja **Debugowanie** zawiera instrukcję włączania logów.
         - [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md) — instrukcja migracji z v1.x do v2.0.0. **Wersje v1.x nie są już wspierane.**
@@ -21,8 +21,6 @@ body:
       label: Opis problemu
       description: |
         Opisz dokładnie czego dotyczy problem. Co próbowałeś/aś zrobić i co się wydarzyło zamiast tego?
-      placeholder: |
-        Przykład: Po dodaniu integracji w trybie Lite sensor "Cena Jutro" nie aktualizuje się po godzinie 14:00...
     validations:
       required: true
 
@@ -31,12 +29,12 @@ body:
     attributes:
       label: Wersja integracji RCE PSE
       description: |
-        Podaj dokładną wersję integracji której używasz (np. `v2.3.1`, `v2.0.0`, hash commita lub nazwę brancha).
+        Podaj dokładną wersję integracji której używasz (np. `v2.0.0`, `v1.4.0`, hash commita lub nazwę brancha).
 
         > **Uwaga:** Wersje **v1.x nie są już wspierane**. Jeśli korzystasz z v1.x, najpierw wykonaj migrację zgodnie z [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md), a dopiero potem zgłoś problem na aktualnej wersji.
 
         Wersję sprawdzisz w HACS (Integracje → RCE PSE) lub w pliku `custom_components/rce_pse/manifest.json`. Pełna lista wydań: [Releases](https://github.com/Lewa-Reka/ha-rce-pse/releases).
-      placeholder: np. v2.3.1
+      placeholder: np. v2.0.0
     validations:
       required: true
 
@@ -46,7 +44,7 @@ body:
       label: Wersja Home Assistant
       description: |
         Podaj wersję Home Assistant. Znajdziesz ją w **Ustawienia → Informacje** lub w `Konfiguracja → System → Aktualizacje`.
-      placeholder: np. 2026.4.0
+      placeholder: 2026.4.0
     validations:
       required: true
 
@@ -56,8 +54,6 @@ body:
       label: Oczekiwane zachowanie / proponowane rozwiązanie
       description: |
         Opisz dokładnie czego oczekujesz — jak integracja powinna się zachować lub jakie konkretnie zmiany proponujesz.
-      placeholder: |
-        Przykład: Sensor "Cena Jutro" powinien zaktualizować swoją wartość w ciągu 30 minut po publikacji danych przez PSE...
     validations:
       required: true
 
@@ -85,9 +81,13 @@ body:
     attributes:
       label: Potwierdzenie
       options:
-        - label: Przeczytałem/am [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) oraz [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md).
+        - label: Przeczytałem/am
+            [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md)
+            oraz
+            [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md).
           required: true
-        - label: Sprawdziłem/am istniejące (otwarte i zamknięte) zgłoszenia i mój problem nie został jeszcze opisany.
+        - label: Sprawdziłem/am istniejące (otwarte i zamknięte) zgłoszenia i mój problem
+            nie został jeszcze opisany.
           required: true
         - label: Korzystam z wersji v2.x integracji (v1.x nie jest wspierana).
           required: true

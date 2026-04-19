@@ -29,11 +29,11 @@ jobs:
 
             To zgłoszenie zostało automatycznie oznaczone jako **nieaktywne**, ponieważ nie odnotowano w nim żadnej aktywności przez ostatnie **60 dni**.
 
-            Zostanie ono automatycznie **zamknięte za 14 dni**, jeśli nie pojawi się nowy komentarz lub aktualizacja.
+            Zostanie ono automatycznie **zamknięte za 14 dni**, jeśli nie pojawią się nowe informacje lub propozycje rozwiązania.
 
             **Jak zapobiec automatycznemu zamknięciu?**
 
-            - Dodaj komentarz z aktualnymi informacjami (np. czy problem nadal występuje na najnowszej wersji integracji).
+            - Dodaj komentarz z aktualnymi informacjami (np. czy problem nadal występuje na najnowszej wersji integracji) lub propozycją rozwiązania.
             - Jeśli zgłoszenie wymaga dłuższego czasu na rozwiązanie, poproś maintainera o nadanie etykiety `no-stale` — wtedy bot pominie to issue.
 
             ---
@@ -42,16 +42,16 @@ jobs:
 
             This issue has been automatically marked as **stale** because it has not had any activity for the last **60 days**.
 
-            It will be automatically **closed in 14 days** if no further activity occurs.
+            It will be automatically **closed in 14 days** if no further information or solution proposal occurs.
 
             **How to prevent automatic closing?**
 
-            - Leave a comment with up-to-date information (for example, whether the problem still occurs on the latest integration version).
+            - Leave a comment with up-to-date information (for example, whether the problem still occurs on the latest integration version) or a solution proposal.
             - If the issue needs more time to be resolved, ask a maintainer to add the `no-stale` label — the bot will then skip this issue.
           close-issue-message: |
             ## :pl: Polski
 
-            Zamykam to zgłoszenie z powodu braku aktywności przez 14 dni od oznaczenia jako nieaktywne. Jeśli problem nadal występuje na najnowszej wersji integracji, otwórz **nowe zgłoszenie** z aktualnymi informacjami i logami.
+            Zamykam to zgłoszenie z powodu braku aktywności przez 14 dni od oznaczenia jako nieaktywne. Jeśli problem nadal występuje na najnowszej wersji integracji, otwórz **nowe zgłoszenie** z aktualnymi informacjami lub propozycją rozwiązania.
 
             Dziękujemy za wkład w projekt!
 
@@ -59,6 +59,6 @@ jobs:
 
             ## :gb: English
 
-            Closing this issue due to inactivity for 14 days after being marked as stale. If the problem persists on the latest integration version, please open a **new issue** with up-to-date information and logs.
+            Closing this issue due to inactivity for 14 days after being marked as stale. If the problem persists on the latest integration version, please open a **new issue** with up-to-date information or a solution proposal.
 
             Thank you for your contribution to the project!
