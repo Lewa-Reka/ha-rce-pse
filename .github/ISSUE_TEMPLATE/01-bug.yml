@@ -1,0 +1,93 @@
+name: Zgłoś błąd
+description: Zgłoś błąd w integracji RCE PSE dla Home Assistant
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Zanim założysz zgłoszenie
+
+        Dziękujemy za poświęcony czas! Aby przyspieszyć analizę problemu, prosimy o zapoznanie się z dokumentacją:
+
+        - [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) — pełna dokumentacja integracji, sekcja **Debugowanie** zawiera instrukcję włączania logów.
+        - [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md) — instrukcja migracji z v1.x do v2.0.0. **Wersje v1.x nie są już wspierane.**
+        - [Zamknięte zgłoszenia](https://github.com/Lewa-Reka/ha-rce-pse/issues?q=is%3Aissue+is%3Aclosed) — Twój problem mógł już zostać rozwiązany.
+        - [Otwarte zgłoszenia](https://github.com/Lewa-Reka/ha-rce-pse/issues) — sprawdź czy ktoś już nie zgłosił tego samego problemu.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Opis problemu
+      description: |
+        Opisz dokładnie czego dotyczy problem. Co próbowałeś/aś zrobić i co się wydarzyło zamiast tego?
+      placeholder: |
+        Przykład: Po dodaniu integracji w trybie Lite sensor "Cena Jutro" nie aktualizuje się po godzinie 14:00...
+    validations:
+      required: true
+
+  - type: input
+    id: integration_version
+    attributes:
+      label: Wersja integracji RCE PSE
+      description: |
+        Podaj dokładną wersję integracji której używasz (np. `v2.3.1`, `v2.0.0`, hash commita lub nazwę brancha).
+
+        > **Uwaga:** Wersje **v1.x nie są już wspierane**. Jeśli korzystasz z v1.x, najpierw wykonaj migrację zgodnie z [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md), a dopiero potem zgłoś problem na aktualnej wersji.
+
+        Wersję sprawdzisz w HACS (Integracje → RCE PSE) lub w pliku `custom_components/rce_pse/manifest.json`. Pełna lista wydań: [Releases](https://github.com/Lewa-Reka/ha-rce-pse/releases).
+      placeholder: np. v2.3.1
+    validations:
+      required: true
+
+  - type: input
+    id: ha_version
+    attributes:
+      label: Wersja Home Assistant
+      description: |
+        Podaj wersję Home Assistant. Znajdziesz ją w **Ustawienia → Informacje** lub w `Konfiguracja → System → Aktualizacje`.
+      placeholder: np. 2026.4.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Oczekiwane zachowanie / proponowane rozwiązanie
+      description: |
+        Opisz dokładnie czego oczekujesz — jak integracja powinna się zachować lub jakie konkretnie zmiany proponujesz.
+      placeholder: |
+        Przykład: Sensor "Cena Jutro" powinien zaktualizować swoją wartość w ciągu 30 minut po publikacji danych przez PSE...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logi
+      description: |
+        Wklej istotne logi z Home Assistant. Instrukcja włączenia logów debug znajduje się w sekcji **Debugowanie** w [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md).
+
+        Pole jest opcjonalne, ale logi znacząco przyspieszają diagnozę.
+      render: txt
+      placeholder: |
+        2026-04-19 14:05:12.345 DEBUG (MainThread) [custom_components.rce_pse] ...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Dodatkowe informacje
+      description: |
+        Cokolwiek co może być pomocne — zrzuty ekranu (przeciągnij i upuść), fragmenty konfiguracji, automatyzacji, dashboardów Lovelace itp.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Potwierdzenie
+      options:
+        - label: Przeczytałem/am [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) oraz [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md).
+          required: true
+        - label: Sprawdziłem/am istniejące (otwarte i zamknięte) zgłoszenia i mój problem nie został jeszcze opisany.
+          required: true
+        - label: Korzystam z wersji v2.x integracji (v1.x nie jest wspierana).
+          required: true

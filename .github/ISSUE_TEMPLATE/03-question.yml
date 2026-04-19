@@ -1,0 +1,75 @@
+name: Pytanie / pomoc
+description: Zadaj pytanie dotyczące konfiguracji, użycia lub działania integracji RCE PSE
+title: "[Pytanie]: "
+labels: ["question", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Zanim zadasz pytanie
+
+        - [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) — pełna dokumentacja: konfiguracja, sensory, Kompas Energetyczny, debugowanie.
+        - [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md) — jeśli pytanie dotyczy zmian względem v1.x.
+        - [Zamknięte zgłoszenia](https://github.com/Lewa-Reka/ha-rce-pse/issues?q=is%3Aissue+is%3Aclosed) — odpowiedź mogła już paść w przeszłości.
+        - [Otwarte zgłoszenia](https://github.com/Lewa-Reka/ha-rce-pse/issues) — sprawdź czy ktoś już nie zadał podobnego pytania.
+
+        > Jeśli pytanie dotyczy ogólnych zagadnień Home Assistant (a nie samej integracji), lepszym miejscem może być [forum Home Assistant](https://community.home-assistant.io/) lub polska społeczność HA.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Twoje pytanie / co chcesz osiągnąć
+      description: |
+        Opisz dokładnie czego dotyczy pytanie i jaki efekt końcowy chcesz uzyskać.
+      placeholder: |
+        Przykład: Jak skonfigurować okno tanich godzin tak, żeby uwzględniało tylko godziny nocne (22:00–06:00) ale tylko jeśli cena jest poniżej 200 PLN/MWh?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: Co już sprawdziłeś/aś / próbowałeś/aś
+      description: |
+        Wymień konkretne kroki, dokumentację, ustawienia lub konfiguracje które już sprawdziłeś/aś. To pomaga uniknąć powtarzania znanych Ci rzeczy.
+      placeholder: |
+        - Sprawdziłem sekcję "Konfiguracja" w README
+        - Próbowałem ustawić próg 200 w polu "Próg ceny tanich godzin", ale...
+    validations:
+      required: true
+
+  - type: input
+    id: integration_version
+    attributes:
+      label: Wersja integracji RCE PSE
+      description: |
+        Wersja integracji której używasz (np. `v2.3.1`). Lista wydań: [Releases](https://github.com/Lewa-Reka/ha-rce-pse/releases).
+      placeholder: np. v2.3.1
+    validations:
+      required: true
+
+  - type: input
+    id: ha_version
+    attributes:
+      label: Wersja Home Assistant
+      description: |
+        Wersja Home Assistant (Ustawienia → Informacje).
+      placeholder: np. 2026.4.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Konfiguracja / fragmenty YAML
+      description: |
+        Wklej istotne fragmenty konfiguracji integracji, automatyzacji, szablonów Jinja lub dashboardu Lovelace których dotyczy pytanie.
+      render: yaml
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logi
+      description: |
+        Opcjonalnie — fragmenty logów Home Assistant jeśli mogą pomóc w odpowiedzi. Instrukcja włączenia logów debug w sekcji **Debugowanie** w [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md).
+      render: txt

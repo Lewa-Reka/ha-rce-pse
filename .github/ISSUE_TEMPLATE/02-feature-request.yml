@@ -1,0 +1,70 @@
+name: Propozycja funkcjonalności
+description: Zaproponuj nową funkcjonalność lub usprawnienie integracji RCE PSE
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Zanim zaproponujesz funkcjonalność
+
+        - [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) — sprawdź czy proponowana funkcjonalność nie jest już dostępna.
+        - [docs/MIGRACJA-V2.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/docs/MIGRACJA-V2.md) — zmiany w v2 mogły wprowadzić to czego szukasz.
+        - [Zamknięte zgłoszenia](https://github.com/Lewa-Reka/ha-rce-pse/issues?q=is%3Aissue+is%3Aclosed) — pomysł mógł być już rozważany lub odrzucony z konkretnego powodu.
+        - [Otwarte zgłoszenia](https://github.com/Lewa-Reka/ha-rce-pse/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) — może ktoś już zaproponował coś podobnego.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motywacja
+      description: |
+        Opisz problem lub potrzebę, której rozwiązanie miałaby ta funkcjonalność. Jaki konkretny scenariusz użycia (use case) ma obsługiwać?
+      placeholder: |
+        Przykład: Chciałbym widzieć w dashboardzie średnią cenę z ostatnich 7 dni, żeby decydować kiedy uruchamiać duże odbiorniki...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proponowane rozwiązanie / oczekiwane zachowanie
+      description: |
+        Opisz dokładnie jak miałaby działać proponowana funkcjonalność. Im bardziej konkretnie (nazwy sensorów, atrybuty, format danych, opcje konfiguracji), tym lepiej.
+      placeholder: |
+        Przykład: Dodać sensor `sensor.rce_pse_srednia_7d` zwracający średnią arytmetyczną cen z ostatnich 7 pełnych dób...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Rozważone alternatywy
+      description: |
+        Czy próbowałeś/aś rozwiązać ten problem inaczej? Jakie inne podejścia rozważałeś/aś (np. szablony Jinja w HA, statystyki recordera, własna automatyzacja)? Dlaczego nie są wystarczające?
+
+  - type: input
+    id: integration_version
+    attributes:
+      label: Wersja integracji której używasz
+      description: |
+        Aktualna wersja integracji RCE PSE (np. `v2.3.1`). Pomaga zweryfikować czy funkcjonalność nie istnieje już w nowszej wersji.
+
+        Lista wydań: [Releases](https://github.com/Lewa-Reka/ha-rce-pse/releases).
+      placeholder: np. v2.3.1
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Dodatkowy kontekst
+      description: |
+        Zrzuty ekranu (przeciągnij i upuść), przykładowe fragmenty YAML dashboardu lub automatyzacji, linki do dokumentacji PSE lub Home Assistant — wszystko co pomoże zrozumieć propozycję.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Potwierdzenie
+      options:
+        - label: Przeczytałem/am [README.md](https://github.com/Lewa-Reka/ha-rce-pse/blob/main/README.md) i sprawdziłem/am, że proponowana funkcjonalność nie jest już dostępna.
+          required: true
+        - label: Sprawdziłem/am istniejące (otwarte i zamknięte) zgłoszenia i podobna propozycja nie została jeszcze złożona.
+          required: true

@@ -1,0 +1,64 @@
+name: Close stale issues
+
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  stale:
+    name: Mark and close stale issues
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          stale-issue-label: stale
+          exempt-issue-labels: "pinned,no-stale,help-wanted,in-progress,bug-confirmed"
+          remove-stale-when-updated: true
+          operations-per-run: 100
+          ascending: true
+          stale-issue-message: |
+            ## :pl: Polski
+
+            To zgłoszenie zostało automatycznie oznaczone jako **nieaktywne**, ponieważ nie odnotowano w nim żadnej aktywności przez ostatnie **60 dni**.
+
+            Zostanie ono automatycznie **zamknięte za 14 dni**, jeśli nie pojawi się nowy komentarz lub aktualizacja.
+
+            **Jak zapobiec automatycznemu zamknięciu?**
+
+            - Dodaj komentarz z aktualnymi informacjami (np. czy problem nadal występuje na najnowszej wersji integracji).
+            - Jeśli zgłoszenie wymaga dłuższego czasu na rozwiązanie, poproś maintainera o nadanie etykiety `no-stale` — wtedy bot pominie to issue.
+
+            ---
+
+            ## :gb: English
+
+            This issue has been automatically marked as **stale** because it has not had any activity for the last **60 days**.
+
+            It will be automatically **closed in 14 days** if no further activity occurs.
+
+            **How to prevent automatic closing?**
+
+            - Leave a comment with up-to-date information (for example, whether the problem still occurs on the latest integration version).
+            - If the issue needs more time to be resolved, ask a maintainer to add the `no-stale` label — the bot will then skip this issue.
+          close-issue-message: |
+            ## :pl: Polski
+
+            Zamykam to zgłoszenie z powodu braku aktywności przez 14 dni od oznaczenia jako nieaktywne. Jeśli problem nadal występuje na najnowszej wersji integracji, otwórz **nowe zgłoszenie** z aktualnymi informacjami i logami.
+
+            Dziękujemy za wkład w projekt!
+
+            ---
+
+            ## :gb: English
+
+            Closing this issue due to inactivity for 14 days after being marked as stale. If the problem persists on the latest integration version, please open a **new issue** with up-to-date information and logs.
+
+            Thank you for your contribution to the project!
