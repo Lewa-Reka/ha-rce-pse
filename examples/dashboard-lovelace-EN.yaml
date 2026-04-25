@@ -1,0 +1,803 @@
+views:
+  - title: Energy Prices
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: 📊 Energy Prices - 48h
+              show_states: true
+              colorize_states: true
+            grid_options:
+              columns: 24
+            graph_span: 48h
+            cache: true
+            experimental:
+              color_threshold: true
+            span:
+              start: day
+            yaxis:
+              - id: price
+                decimals: 0
+                apex_config:
+                  title:
+                    text: Price [PLN/MWh]
+                    style:
+                      fontWeight: 400
+            apex_config:
+              chart:
+                height: 300
+              dataLabels:
+                enabled: false
+              stroke:
+                width: 6
+                curve: monotoneCubic
+              tooltip:
+                enabled: true
+                theme: dark
+                x:
+                  format: dd MMM HH:mm
+              annotations:
+                yaxis:
+                  - 'y': 200
+                    borderColor: '#10B981'
+                    strokeDashArray: 4
+                    label:
+                      text: Low prices
+                      style:
+                        color: '#FFFFFF'
+                        background: '#059669'
+                        fontWeight: bold
+                  - 'y': 600
+                    borderColor: '#F97316'
+                    strokeDashArray: 4
+                    label:
+                      text: High prices
+                      style:
+                        color: '#FFFFFF'
+                        background: '#C2410C'
+                        fontWeight: bold
+            series:
+              - entity: sensor.rce_pse_price
+                attribute: prices
+                name: Price current
+                yaxis_id: price
+                type: line
+                color: '#F59E0B'
+                time_delta: '-15min'
+                stroke_width: 0
+                opacity: 1
+                extend_to: false
+                color_threshold:
+                  - value: -100
+                    color: '#3B82F6'
+                  - value: 0
+                    color: '#06B6D4'
+                  - value: 200
+                    color: '#10B981'
+                  - value: 400
+                    color: '#FBBF24'
+                  - value: 600
+                    color: '#F97316'
+                  - value: 800
+                    color: '#EF4444'
+                data_generator: |
+                  return entity.attributes.prices.map((entry) => {
+                    return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+                  });
+                show:
+                  extremas: true
+                  in_header: after_now
+                  legend_value: false
+              - entity: sensor.rce_pse_tomorrow_price
+                attribute: prices
+                name: Price tomorrow
+                yaxis_id: price
+                type: line
+                color: '#8B5CF6'
+                time_delta: '-15min'
+                stroke_width: 0
+                opacity: 0.7
+                extend_to: end
+                color_threshold:
+                  - value: -100
+                    color: '#3B82F6'
+                  - value: 0
+                    color: '#06B6D4'
+                  - value: 200
+                    color: '#10B981'
+                  - value: 400
+                    color: '#FBBF24'
+                  - value: 600
+                    color: '#F97316'
+                  - value: 800
+                    color: '#EF4444'
+                data_generator: |
+                  return entity.attributes.prices.map((entry) => {
+                    return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+                  });
+                show:
+                  extremas: true
+                  in_header: false
+                  legend_value: false
+              - entity: sensor.rce_pse_prosumer_selling_price
+                name: Price of selling (prosumer)
+                yaxis_id: price
+                type: line
+                color: '#27AE60'
+                stroke_width: 1
+                extend_to: end
+                show:
+                  in_chart: false
+                  legend_value: true
+                  in_header: true
+            now:
+              show: true
+              label: Now
+              color: '#06B6D4'
+        column_span: 2
+      - type: grid
+        column_span: 1
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: heading
+                heading: Today
+                heading_style: title
+                icon: mdi:white-balance-sunny
+                badges:
+                  - type: entity
+                    show_state: true
+                    show_icon: true
+                    entity: binary_sensor.rce_pse_today_second_expensive_window_active
+                    color: state
+                    name: Morning expensive window active
+                  - type: entity
+                    show_state: true
+                    show_icon: true
+                    entity: >-
+                      binary_sensor.rce_pse_today_custom_most_expensive_window_active
+                    color: state
+                    name: Evening expensive window active
+                  - type: entity
+                    show_state: true
+                    show_icon: true
+                    entity: binary_sensor.rce_pse_today_custom_cheapest_window_active
+                    color: state
+                    name: Cheap window active
+              - type: markdown
+                text_only: true
+                content: >
+                  <table role="presentation">
+
+                  <tr>
+
+                  <td width="44"><ha-icon
+                  icon="mdi:calendar-today"></ha-icon></td>
+
+                  <td><h1>{{ as_timestamp(now()) | timestamp_custom('%d.%m.%Y',
+                  local=True) }}</h1></td>
+
+                  </tr>
+
+                  </table>
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >
+                  {% macro trend_block(entity_id, title) %}<center><b>{{ title
+                  }}</b><br>{% if not has_value(entity_id) %}—{% else %}{% set v
+                  = states(entity_id) | float %}{% if v > 0 %}<font
+                  color="#10B981" size="5">&#9650; {{ (v | abs) | round(1)
+                  }}</font> %{% elif v < 0 %}<font color="#EF4444"
+                  size="5">&#9660; {{ (v | abs) | round(1) }}</font> %{% else
+                  %}<font color="#94A3B8" size="5">= {{ (v | abs) | round(1)
+                  }}</font> %{% endif %}{% endif %}</center>{% endmacro %}
+
+                  {{ trend_block('sensor.rce_pse_today_current_vs_average', 'Now
+                  / Average') }}
+              - square: false
+                type: grid
+                columns: 2
+                cards:
+                  - type: tile
+                    entity: sensor.rce_pse_today_minimum_price
+                    name: Min
+                    icon: mdi:arrow-collapse-down
+                    color: green
+                    vertical: false
+                    features_position: bottom
+                  - type: tile
+                    entity: sensor.rce_pse_today_maximum_price
+                    name: Max
+                    icon: mdi:arrow-collapse-up
+                    color: red
+                    vertical: false
+                    features_position: bottom
+                  - type: tile
+                    entity: sensor.rce_pse_today_average_price
+                    name: Average
+                    icon: mdi:chart-timeline-variant-shimmer
+                    color: '#F59E0B'
+                    vertical: false
+                    features_position: bottom
+                  - type: tile
+                    entity: sensor.rce_pse_today_median_price
+                    name: Median
+                    icon: mdi:chart-bell-curve
+                    color: amber
+                    vertical: false
+                    features_position: bottom
+              - type: markdown
+                text_only: true
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
+
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
+
+                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else
+                  %}—{% endif %}{% endmacro %}
+
+                  {% set uom = state_attr('sensor.rce_pse_price',
+                  'unit_of_measurement') or 'PLN/MWh' %}
+
+                  <h2>User windows</h2>
+
+                  <ha-alert alert-type="success">
+
+                  <div>Morning expensive window</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_today_second_expensive_window_start','sensor.rce_pse_today_second_expensive_window_end')
+                  }}</strong>
+
+                  <div>Average: {{
+                  p('sensor.rce_pse_second_expensive_window_avg_price_today') }}
+                  {{ uom }}</div>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="success">
+
+                  <div>Evening expensive window</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_today_custom_most_expensive_window_start','sensor.rce_pse_today_custom_most_expensive_window_end')
+                  }}</strong>
+
+                  <div>Average: {{
+                  p('sensor.rce_pse_expensive_window_avg_price_today') }} {{ uom
+                  }}</div>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="info">
+
+                  <div>Cheap window</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_today_custom_cheapest_window_start','sensor.rce_pse_today_custom_cheapest_window_end')
+                  }}</strong>
+
+                  <div>Average: {{
+                  p('sensor.rce_pse_cheap_window_avg_price_today') }} {{ uom
+                  }}</div>
+
+                  </ha-alert>
+              - type: markdown
+                text_only: true
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
+
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
+
+                  {% if has_value('sensor.rce_pse_lowest_price_today_start') or
+                  has_value('sensor.rce_pse_highest_price_today_start') %}
+
+                  <h2>Most expensive and cheapest period</h2>
+
+                  <ha-alert alert-type="info">
+
+                  <div>Najniższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_lowest_price_today_start','sensor.rce_pse_lowest_price_today_end')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="error">
+
+                  <div>Najwyższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_highest_price_today_start','sensor.rce_pse_highest_price_today_end')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  {% endif %}
+      - type: grid
+        column_span: 1
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: heading
+                heading: Tomorrow
+                heading_style: title
+                icon: mdi:weather-night-partly-cloudy
+              - type: markdown
+                text_only: true
+                content: >
+                  <table role="presentation">
+
+                  <tr>
+
+                  <td width="44"><ha-icon
+                  icon="mdi:calendar-arrow-right"></ha-icon></td>
+
+                  <td><h1>{{ as_timestamp(now() + timedelta(days=1)) |
+                  timestamp_custom('%d.%m.%Y', local=True) }}</h1></td>
+
+                  </tr>
+
+                  </table>
+          - type: vertical-stack
+            visibility:
+              - condition: state
+                entity: sensor.rce_pse_tomorrow_price
+                state_not: unavailable
+              - condition: state
+                entity: sensor.rce_pse_tomorrow_price
+                state_not: unknown
+            cards:
+              - type: markdown
+                content: >
+                  {% macro trend_block(entity_id, title) %}<center><b>{{ title
+                  }}</b><br>{% if not has_value(entity_id) %}—{% else %}{% set v
+                  = states(entity_id) | float %}{% if v > 0 %}<font
+                  color="#10B981" size="5">&#9650; {{ (v | abs) | round(1)
+                  }}</font> %{% elif v < 0 %}<font color="#EF4444"
+                  size="5">&#9660; {{ (v | abs) | round(1) }}</font> %{% else
+                  %}<font color="#94A3B8" size="5">= {{ (v | abs) | round(1)
+                  }}</font> %{% endif %}{% endif %}</center>{% endmacro %}
+
+                  {{ trend_block('sensor.rce_pse_tomorrow_vs_today_average',
+                  'Tomorrow / Today') }}
+              - type: grid
+                square: false
+                columns: 2
+                cards:
+                  - type: tile
+                    entity: sensor.rce_pse_tomorrow_minimum_price
+                    name: Min
+                    icon: mdi:arrow-collapse-down
+                    color: green
+                  - type: tile
+                    entity: sensor.rce_pse_tomorrow_maximum_price
+                    name: Max
+                    icon: mdi:arrow-collapse-up
+                    color: red
+                  - type: tile
+                    entity: sensor.rce_pse_tomorrow_average_price
+                    name: Average
+                    icon: mdi:chart-timeline-variant-shimmer
+                    color: '#8B5CF6'
+                    vertical: false
+                    features_position: bottom
+                  - type: tile
+                    entity: sensor.rce_pse_tomorrow_median_price
+                    name: Median
+                    icon: mdi:chart-bell-curve
+                    color: amber
+                    vertical: false
+                    features_position: bottom
+              - type: markdown
+                text_only: true
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
+
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
+
+                  {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else
+                  %}—{% endif %}{% endmacro %}
+
+                  {% set uom = state_attr('sensor.rce_pse_price',
+                  'unit_of_measurement') or 'PLN/MWh' %}
+
+                  <h2>User windows</h2>
+
+                  <ha-alert alert-type="success">
+
+                  <div>Morning expensive window</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_tomorrow_second_expensive_window_start','sensor.rce_pse_tomorrow_second_expensive_window_end')
+                  }}</strong>
+
+                  <div>Average: {{
+                  p('sensor.rce_pse_second_expensive_window_avg_price_tomorrow')
+                  }} {{ uom }}</div>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="success">
+
+                  <div>Evening expensive window</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_tomorrow_custom_most_expensive_window_start','sensor.rce_pse_tomorrow_custom_most_expensive_window_end')
+                  }}</strong>
+
+                  <div>Average: {{
+                  p('sensor.rce_pse_expensive_window_avg_price_tomorrow') }} {{
+                  uom }}</div>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="info">
+
+                  <div>Cheap window</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_tomorrow_custom_cheapest_window_start','sensor.rce_pse_tomorrow_custom_cheapest_window_end')
+                  }}</strong>
+
+                  <div>Average: {{
+                  p('sensor.rce_pse_cheap_window_avg_price_tomorrow') }} {{ uom
+                  }}</div>
+
+                  </ha-alert>
+              - type: markdown
+                text_only: true
+                content: >
+                  {% macro t(x) %}{% set v = states(x) %}{% if v not in
+                  ['unknown','unavailable','none',''] and v is not none %}{{
+                  as_timestamp(v) | timestamp_custom('%H:%M', local=True) }}{%
+                  else %}—{% endif %}{% endmacro %}
+
+                  {% macro w(s,e) %}{% set a = states(s) %}{% set b = states(e)
+                  %}{% if a not in ['unknown','unavailable','none',''] and b not
+                  in ['unknown','unavailable','none',''] and a is not none and b
+                  is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
+                  endmacro %}
+
+                  {% if has_value('sensor.rce_pse_lowest_price_tomorrow_start')
+                  or has_value('sensor.rce_pse_highest_price_tomorrow_start') %}
+
+                  <h2>Most expensive and cheapest period</h2>
+
+                  <ha-alert alert-type="info">
+
+                  <div>Najniższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_lowest_price_tomorrow_start','sensor.rce_pse_lowest_price_tomorrow_end')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  <ha-alert alert-type="error">
+
+                  <div>Najwyższa cena</div>
+
+                  <strong>{{
+                  w('sensor.rce_pse_highest_price_tomorrow_start','sensor.rce_pse_highest_price_tomorrow_end')
+                  }}</strong>
+
+                  </ha-alert>
+
+                  {% endif %}
+          - type: markdown
+            text_only: true
+            content: >
+              > **Publikacja danych na tomorrow (PSE)**
+
+              > Ceny na kolejny dzień są zwykle dostępne **po godzinie 14:00**.
+              Do tego czasu encje „tomorrow” mogą mieć stan `unknown` /
+              `unavailable`.
+            visibility:
+              - condition: state
+                entity: sensor.rce_pse_price_tomorrow
+                state: unknown
+  - title: Kompas Energetyczny
+    path: kompas-energetyczny
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        column_span: 1
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: heading
+                heading: Dzisiaj
+                heading_style: title
+                icon: mdi:compass-outline
+              - type: markdown
+                text_only: true
+                content: >
+                  <table role="presentation">
+
+                  <tr>
+
+                  <td width="44"><ha-icon
+                  icon="mdi:calendar-today"></ha-icon></td>
+
+                  <td><h1>{{ as_timestamp(now()) | timestamp_custom('%d.%m.%Y',
+                  local=True) }}</h1></td>
+
+                  </tr>
+
+                  </table>
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >
+                  {% macro compass_cell(entity_id, hour) -%}
+
+                  {%- set vals = state_attr(entity_id, 'values') -%}
+
+                  {%- set ns = namespace(st='', fg='#9CA3AF') -%}
+
+                  {%- if vals -%}
+
+                  {%- for item in vals -%}
+
+                  {%- set ds = item.dtime | string -%}
+
+                  {%- if 'T' in ds -%}{%- set hh =
+                  ds.split('T',1)[1].split(':')[0] | int -%}
+
+                  {%- elif ' ' in ds -%}{%- set hh = ds.split('
+                  ',1)[1].split(':')[0] | int -%}
+
+                  {%- else -%}{%- set hh = -999 -%}
+
+                  {%- endif -%}
+
+                  {%- if hh == hour -%}{%- set ns.st = item.state -%}{%- endif
+                  -%}
+
+                  {%- endfor -%}
+
+                  {%- endif -%}
+
+                  {%- if ns.st == 'recommended_usage' -%}
+
+                  {%- set ns.fg = '#236B11' -%}
+
+                  {%- elif ns.st == 'normal_usage' -%}
+
+                  {%- set ns.fg = '#98C21D' -%}
+
+                  {%- elif ns.st == 'recommended_saving' -%}
+
+                  {%- set ns.fg = '#F2C433' -%}
+
+                  {%- elif ns.st == 'required_restriction' -%}
+
+                  {%- set ns.fg = '#E42314' -%}
+
+                  {%- endif -%}
+
+                  <td align="center"><b><font color="{{ ns.fg }}" size="5">{{
+                  '%02d' | format(hour) }}:00</font></b></td>
+
+                  {%- endmacro %}
+
+                  <table border="1" cellspacing="0" cellpadding="10"
+                  width="100%">
+
+                  {% for r in range(6) %}
+
+                  <tr>
+
+                  {% for c in range(4) %}
+
+                  {{ compass_cell('sensor.rce_pse_energy_compass_today', r * 4 +
+                  c) }}
+
+                  {% endfor %}
+
+                  </tr>
+
+                  {% endfor %}
+
+                  </table>
+
+                  <center>
+
+                  {% if
+                  states['sensor.rce_pse_energy_compass_today'].last_updated is
+                  defined %}
+
+                  Ostatnia aktualizacja: {{ as_timestamp(
+                  states['sensor.rce_pse_energy_compass_today'].last_updated) |
+                  timestamp_custom('%Y-%m-%d %H:%M:%S', local=True) }}
+
+                  {% endif %}
+
+                  </center>
+              - type: tile
+                entity: sensor.rce_pse_energy_compass_today
+                name: Teraz
+                icon: mdi:compass
+                color: green
+                vertical: true
+                features_position: bottom
+      - type: grid
+        column_span: 1
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: heading
+                heading: Jutro
+                heading_style: title
+                icon: mdi:weather-night-partly-cloudy
+              - type: markdown
+                text_only: true
+                content: >
+                  <table role="presentation">
+
+                  <tr>
+
+                  <td width="44"><ha-icon
+                  icon="mdi:calendar-arrow-right"></ha-icon></td>
+
+                  <td><h1>{{ as_timestamp(now() + timedelta(days=1)) |
+                  timestamp_custom('%d.%m.%Y', local=True) }}</h1></td>
+
+                  </tr>
+
+                  </table>
+          - type: vertical-stack
+            visibility:
+              - condition: state
+                entity: sensor.rce_pse_kompas_energetyczny_jutro
+                state_not: unavailable
+              - condition: state
+                entity: sensor.rce_pse_kompas_energetyczny_jutro
+                state_not: unknown
+            cards:
+              - type: markdown
+                content: >
+                  {% macro compass_cell(entity_id, hour) -%}
+
+                  {%- set vals = state_attr(entity_id, 'values') -%}
+
+                  {%- set ns = namespace(st='', fg='#9CA3AF') -%}
+
+                  {%- if vals -%}
+
+                  {%- for item in vals -%}
+
+                  {%- set ds = item.dtime | string -%}
+
+                  {%- if 'T' in ds -%}{%- set hh =
+                  ds.split('T',1)[1].split(':')[0] | int -%}
+
+                  {%- elif ' ' in ds -%}{%- set hh = ds.split('
+                  ',1)[1].split(':')[0] | int -%}
+
+                  {%- else -%}{%- set hh = -999 -%}
+
+                  {%- endif -%}
+
+                  {%- if hh == hour -%}{%- set ns.st = item.state -%}{%- endif
+                  -%}
+
+                  {%- endfor -%}
+
+                  {%- endif -%}
+
+                  {%- if ns.st == 'recommended_usage' -%}
+
+                  {%- set ns.fg = '#236B11' -%}
+
+                  {%- elif ns.st == 'normal_usage' -%}
+
+                  {%- set ns.fg = '#98C21D' -%}
+
+                  {%- elif ns.st == 'recommended_saving' -%}
+
+                  {%- set ns.fg = '#F2C433' -%}
+
+                  {%- elif ns.st == 'required_restriction' -%}
+
+                  {%- set ns.fg = '#E42314' -%}
+
+                  {%- endif -%}
+
+                  <td align="center"><b><font color="{{ ns.fg }}" size="5">{{
+                  '%02d' | format(hour) }}:00</font></b></td>
+
+                  {%- endmacro %}
+
+                  <table border="1" cellspacing="0" cellpadding="10"
+                  width="100%">
+
+                  {% for r in range(6) %}
+
+                  <tr>
+
+                  {% for c in range(4) %}
+
+                  {{ compass_cell('sensor.rce_pse_energy_compass_tomorrow', r *
+                  4 + c) }}
+
+                  {% endfor %}
+
+                  </tr>
+
+                  {% endfor %}
+
+                  </table>
+
+                  <center>
+
+                  {% if
+                  states['sensor.rce_pse_energy_compass_tomorrow'].last_updated
+                  is defined %}
+
+                  Ostatnia aktualizacja: {{ as_timestamp(
+                  states['sensor.rce_pse_energy_compass_tomorrow'].last_updated)
+                  | timestamp_custom('%Y-%m-%d %H:%M:%S', local=True) }}
+
+                  {% endif %}
+
+                  </center>
+          - type: markdown
+            text_only: true
+            content: >
+              > **Publikacja Kompasu Energetycznego na jutro (PSE)**
+
+              > Godziny na kolejny dzień są zwykle dostępne **przed godziną
+              17:00**. Do tego czasu encje „jutro” mogą mieć stan `unknown` /
+              `unavailable`.
+            visibility:
+              - condition: state
+                entity: sensor.rce_pse_kompas_energetyczny_jutro
+                state: unknown
+      - type: grid
+        column_span: 2
+        cards:
+          - type: markdown
+            content: >
+              <b>MOŻLIWE ALERTY UŻYTKOWANIA PRĄDU:</b>
+
+              <font color="#236B11" size="7">&#9632;</font>&nbsp; Zalecane
+              użytkowanie  <font color="#98C21D" size="7">&#9632;</font>&nbsp;
+              Normalne użytkowanie  <font color="#F2C433"
+              size="7">&#9632;</font>&nbsp; Zalecane oszczędzanie <font
+              color="#E42314" size="7">&#9632;</font>&nbsp; Wymagane
+              ograniczanie
+            text_only: true
+            grid_options:
+              columns: 24
+              rows: auto
+    cards: []
