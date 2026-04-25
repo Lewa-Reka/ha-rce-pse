@@ -11,5 +11,5 @@ homeassistant>=2025.5.3
 aiohttp>=3.8.0
 
 # Mock and testing utilities
-pytest-mock>=3.10.0
+pytest-mock>=3.15.1
 responses>=0.23.0 
