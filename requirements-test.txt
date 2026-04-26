@@ -5,7 +5,7 @@ pytest-cov>=4.0.0
 pytest-homeassistant-custom-component>=0.13.325
 
 # Home Assistant core for testing
-homeassistant>=2025.5.3
+homeassistant>=2026.4.4
 
 # HTTP client for API testing
 aiohttp>=3.8.0
