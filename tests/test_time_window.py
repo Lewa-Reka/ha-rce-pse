@@ -5,6 +5,7 @@ from custom_components.rce_pse.time_window import (
     is_search_end_end_of_day,
     is_valid_quarter_step,
     normalize_hhmm,
+    parse_hhmm_to_time,
     parse_pse_dtime,
     period_bounds_for_record,
     period_overlaps_search,
@@ -42,6 +43,11 @@ def test_search_end_eod():
     assert ex == datetime(2024, 1, 2, 0, 0, 0)
 
 
+def test_search_end_eod_2400():
+    ex = search_window_exclusive_end("2024-01-01", "24:00")
+    assert ex == datetime(2024, 1, 2, 0, 0, 0)
+
+
 def test_search_end_fixed():
     ex = search_window_exclusive_end("2024-01-01", "10:00")
     assert ex == datetime(2024, 1, 1, 10, 0, 0)
@@ -65,3 +71,9 @@ def test_is_now_in_window_end_exclusive():
 def test_is_search_end_end_of_day():
     assert is_search_end_end_of_day("00:00") is True
     assert is_search_end_end_of_day("0:00") is True
+    assert is_search_end_end_of_day("24:00") is True
+    assert is_search_end_end_of_day("24:00:00") is True
+
+
+def test_parse_hhmm_to_time_2400():
+    assert parse_hhmm_to_time("24:00") == datetime(2000, 1, 1, 23, 59).time()
