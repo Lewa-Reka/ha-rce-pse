@@ -65,11 +65,13 @@ def is_valid_quarter_step(hhmm: str) -> bool:
 
 
 def is_search_end_end_of_day(hhmm: str) -> bool:
-    return normalize_hhmm(hhmm) == "00:00"
+    return normalize_hhmm(hhmm) in ("00:00", "24:00")
 
 
 def parse_hhmm_to_time(hhmm: str) -> time:
     h, m = map(int, normalize_hhmm(hhmm).split(":"))
+    if h >= 24:
+        return time(hour=23, minute=59)
     return time(hour=h, minute=m)
 
 
