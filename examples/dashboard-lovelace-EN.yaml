@@ -92,7 +92,7 @@ views:
                   extremas: true
                   in_header: after_now
                   legend_value: false
-              - entity: sensor.rce_pse_tomorrow_price
+              - entity: sensor.rce_pse_price_tomorrow
                 attribute: prices
                 name: Price tomorrow
                 yaxis_id: price
@@ -362,10 +362,10 @@ views:
           - type: vertical-stack
             visibility:
               - condition: state
-                entity: sensor.rce_pse_tomorrow_price
+                entity: sensor.rce_pse_price_tomorrow
                 state_not: unavailable
               - condition: state
-                entity: sensor.rce_pse_tomorrow_price
+                entity: sensor.rce_pse_price_tomorrow
                 state_not: unknown
             cards:
               - type: markdown
