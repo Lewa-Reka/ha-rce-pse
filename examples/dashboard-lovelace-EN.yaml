@@ -92,7 +92,7 @@ views:
                   extremas: true
                   in_header: after_now
                   legend_value: false
-              - entity: sensor.rce_pse_tomorrow_price
+              - entity: sensor.rce_pse_price_tomorrow
                 attribute: prices
                 name: Price tomorrow
                 yaxis_id: price
@@ -152,20 +152,20 @@ views:
                   - type: entity
                     show_state: true
                     show_icon: true
-                    entity: binary_sensor.rce_pse_today_second_expensive_window_active
+                    entity: binary_sensor.rce_pse_second_expensive_window_active
                     color: state
                     name: Morning expensive window active
                   - type: entity
                     show_state: true
                     show_icon: true
                     entity: >-
-                      binary_sensor.rce_pse_today_custom_most_expensive_window_active
+                      binary_sensor.rce_pse_expensive_window_active
                     color: state
                     name: Evening expensive window active
                   - type: entity
                     show_state: true
                     show_icon: true
-                    entity: binary_sensor.rce_pse_today_custom_cheapest_window_active
+                    entity: binary_sensor.rce_pse_cheap_window_active
                     color: state
                     name: Cheap window active
               - type: markdown
@@ -204,28 +204,28 @@ views:
                 columns: 2
                 cards:
                   - type: tile
-                    entity: sensor.rce_pse_today_minimum_price
+                    entity: sensor.rce_pse_minimum_price_today
                     name: Min
                     icon: mdi:arrow-collapse-down
                     color: green
                     vertical: false
                     features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_today_maximum_price
+                    entity: sensor.rce_pse_maximum_price_today
                     name: Max
                     icon: mdi:arrow-collapse-up
                     color: red
                     vertical: false
                     features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_today_average_price
+                    entity: sensor.rce_pse_average_price_today
                     name: Average
                     icon: mdi:chart-timeline-variant-shimmer
                     color: '#F59E0B'
                     vertical: false
                     features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_today_median_price
+                    entity: sensor.rce_pse_median_price_today
                     name: Median
                     icon: mdi:chart-bell-curve
                     color: amber
@@ -362,10 +362,10 @@ views:
           - type: vertical-stack
             visibility:
               - condition: state
-                entity: sensor.rce_pse_tomorrow_price
+                entity: sensor.rce_pse_price_tomorrow
                 state_not: unavailable
               - condition: state
-                entity: sensor.rce_pse_tomorrow_price
+                entity: sensor.rce_pse_price_tomorrow
                 state_not: unknown
             cards:
               - type: markdown
@@ -386,24 +386,24 @@ views:
                 columns: 2
                 cards:
                   - type: tile
-                    entity: sensor.rce_pse_tomorrow_minimum_price
+                    entity: sensor.rce_pse_minimum_price_tomorrow
                     name: Min
                     icon: mdi:arrow-collapse-down
                     color: green
                   - type: tile
-                    entity: sensor.rce_pse_tomorrow_maximum_price
+                    entity: sensor.rce_pse_maximum_price_tomorrow
                     name: Max
                     icon: mdi:arrow-collapse-up
                     color: red
                   - type: tile
-                    entity: sensor.rce_pse_tomorrow_average_price
+                    entity: sensor.rce_pse_average_price_tomorrow
                     name: Average
                     icon: mdi:chart-timeline-variant-shimmer
                     color: '#8B5CF6'
                     vertical: false
                     features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_tomorrow_median_price
+                    entity: sensor.rce_pse_median_price_tomorrow
                     name: Median
                     icon: mdi:chart-bell-curve
                     color: amber
