@@ -7,7 +7,6 @@ from datetime import timedelta
 from typing import Any
 
 import aiohttp
-import async_timeout
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
@@ -86,7 +85,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
             self.session = aiohttp.ClientSession()
             
         try:
-            async with async_timeout.timeout(30):
+            async with asyncio.timeout(30):
                 data = await self._fetch_data()
                 self._last_api_fetch = now
                 _LOGGER.debug("Successfully fetched fresh data from PSE API, records count: %d", 
