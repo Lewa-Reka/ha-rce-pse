@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, time, timedelta
+from functools import lru_cache
 
 
 HHMM_PATTERN = re.compile(r"^([01]?\d|2[0-3]):([0-5]\d)$")
@@ -75,7 +76,8 @@ def parse_hhmm_to_time(hhmm: str) -> time:
     return time(hour=h, minute=m)
 
 
-def parse_pse_dtime(dtime_str: str) -> datetime:
+@lru_cache(maxsize=512)
+def _parse_pse_dtime_cached(dtime_str: str) -> datetime:
     if not dtime_str or " " not in dtime_str:
         raise ValueError(dtime_str)
     date_part, time_part = dtime_str.split(" ", 1)
@@ -85,6 +87,12 @@ def parse_pse_dtime(dtime_str: str) -> datetime:
         base = datetime.strptime(f"{date_part} 00:00:00", "%Y-%m-%d %H:%M:%S")
         return base + timedelta(days=1)
     return datetime.strptime(dtime_str, "%Y-%m-%d %H:%M:%S")
+
+
+def parse_pse_dtime(dtime_str: str) -> datetime:
+    if not isinstance(dtime_str, str):
+        raise ValueError(dtime_str)
+    return _parse_pse_dtime_cached(dtime_str)
 
 
 def business_date_from_day_data(data: list[dict]) -> str | None:

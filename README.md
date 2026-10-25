@@ -260,7 +260,7 @@ Zrestartuj Home Assistant. Logi sprawdź w **Ustawienia** → **Logi** lub bezpo
 
 ## Źródło danych
 
-Integracja korzysta z oficjalnego API PSE pod adresem `https://api.raporty.pse.pl/api`, odświeżanie co 30 minut.
+Integracja korzysta z oficjalnego API PSE pod adresem `https://api.raporty.pse.pl/api`, odświeżanie danych z API odbywa się co 30 minut.
 
 - **`rce-pln`** — ceny RCE w PLN/MWh, rozdzielczość 15 minut. Pobierane pola: `dtime`, `period`, `rce_pln`, `business_date`. Ceny na jutro publikowane są zwykle po 14:00.
 - **`pdgsz`** — godziny szczytu z rekomendacją `usage_fcst`. Pobierane pola: `business_date`, `dtime`, `is_active`, `usage_fcst`.

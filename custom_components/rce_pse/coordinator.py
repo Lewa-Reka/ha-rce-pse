@@ -3,12 +3,13 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Any
 
 import aiohttp
-from homeassistant.core import HomeAssistant
+from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
@@ -56,7 +57,24 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         )
         self.session = None
         self._last_api_fetch = None
+        self._unsub_quarter_hour: CALLBACK_TYPE | None = None
         self.config_entry = config_entry
+
+    @callback
+    def _async_on_quarter_hour(self, _now: datetime) -> None:
+        if self.data is not None:
+            self.async_update_listeners()
+
+    @callback
+    def async_setup_quarter_hour_refresh(self) -> None:
+        if self._unsub_quarter_hour is not None:
+            return
+        self._unsub_quarter_hour = async_track_time_change(
+            self.hass,
+            self._async_on_quarter_hour,
+            minute=(0, 15, 30, 45),
+            second=0,
+        )
 
     def _get_config_value(self, key: str, default: Any) -> Any:
         if not self.config_entry:
@@ -345,4 +363,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def async_close(self) -> None:
         _LOGGER.debug("Closing PSE API session")
+        if self._unsub_quarter_hour is not None:
+            self._unsub_quarter_hour()
+            self._unsub_quarter_hour = None
         self.session = None

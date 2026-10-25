@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-from datetime import timedelta
-
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.util import dt as dt_util
 
 from ..const import CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD
-from ..time_window import parse_pse_dtime
 from ..coordinator import RCEPSEDataUpdateCoordinator
 from .base import RCEBaseBinarySensor
 
@@ -33,20 +29,6 @@ class RCELowPriceThresholdWindowActiveBinarySensor(RCEBaseBinarySensor):
                 CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD
             )
         )
-
-    def get_current_price_data(self) -> dict | None:
-        if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
-            return None
-        now = dt_util.now()
-        for record in self.coordinator.data["raw_data"]:
-            try:
-                period_end = parse_pse_dtime(record["dtime"])
-                period_start = period_end - timedelta(minutes=15)
-                if period_start <= now.replace(tzinfo=None) <= period_end:
-                    return record
-            except (ValueError, KeyError):
-                continue
-        return None
 
     @property
     def is_on(self) -> bool:

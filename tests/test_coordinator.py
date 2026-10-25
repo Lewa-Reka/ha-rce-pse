@@ -179,11 +179,44 @@ class TestRCEPSEDataUpdateCoordinator:
         assert coordinator.session is None
         
         mock_session = AsyncMock()
+        unsub = Mock()
         coordinator.session = mock_session
+        coordinator._unsub_quarter_hour = unsub
         
         await coordinator.async_close()
         assert coordinator.session is None
+        assert coordinator._unsub_quarter_hour is None
+        unsub.assert_called_once()
         mock_session.close.assert_not_called()
+
+    def test_quarter_hour_refresh_registration_is_idempotent(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        unsub = Mock()
+        with patch(
+            "custom_components.rce_pse.coordinator.async_track_time_change",
+            return_value=unsub,
+        ) as mock_track:
+            coordinator.async_setup_quarter_hour_refresh()
+            coordinator.async_setup_quarter_hour_refresh()
+
+            mock_track.assert_called_once_with(
+                mock_hass,
+                coordinator._async_on_quarter_hour,
+                minute=(0, 15, 30, 45),
+                second=0,
+            )
+            assert coordinator._unsub_quarter_hour is unsub
+
+    def test_on_quarter_hour_updates_listeners_only_when_data_present(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        with patch.object(coordinator, "async_update_listeners") as mock_update:
+            coordinator.data = None
+            coordinator._async_on_quarter_hour(dt_util.now())
+            mock_update.assert_not_called()
+
+            coordinator.data = {"raw_data": []}
+            coordinator._async_on_quarter_hour(dt_util.now())
+            mock_update.assert_called_once()
 
     @pytest.mark.asyncio 
     async def test_data_processing_with_valid_response(self, mock_hass, sample_api_response):

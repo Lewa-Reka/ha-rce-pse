@@ -60,7 +60,7 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
             try:
                 period_end = parse_pse_dtime(record["dtime"])
                 period_start = period_end - timedelta(minutes=15)
-                if period_start <= target_time <= period_end:
+                if period_start <= target_time < period_end:
                     return float(record["rce_pln"])
             except (ValueError, KeyError):
                 continue
@@ -79,7 +79,7 @@ class RCEBaseSensor(RCEBaseCommonEntity, SensorEntity):
             try:
                 period_end = parse_pse_dtime(record["dtime"])
                 period_start = period_end - timedelta(minutes=15)
-                if period_start <= target_time <= period_end:
+                if period_start <= target_time < period_end:
                     return float(record["rce_pln"])
                 if period_end <= target_time:
                     diff = abs((target_time - period_end).total_seconds())

@@ -72,12 +72,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     
     await coordinator.async_config_entry_first_refresh()
     _LOGGER.debug("Completed first data refresh for RCE PSE")
-    
+
     hass.data[DOMAIN][entry.entry_id] = coordinator
-    
+
     entry.async_on_unload(entry.add_update_listener(async_update_options))
-    
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    coordinator.async_setup_quarter_hour_refresh()
     _LOGGER.debug("RCE PSE config entry setup completed successfully")
     
     return True

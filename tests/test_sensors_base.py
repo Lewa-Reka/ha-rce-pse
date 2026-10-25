@@ -585,6 +585,36 @@ class TestRCEBaseSensor:
             assert result is not None
             assert result["rce_pln"] == "310.00"
 
+    def test_get_current_price_data_at_quarter_hour_boundary_selects_starting_period(
+        self, mock_coordinator
+    ):
+        from unittest.mock import patch
+
+        sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
+        mock_coordinator.data = {
+            "raw_data": [
+                {
+                    "dtime": "2024-01-01 10:15:00",
+                    "period": "10:00 - 10:15",
+                    "rce_pln": "300.00",
+                    "business_date": "2024-01-01",
+                },
+                {
+                    "dtime": "2024-01-01 10:30:00",
+                    "period": "10:15 - 10:30",
+                    "rce_pln": "310.00",
+                    "business_date": "2024-01-01",
+                },
+            ]
+        }
+
+        with patch("custom_components.rce_pse.shared_base.dt_util.now") as mock_now:
+            mock_now.return_value = datetime(2024, 1, 1, 10, 15, 0)
+            result = sensor.get_current_price_data()
+            assert result is not None
+            assert result["dtime"] == "2024-01-01 10:30:00"
+            assert result["rce_pln"] == "310.00"
+
 
 class TestRCECustomWindowSensor:
 
