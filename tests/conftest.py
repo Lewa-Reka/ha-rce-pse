@@ -47,7 +47,7 @@ def disable_frame_report_usage():
 @pytest.fixture(autouse=True)
 def mock_create_clientsession():
     with patch(
-        "homeassistant.helpers.aiohttp_client._async_create_clientsession",
+        "custom_components.rce_pse.coordinator.async_get_clientsession",
         return_value=AsyncMock(),
     ):
         yield
