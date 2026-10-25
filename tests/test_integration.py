@@ -60,6 +60,7 @@ class TestRCEPSEIntegration:
             assert result is True
             mock_coordinator_class.assert_called_once_with(mock_hass, mock_entry)
             mock_coordinator.async_config_entry_first_refresh.assert_called_once()
+            mock_coordinator.async_setup_quarter_hour_refresh.assert_called_once()
             assert mock_hass.data[DOMAIN][mock_entry.entry_id] == mock_coordinator
 
     @pytest.mark.asyncio

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, time, timedelta
+from functools import lru_cache
 
 
 HHMM_PATTERN = re.compile(r"^([01]?\d|2[0-3]):([0-5]\d)$")
@@ -75,6 +76,7 @@ def parse_hhmm_to_time(hhmm: str) -> time:
     return time(hour=h, minute=m)
 
 
+@lru_cache(maxsize=512)
 def parse_pse_dtime(dtime_str: str) -> datetime:
     if not dtime_str or " " not in dtime_str:
         raise ValueError(dtime_str)

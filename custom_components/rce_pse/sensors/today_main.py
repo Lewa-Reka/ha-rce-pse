@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from datetime import timedelta
 from typing import Any, TYPE_CHECKING
 
 from .base import RCEPriceSensor
@@ -16,14 +15,6 @@ class RCETodayMainSensor(RCEPriceSensor):
         super().__init__(coordinator, "today_price")
         self._attr_native_unit_of_measurement = self.native_price_unit()
         self._attr_icon = "mdi:cash"
-
-    @property
-    def should_poll(self) -> bool:
-        return True
-
-    @property
-    def scan_interval(self) -> timedelta:
-        return timedelta(minutes=1)
 
     @property
     def native_value(self) -> float | None:

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
@@ -27,6 +26,7 @@ class TestTodayMainSensors:
         assert sensor._attr_unique_id == "rce_pse_today_price"
         assert sensor._attr_native_unit_of_measurement == "PLN/MWh"
         assert sensor._attr_icon == "mdi:cash"
+        assert sensor.should_poll is False
 
     def test_today_main_price_sensor_state_with_data(self, mock_coordinator):
         sensor = RCETodayMainSensor(mock_coordinator)
@@ -524,11 +524,10 @@ class TestTomorrowMainSensor:
                 price = sensor.native_value
                 assert price == 350.46 
 
-    def test_tomorrow_price_sensor_scan_interval(self, mock_coordinator):
+    def test_tomorrow_price_sensor_should_not_poll(self, mock_coordinator):
         sensor = RCETomorrowMainSensor(mock_coordinator)
-        
-        assert sensor.scan_interval == timedelta(minutes=1)
-        assert sensor.should_poll is True
+
+        assert sensor.should_poll is False
 
     def test_tomorrow_price_updates_every_15_minutes(self, mock_coordinator):
         sensor = RCETomorrowMainSensor(mock_coordinator)
