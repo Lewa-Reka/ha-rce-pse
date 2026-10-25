@@ -123,7 +123,7 @@ Tabele poniżej używają polskich `entity_id` — Home Assistant w polskiej wer
 
 | `entity_id` PL | Nazwa PL | `entity_id` EN | Nazwa EN | Opis |
 | --- | --- | --- | --- | --- |
-| `sensor.rce_pse_cena` | Cena | `sensor.rce_pse_price` | Price | Aktualna cena energii dla bieżącego okresu; atrybut `raw_data` zawiera wszystkie kwadranse na dziś. |
+| `sensor.rce_pse_cena` | Cena | `sensor.rce_pse_price` | Price | Aktualna cena energii dla bieżącego okresu; atrybut `prices` zawiera wszystkie kwadranse na dziś. |
 | `sensor.rce_pse_cena_sprzedazy_prosument` | Cena Sprzedaży Prosument | `sensor.rce_pse_prosumer_selling_price` | Prosumer Selling Price | Cena sprzedaży prosumenta: ujemne wartości sprowadzone do 0; w trybie netto VAT 23% doliczany lokalnie, w trybie brutto bez podwójnego VAT. |
 
 ### Cena sąsiedniego okresu
@@ -262,7 +262,7 @@ Zrestartuj Home Assistant. Logi sprawdź w **Ustawienia** → **Logi** lub bezpo
 
 Integracja korzysta z oficjalnego API PSE pod adresem `https://api.raporty.pse.pl/api`, odświeżanie danych z API odbywa się co 30 minut.
 
-- **`rce-pln`** — ceny RCE w PLN/MWh, rozdzielczość 15 minut. Pobierane pola: `dtime`, `period`, `rce_pln`, `business_date`. Ceny na jutro publikowane są zwykle po 14:00.
+- **`rce-pln`** — ceny RCE w PLN/MWh, rozdzielczość 15 minut. Pobierane pola: `dtime`, `period`, `rce_pln`, `business_date`. Do każdego rekordu dopisywane jest `start_dtime` jako początek okna, w tym samym formacie co `dtime`. Ceny na jutro publikowane są zwykle po 14:00.
 - **`pdgsz`** — godziny szczytu z rekomendacją `usage_fcst`. Pobierane pola: `business_date`, `dtime`, `is_active`, `usage_fcst`.
 
 ## Migracja z v1.x

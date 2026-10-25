@@ -22,6 +22,7 @@ from custom_components.rce_pse.const import (
     UNIT_PLN_KWH,
     TAX_RATE,
 )
+from custom_components.rce_pse.time_window import start_dtime_for_record
 
 
 def _build_record(rce_pln: float, rce_pln_neg_to_zero: float | None = None) -> dict[str, Any]:
@@ -170,6 +171,7 @@ class TestRCEPSEDataUpdateCoordinator:
                     assert record["dtime"] == original_record["dtime"]
                     assert record["period"] == original_record["period"]
                     assert record["business_date"] == original_record["business_date"]
+                    assert record["start_dtime"] == start_dtime_for_record(original_record)
 
     @pytest.mark.asyncio
     async def test_successful_close_session(self, mock_hass):
@@ -439,16 +441,26 @@ class TestRCEPSEDataUpdateCoordinator:
     def test_calculate_hourly_averages_single_record(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
-        data = [{
+        data = coordinator._attach_start_dtime([{
             "dtime": "2024-01-01 00:15:00",
             "period": "00:00 - 00:15",
             "rce_pln": "350.00",
             "business_date": "2024-01-01"
-        }]
+        }])
         
         result = coordinator._calculate_hourly_averages(data)
         assert len(result) == 1
         assert result[0]["rce_pln"] == format_internal_price(350.0)
+        assert result[0]["start_dtime"] == "2024-01-01 00:00:00"
+
+    def test_attach_start_dtime_skips_unparseable_dtime(self, mock_hass):
+        coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
+        result = coordinator._attach_start_dtime([
+            {"dtime": "2024-01-01 00:15:00", "rce_pln": "350.00"},
+            {"dtime": "invalid_date", "rce_pln": "360.00"},
+        ])
+        assert result[0]["start_dtime"] == "2024-01-01 00:00:00"
+        assert "start_dtime" not in result[1]
 
     def test_calculate_hourly_averages_multiple_quarters_same_hour(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)

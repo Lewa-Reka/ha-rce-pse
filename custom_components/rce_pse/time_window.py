@@ -95,6 +95,10 @@ def parse_pse_dtime(dtime_str: str) -> datetime:
     return _parse_pse_dtime_cached(dtime_str)
 
 
+def format_pse_dtime(value: datetime) -> str:
+    return value.strftime("%Y-%m-%d %H:%M:%S")
+
+
 def business_date_from_day_data(data: list[dict]) -> str | None:
     if not data:
         return None
@@ -112,6 +116,14 @@ def period_bounds_for_record(record: dict) -> tuple[datetime, datetime]:
     end = parse_pse_dtime(record["dtime"])
     start = end - timedelta(minutes=15)
     return start, end
+
+
+def start_dtime_for_record(record: dict) -> str | None:
+    try:
+        start, _ = period_bounds_for_record(record)
+    except (ValueError, KeyError, TypeError):
+        return None
+    return format_pse_dtime(start)
 
 
 def search_window_exclusive_end(
