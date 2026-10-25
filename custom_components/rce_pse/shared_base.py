@@ -89,12 +89,12 @@ class RCEBaseCommonEntity(CoordinatorEntity):
     def get_current_price_data(self) -> dict | None:
         if not self.coordinator.data or not self.coordinator.data.get("raw_data"):
             return None
-        now = dt_util.now()
+        now = dt_util.now().replace(tzinfo=None)
         for record in self.coordinator.data["raw_data"]:
             try:
                 period_end = parse_pse_dtime(record["dtime"])
                 period_start = period_end - timedelta(minutes=15)
-                if period_start <= now.replace(tzinfo=None) <= period_end:
+                if period_start <= now < period_end:
                     return record
             except (ValueError, KeyError):
                 continue

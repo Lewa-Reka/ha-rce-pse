@@ -77,7 +77,7 @@ def parse_hhmm_to_time(hhmm: str) -> time:
 
 
 @lru_cache(maxsize=512)
-def parse_pse_dtime(dtime_str: str) -> datetime:
+def _parse_pse_dtime_cached(dtime_str: str) -> datetime:
     if not dtime_str or " " not in dtime_str:
         raise ValueError(dtime_str)
     date_part, time_part = dtime_str.split(" ", 1)
@@ -87,6 +87,12 @@ def parse_pse_dtime(dtime_str: str) -> datetime:
         base = datetime.strptime(f"{date_part} 00:00:00", "%Y-%m-%d %H:%M:%S")
         return base + timedelta(days=1)
     return datetime.strptime(dtime_str, "%Y-%m-%d %H:%M:%S")
+
+
+def parse_pse_dtime(dtime_str: str) -> datetime:
+    if not isinstance(dtime_str, str):
+        raise ValueError(dtime_str)
+    return _parse_pse_dtime_cached(dtime_str)
 
 
 def business_date_from_day_data(data: list[dict]) -> str | None:

@@ -60,8 +60,34 @@ class TestRCEPSEIntegration:
             assert result is True
             mock_coordinator_class.assert_called_once_with(mock_hass, mock_entry)
             mock_coordinator.async_config_entry_first_refresh.assert_called_once()
+            mock_hass.config_entries.async_forward_entry_setups.assert_called_once_with(
+                mock_entry, ["sensor", "binary_sensor"]
+            )
             mock_coordinator.async_setup_quarter_hour_refresh.assert_called_once()
             assert mock_hass.data[DOMAIN][mock_entry.entry_id] == mock_coordinator
+
+    @pytest.mark.asyncio
+    async def test_async_setup_entry_does_not_register_quarter_hour_refresh_when_forward_fails(
+        self, mock_hass
+    ):
+        mock_entry = Mock(spec=ConfigEntry)
+        mock_entry.runtime_data = None
+        mock_entry.entry_id = "test_entry_id"
+
+        with patch("custom_components.rce_pse.RCEPSEDataUpdateCoordinator") as mock_coordinator_class:
+            mock_coordinator = Mock()
+            mock_coordinator_class.return_value = mock_coordinator
+            mock_coordinator.async_config_entry_first_refresh = AsyncMock()
+
+            mock_hass.config_entries = Mock()
+            mock_hass.config_entries.async_forward_entry_setups = AsyncMock(
+                side_effect=RuntimeError("Forward failed")
+            )
+
+            with pytest.raises(RuntimeError, match="Forward failed"):
+                await async_setup_entry(mock_hass, mock_entry)
+
+            mock_coordinator.async_setup_quarter_hour_refresh.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_async_unload_entry_success(self, mock_hass):

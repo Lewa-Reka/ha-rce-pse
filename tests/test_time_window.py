@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import pytest
+
 from custom_components.rce_pse.time_window import (
     is_now_in_window,
     is_search_end_end_of_day,
@@ -29,6 +31,13 @@ def test_parse_pse_dtime_midnight_next_day():
 
 def test_parse_pse_dtime_normal():
     assert parse_pse_dtime("2024-01-01 10:15:00") == datetime(2024, 1, 1, 10, 15, 0)
+
+
+def test_parse_pse_dtime_non_string_raises_value_error():
+    bad_inputs: list[object] = [["2024-01-01 10:15:00"], None]
+    for bad in bad_inputs:
+        with pytest.raises(ValueError):
+            parse_pse_dtime(bad)
 
 
 def test_period_bounds_for_record():
