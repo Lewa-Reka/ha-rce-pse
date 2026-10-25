@@ -34,10 +34,10 @@ def test_parse_pse_dtime_normal():
 
 
 def test_parse_pse_dtime_non_string_raises_value_error():
-    bad_inputs: list[object] = [["2024-01-01 10:15:00"], None]
-    for bad in bad_inputs:
+    malformed_records: list[dict] = [{"dtime": ["2024-01-01 10:15:00"]}, {"dtime": None}]
+    for rec in malformed_records:
         with pytest.raises(ValueError):
-            parse_pse_dtime(bad)
+            parse_pse_dtime(rec["dtime"])
 
 
 def test_period_bounds_for_record():
