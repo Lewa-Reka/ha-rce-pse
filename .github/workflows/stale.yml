@@ -30,7 +30,7 @@ jobs:
 
             To zgłoszenie zostało automatycznie oznaczone jako **nieaktywne**, ponieważ nie odnotowano w nim żadnej aktywności przez ostatnie **60 dni**.
 
-            Zostanie ono automatycznie **zamknięte za 14 dni**, jeśli nie pojawią się nowe informacje, propozycje rozwiązania lub rozwiązanie.
+            Zostanie ono automatycznie **zamknięte za 14 dni**, jeśli nie pojawią się nowe informacje, rozwiązanie lub przynajmniej propozycje rozwiązania.
 
             **Jak zapobiec automatycznemu zamknięciu?**
 
@@ -43,7 +43,7 @@ jobs:
 
             This issue has been automatically marked as **stale** because it has not had any activity for the last **60 days**.
 
-            It will be automatically **closed in 14 days** if no further information, solution proposal occurs or solution.
+            It will be automatically **closed in 14 days** if no further information, solution or at least solution proposal occurs.
 
             **How to prevent automatic closing?**
 
