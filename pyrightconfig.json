@@ -1,5 +1,5 @@
 {
-  "pythonVersion": "3.13",
+  "pythonVersion": "3.14",
   "typeCheckingMode": "basic",
   "reportMissingImports": "none",
   "reportReturnType": "warning"

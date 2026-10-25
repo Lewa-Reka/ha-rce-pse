@@ -95,9 +95,9 @@ class TestRCEPSEDataUpdateCoordinator:
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         assert coordinator.session is None
         
-        with patch("custom_components.rce_pse.coordinator.aiohttp.ClientSession") as mock_session_class:
+        with patch("custom_components.rce_pse.coordinator.async_get_clientsession") as mock_get_session:
             mock_session = AsyncMock()
-            mock_session_class.return_value = mock_session
+            mock_get_session.return_value = mock_session
             
             with patch.object(coordinator, '_fetch_data') as mock_fetch:
                 expected_data = {
@@ -109,7 +109,7 @@ class TestRCEPSEDataUpdateCoordinator:
                 
                 result = await coordinator._async_update_data()
                 
-                mock_session_class.assert_called_once()
+                mock_get_session.assert_called_once_with(mock_hass)
                 assert coordinator.session == mock_session
                 assert result["raw_data"] == sample_api_response["value"]
 
@@ -176,12 +176,14 @@ class TestRCEPSEDataUpdateCoordinator:
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
         await coordinator.async_close()
+        assert coordinator.session is None
         
         mock_session = AsyncMock()
         coordinator.session = mock_session
         
         await coordinator.async_close()
-        mock_session.close.assert_called_once()
+        assert coordinator.session is None
+        mock_session.close.assert_not_called()
 
     @pytest.mark.asyncio 
     async def test_data_processing_with_valid_response(self, mock_hass, sample_api_response):
