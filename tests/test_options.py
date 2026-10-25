@@ -79,7 +79,8 @@ async def test_async_set_entry_option_writes_full_options(mock_hass):
     )
 
     mock_hass.config_entries.async_update_entry.assert_called_once()
-    kwargs = mock_hass.config_entries.async_update_entry.call_args.kwargs
+    args, kwargs = mock_hass.config_entries.async_update_entry.call_args
+    assert args[0] is config_entry
     options = kwargs["options"]
     assert options[CONF_CHEAPEST_WINDOW_DURATION_HOURS] == "01:30"
     assert options[CONF_LITE_MODE] is False

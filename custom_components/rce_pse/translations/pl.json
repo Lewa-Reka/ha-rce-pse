@@ -92,6 +92,17 @@
       "single_instance_allowed": "Dozwolona jest tylko jedna konfiguracja RCE PSE."
     }
   },
+  "exceptions": {
+    "invalid_time_window": {
+      "message": "Nieprawidłowy zakres: koniec musi być później niż początek tego samego dnia, chyba że koniec to 00:00 (koniec dnia)."
+    },
+    "invalid_duration": {
+      "message": "Długość okna musi być w krokach 15 minut od 00:15 do 24:00."
+    },
+    "duration_exceeds_search_window": {
+      "message": "Długość okna jest większa niż skonfigurowany zakres przeszukiwania."
+    }
+  },
   "options": {
     "step": {
       "init": {

@@ -56,15 +56,11 @@ from .const import (
 )
 from .options import get_effective_options, with_option_defaults
 from .time_window import (
-    duration_minutes_from_hhmm,
     duration_options,
     end_time_options,
-    is_search_end_end_of_day,
-    is_valid_duration_hhmm,
-    is_valid_quarter_step,
-    minutes_from_midnight,
     normalize_hhmm,
     start_time_options,
+    time_window_error,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -224,48 +220,54 @@ def _coerce_time_values(flat: Mapping[str, Any]) -> dict[str, Any]:
     return out
 
 
-def _search_span_minutes(start_hhmm: str, end_hhmm: str) -> int:
-    sm = minutes_from_midnight(normalize_hhmm(start_hhmm))
-    ne = normalize_hhmm(end_hhmm)
-    if is_search_end_end_of_day(ne):
-        return 24 * 60 - sm
-    em = minutes_from_midnight(ne)
-    return em - sm
+def _window_row_error(
+    flat: Mapping[str, Any],
+    enable_key: str,
+    enable_default: bool,
+    start_key: str,
+    start_default: str,
+    end_key: str,
+    end_default: str,
+    duration_key: str,
+    duration_default: str,
+) -> str | None:
+    if not flat.get(enable_key, enable_default):
+        return None
+    return time_window_error(
+        str(flat.get(start_key, start_default)),
+        str(flat.get(end_key, end_default)),
+        str(flat.get(duration_key, duration_default)),
+    )
+
+
+def window_option_error(flat: Mapping[str, Any], option_key: str, option_value: str) -> str | None:
+    proposed = dict(flat)
+    proposed[option_key] = option_value
+    for row in WINDOW_VALIDATION_CONFIG:
+        (
+            _enable_key,
+            _enable_default,
+            start_key,
+            _start_default,
+            end_key,
+            _end_default,
+            duration_key,
+            _duration_default,
+        ) = row
+        if option_key not in (start_key, end_key, duration_key):
+            continue
+        return _window_row_error(proposed, *row)
+    return None
 
 
 def _time_window_errors(flat: Mapping[str, Any]) -> dict[str, str]:
     if flat.get(CONF_LITE_MODE, DEFAULT_LITE_MODE):
         return {}
 
-    for (
-        enable_key,
-        enable_default,
-        start_key,
-        start_default,
-        end_key,
-        end_default,
-        duration_key,
-        duration_default,
-    ) in WINDOW_VALIDATION_CONFIG:
-        if not flat.get(enable_key, enable_default):
-            continue
-        start = flat.get(start_key, start_default)
-        end = flat.get(end_key, end_default)
-        duration = flat.get(duration_key, duration_default)
-        ns = normalize_hhmm(str(start))
-        ne = normalize_hhmm(str(end))
-        if not is_valid_quarter_step(ns):
-            return {"base": "invalid_time_window"}
-        if not is_valid_quarter_step(ne):
-            return {"base": "invalid_time_window"}
-        if not is_valid_duration_hhmm(str(duration)):
-            return {"base": "invalid_duration"}
-        if not is_search_end_end_of_day(ne) and minutes_from_midnight(ns) >= minutes_from_midnight(ne):
-            return {"base": "invalid_time_window"}
-        span = _search_span_minutes(ns, ne)
-        dm = duration_minutes_from_hhmm(str(duration))
-        if dm > span:
-            return {"base": "duration_exceeds_search_window"}
+    for row in WINDOW_VALIDATION_CONFIG:
+        error = _window_row_error(flat, *row)
+        if error:
+            return {"base": error}
     return {}
 
 

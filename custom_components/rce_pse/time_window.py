@@ -95,6 +95,29 @@ def is_search_end_end_of_day(hhmm: str) -> bool:
     return normalize_hhmm(hhmm) in ("00:00", "24:00")
 
 
+def search_span_minutes(start_hhmm: str, end_hhmm: str) -> int:
+    sm = minutes_from_midnight(normalize_hhmm(start_hhmm))
+    ne = normalize_hhmm(end_hhmm)
+    if is_search_end_end_of_day(ne):
+        return 24 * 60 - sm
+    em = minutes_from_midnight(ne)
+    return em - sm
+
+
+def time_window_error(start: str, end: str, duration: str) -> str | None:
+    ns = normalize_hhmm(str(start))
+    ne = normalize_hhmm(str(end))
+    if not is_valid_quarter_step(ns) or not is_valid_quarter_step(ne):
+        return "invalid_time_window"
+    if not is_valid_duration_hhmm(str(duration)):
+        return "invalid_duration"
+    if not is_search_end_end_of_day(ne) and minutes_from_midnight(ns) >= minutes_from_midnight(ne):
+        return "invalid_time_window"
+    if duration_minutes_from_hhmm(str(duration)) > search_span_minutes(ns, ne):
+        return "duration_exceeds_search_window"
+    return None
+
+
 def parse_hhmm_to_time(hhmm: str) -> time:
     h, m = map(int, normalize_hhmm(hhmm).split(":"))
     if h >= 24:

@@ -122,7 +122,7 @@ Gdy dane okno lub próg jest włączony, integracja publikuje encje sterujące w
 
 ### Select — parametry okien czasowych
 
-Wartości `HH:MM` w krokach 15 minut, te same listy co w formularzu konfiguracji.
+Wartości `HH:MM` w krokach 15 minut, te same listy co w formularzu konfiguracji. Kombinacja początku, końca i długości musi mieścić się w zakresie przeszukiwania tak samo jak w formularzu konfiguracyjnym. Niepasująca zmiana jest odrzucana i poprzednia wartość zostaje.
 
 | `entity_id` PL | Nazwa PL | `entity_id` EN | Nazwa EN |
 | --- | --- | --- | --- |

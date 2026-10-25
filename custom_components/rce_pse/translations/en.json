@@ -92,6 +92,17 @@
       "single_instance_allowed": "Only a single configuration of RCE PSE is allowed."
     }
   },
+  "exceptions": {
+    "invalid_time_window": {
+      "message": "Invalid search range: end must be after start on the same day, unless end is 00:00 (end of day)."
+    },
+    "invalid_duration": {
+      "message": "Duration must use 15-minute steps from 00:15 to 24:00."
+    },
+    "duration_exceeds_search_window": {
+      "message": "Duration is longer than the configured search range."
+    }
+  },
   "options": {
     "step": {
       "init": {

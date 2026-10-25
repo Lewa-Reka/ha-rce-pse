@@ -103,7 +103,9 @@ class TestRCEPriceThresholdNumberEntity:
 
         await entity.async_set_native_value(12.5)
 
-        kwargs = mock_hass.config_entries.async_update_entry.call_args.kwargs
+        mock_hass.config_entries.async_update_entry.assert_called_once()
+        args, kwargs = mock_hass.config_entries.async_update_entry.call_args
+        assert args[0] is config_entry
         assert kwargs["options"][CONF_LOW_PRICE_THRESHOLD] == 12.5
         assert kwargs["options"][CONF_LITE_MODE] is False
 

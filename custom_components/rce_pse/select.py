@@ -6,6 +6,7 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import (
@@ -26,9 +27,11 @@ from .const import (
     DEFAULT_WINDOW_DURATION_HOURS,
     DOMAIN,
 )
+from .config_flow import window_option_error
 from .coordinator import RCEPSEDataUpdateCoordinator
 from .options import (
     async_set_entry_option,
+    get_effective_options,
     get_entry_value,
     is_cheapest_window_enabled,
     is_expensive_window_enabled,
@@ -157,6 +160,16 @@ class RCEWindowTimeSelectEntity(RCEBaseCommonEntity, SelectEntity):
         return normalize_hhmm(str(value))
 
     async def async_select_option(self, option: str) -> None:
+        error = window_option_error(
+            get_effective_options(self.config_entry),
+            self._option_key,
+            option,
+        )
+        if error:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key=error,
+            )
         await async_set_entry_option(
             self.hass, self.config_entry, self._option_key, option
         )

@@ -16,6 +16,7 @@ from custom_components.rce_pse.time_window import (
     search_window_exclusive_end,
     start_dtime_for_record,
     start_time_options,
+    time_window_error,
 )
 
 
@@ -120,6 +121,13 @@ def test_end_time_options():
     assert opts[-1] == "23:45"
     assert "24:00" not in opts
     assert len(opts) == 96
+
+
+def test_time_window_error_matches_config_rules():
+    assert time_window_error("08:00", "10:00", "02:00") is None
+    assert time_window_error("00:00", "00:00", "24:00") is None
+    assert time_window_error("08:00", "10:00", "04:00") == "duration_exceeds_search_window"
+    assert time_window_error("12:00", "06:00", "02:00") == "invalid_time_window"
 
 
 def test_duration_options():
