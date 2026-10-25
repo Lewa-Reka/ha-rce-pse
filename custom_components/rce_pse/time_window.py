@@ -7,6 +7,32 @@ from functools import lru_cache
 
 HHMM_PATTERN = re.compile(r"^([01]?\d|2[0-3]):([0-5]\d)$")
 MINUTES_STEP = 15
+QUARTER_MINUTES = (0, 15, 30, 45)
+
+
+def start_time_options() -> list[str]:
+    return [f"{h:02d}:{m:02d}" for h in range(24) for m in QUARTER_MINUTES]
+
+
+def end_time_options() -> list[str]:
+    opts: list[str] = ["00:00"]
+    for h in range(24):
+        for m in QUARTER_MINUTES:
+            if h == 0 and m == 0:
+                continue
+            opts.append(f"{h:02d}:{m:02d}")
+    return opts
+
+
+def duration_options() -> list[str]:
+    opts: list[str] = []
+    for h in range(24):
+        for m in QUARTER_MINUTES:
+            if h == 0 and m == 0:
+                continue
+            opts.append(f"{h:02d}:{m:02d}")
+    opts.append("24:00")
+    return opts
 
 
 def duration_minutes_from_hhmm(hhmm: str) -> int:
@@ -67,6 +93,29 @@ def is_valid_quarter_step(hhmm: str) -> bool:
 
 def is_search_end_end_of_day(hhmm: str) -> bool:
     return normalize_hhmm(hhmm) in ("00:00", "24:00")
+
+
+def search_span_minutes(start_hhmm: str, end_hhmm: str) -> int:
+    sm = minutes_from_midnight(normalize_hhmm(start_hhmm))
+    ne = normalize_hhmm(end_hhmm)
+    if is_search_end_end_of_day(ne):
+        return 24 * 60 - sm
+    em = minutes_from_midnight(ne)
+    return em - sm
+
+
+def time_window_error(start: str, end: str, duration: str) -> str | None:
+    ns = normalize_hhmm(str(start))
+    ne = normalize_hhmm(str(end))
+    if not is_valid_quarter_step(ns) or not is_valid_quarter_step(ne):
+        return "invalid_time_window"
+    if not is_valid_duration_hhmm(str(duration)):
+        return "invalid_duration"
+    if not is_search_end_end_of_day(ne) and minutes_from_midnight(ns) >= minutes_from_midnight(ne):
+        return "invalid_time_window"
+    if duration_minutes_from_hhmm(str(duration)) > search_span_minutes(ns, ne):
+        return "duration_exceeds_search_window"
+    return None
 
 
 def parse_hhmm_to_time(hhmm: str) -> time:

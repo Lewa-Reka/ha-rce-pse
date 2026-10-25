@@ -32,11 +32,12 @@ Agents may run these locally if needed; full setup is in the workflow files. To 
 ## Translations
 
 - Translation files: `custom_components/rce_pse/translations/en.json` (English) and `custom_components/rce_pse/translations/pl.json` (Polish).
-- For any change that affects UI, config flow, or entity names (new or changed keys under `config`, `options`, `entity.sensor`, or `entity.binary_sensor`), update **both** `en.json` and `pl.json` and keep the key structure identical.
+- For any change that affects UI, config flow, or entity names (new or changed keys under `config`, `options`, `entity.sensor`, `entity.binary_sensor`, `entity.select`, or `entity.number`), update **both** `en.json` and `pl.json` and keep the key structure identical.
+- Service errors raised by configuration entities use the root `exceptions` section. Keep those keys identical in both files as well.
 
 ### Removing or renaming entities
 
-When removing or renaming an entity, update both translation files: remove or rename the corresponding keys under `entity.sensor` or `entity.binary_sensor` in `en.json` and `pl.json` so there are no orphaned entries.
+When removing or renaming an entity, update both translation files: remove or rename the corresponding keys under `entity.sensor`, `entity.binary_sensor`, `entity.select`, or `entity.number` in `en.json` and `pl.json` so there are no orphaned entries. The section matches the Home Assistant platform (`sensor`, `binary_sensor`, `select`, `number`).
 
 ## Documentation
 
@@ -45,9 +46,9 @@ When removing or renaming an entity, update both translation files: remove or re
 
 ## Key paths
 
-- Integration package: `custom_components/rce_pse/` (coordinator, config_flow, sensors, binary_sensors, shared_base, const, price_calculator).
+- Integration package: `custom_components/rce_pse/` (coordinator, config_flow, sensors, binary_sensors, select, number, shared_base, const, price_calculator).
 - Domain and constants: `custom_components/rce_pse/const.py`.
-- Entity names use `_attr_translation_key` set in `custom_components/rce_pse/shared_base.py`; each key must exist in both `translations/en.json` and `translations/pl.json` under `entity.sensor` or `entity.binary_sensor`.
+- Entity names use `_attr_translation_key` set in `custom_components/rce_pse/shared_base.py`. Each key must exist in both `translations/en.json` and `translations/pl.json` under the platform that owns the entity: `entity.sensor`, `entity.binary_sensor`, `entity.select`, or `entity.number`.
 
 ## Validation (optional)
 

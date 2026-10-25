@@ -92,6 +92,17 @@
       "single_instance_allowed": "Dozwolona jest tylko jedna konfiguracja RCE PSE."
     }
   },
+  "exceptions": {
+    "invalid_time_window": {
+      "message": "Nieprawidłowy zakres: koniec musi być później niż początek tego samego dnia, chyba że koniec to 00:00 (koniec dnia)."
+    },
+    "invalid_duration": {
+      "message": "Długość okna musi być w krokach 15 minut od 00:15 do 24:00."
+    },
+    "duration_exceeds_search_window": {
+      "message": "Długość okna jest większa niż skonfigurowany zakres przeszukiwania."
+    }
+  },
   "options": {
     "step": {
       "init": {
@@ -352,6 +363,43 @@
       },
       "rce_pse_high_price_threshold_window_end": {
         "name": "Cena Powyżej Progu Koniec"
+      }
+    },
+    "select": {
+      "rce_pse_cheapest_time_window_start": {
+        "name": "Tanie Okno Początek Przeszukiwania"
+      },
+      "rce_pse_cheapest_time_window_end": {
+        "name": "Tanie Okno Koniec Przeszukiwania"
+      },
+      "rce_pse_cheapest_window_duration_hours": {
+        "name": "Tanie Okno Długość"
+      },
+      "rce_pse_expensive_time_window_start": {
+        "name": "Drogie Okno Początek Przeszukiwania"
+      },
+      "rce_pse_expensive_time_window_end": {
+        "name": "Drogie Okno Koniec Przeszukiwania"
+      },
+      "rce_pse_expensive_window_duration_hours": {
+        "name": "Drogie Okno Długość"
+      },
+      "rce_pse_second_expensive_time_window_start": {
+        "name": "Drugie Drogie Okno Początek Przeszukiwania"
+      },
+      "rce_pse_second_expensive_time_window_end": {
+        "name": "Drugie Drogie Okno Koniec Przeszukiwania"
+      },
+      "rce_pse_second_expensive_window_duration_hours": {
+        "name": "Drugie Drogie Okno Długość"
+      }
+    },
+    "number": {
+      "rce_pse_low_price_threshold": {
+        "name": "Próg Niskiej Ceny"
+      },
+      "rce_pse_high_price_threshold": {
+        "name": "Próg Wysokiej Ceny"
       }
     },
     "binary_sensor": {
