@@ -7,6 +7,32 @@ from functools import lru_cache
 
 HHMM_PATTERN = re.compile(r"^([01]?\d|2[0-3]):([0-5]\d)$")
 MINUTES_STEP = 15
+QUARTER_MINUTES = (0, 15, 30, 45)
+
+
+def start_time_options() -> list[str]:
+    return [f"{h:02d}:{m:02d}" for h in range(24) for m in QUARTER_MINUTES]
+
+
+def end_time_options() -> list[str]:
+    opts: list[str] = ["00:00"]
+    for h in range(24):
+        for m in QUARTER_MINUTES:
+            if h == 0 and m == 0:
+                continue
+            opts.append(f"{h:02d}:{m:02d}")
+    return opts
+
+
+def duration_options() -> list[str]:
+    opts: list[str] = []
+    for h in range(24):
+        for m in QUARTER_MINUTES:
+            if h == 0 and m == 0:
+                continue
+            opts.append(f"{h:02d}:{m:02d}")
+    opts.append("24:00")
+    return opts
 
 
 def duration_minutes_from_hhmm(hhmm: str) -> int:

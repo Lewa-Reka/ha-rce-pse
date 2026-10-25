@@ -5,8 +5,15 @@ from unittest.mock import Mock, patch, AsyncMock
 import pytest
 from homeassistant.config_entries import ConfigEntry
 
-from custom_components.rce_pse import async_migrate_entry, async_setup_entry, async_unload_entry
+from custom_components.rce_pse import (
+    async_migrate_entry,
+    async_setup_entry,
+    async_unload_entry,
+    async_update_options,
+)
 from custom_components.rce_pse.binary_sensor import async_setup_entry as async_setup_binary_sensors
+from custom_components.rce_pse.number import async_setup_entry as async_setup_numbers
+from custom_components.rce_pse.select import async_setup_entry as async_setup_selects
 from custom_components.rce_pse.config_flow import (
     RCEConfigFlow,
     SECTION_CHEAPEST_WINDOW,
@@ -37,6 +44,7 @@ from custom_components.rce_pse.const import (
     CONF_USE_HOURLY_PRICES,
     DOMAIN,
 )
+from custom_components.rce_pse.options import get_reload_options_snapshot
 
 
 class TestRCEPSEIntegration:
@@ -61,7 +69,7 @@ class TestRCEPSEIntegration:
             mock_coordinator_class.assert_called_once_with(mock_hass, mock_entry)
             mock_coordinator.async_config_entry_first_refresh.assert_called_once()
             mock_hass.config_entries.async_forward_entry_setups.assert_called_once_with(
-                mock_entry, ["sensor", "binary_sensor"]
+                mock_entry, ["sensor", "binary_sensor", "select", "number"]
             )
             mock_coordinator.async_setup_quarter_hour_refresh.assert_called_once()
             assert mock_hass.data[DOMAIN][mock_entry.entry_id] == mock_coordinator
@@ -108,7 +116,7 @@ class TestRCEPSEIntegration:
         assert result is True
         mock_coordinator.async_close.assert_called_once()
         mock_hass.config_entries.async_unload_platforms.assert_called_once_with(
-            mock_entry, ["sensor", "binary_sensor"]
+            mock_entry, ["sensor", "binary_sensor", "select", "number"]
         )
         assert mock_entry.entry_id not in mock_hass.data[DOMAIN]
 
@@ -223,6 +231,96 @@ class TestEntitySetupOptions:
             "rce_pse_today_min_price_window_active",
             "rce_pse_today_max_price_window_active",
         }
+
+    @pytest.mark.asyncio
+    async def test_select_setup_in_lite_mode_adds_no_entities(
+        self, mock_hass, mock_coordinator
+    ):
+        mock_hass.data[DOMAIN] = {"entry": mock_coordinator}
+        mock_entry = Mock(spec=ConfigEntry)
+        mock_entry.entry_id = "entry"
+        mock_entry.data = {CONF_LITE_MODE: True}
+        mock_entry.options = {}
+        added_entities = []
+
+        await async_setup_selects(mock_hass, mock_entry, added_entities.extend)
+
+        assert added_entities == []
+
+    @pytest.mark.asyncio
+    async def test_number_setup_skips_disabled_thresholds(
+        self, mock_hass, mock_coordinator
+    ):
+        mock_hass.data[DOMAIN] = {"entry": mock_coordinator}
+        mock_entry = Mock(spec=ConfigEntry)
+        mock_entry.entry_id = "entry"
+        mock_entry.data = {}
+        mock_entry.options = {
+            CONF_ENABLE_LOW_PRICE_THRESHOLD: False,
+            CONF_ENABLE_HIGH_PRICE_THRESHOLD: False,
+        }
+        added_entities = []
+
+        await async_setup_numbers(mock_hass, mock_entry, added_entities.extend)
+
+        assert added_entities == []
+
+
+class TestUpdateOptions:
+
+    @pytest.mark.asyncio
+    async def test_async_update_options_skips_reload_for_window_params(self, mock_hass):
+        mock_entry = Mock(spec=ConfigEntry)
+        mock_entry.entry_id = "test_entry_id"
+        mock_entry.data = {CONF_LITE_MODE: False}
+        mock_entry.options = {CONF_CHEAPEST_WINDOW_DURATION_HOURS: "02:00"}
+        mock_coordinator = Mock()
+        mock_coordinator.reload_options_snapshot = get_reload_options_snapshot(mock_entry)
+        mock_entry.options = {CONF_CHEAPEST_WINDOW_DURATION_HOURS: "01:30"}
+        mock_hass.data[DOMAIN] = {mock_entry.entry_id: mock_coordinator}
+        mock_hass.config_entries = Mock()
+        mock_hass.config_entries.async_reload = AsyncMock()
+
+        await async_update_options(mock_hass, mock_entry)
+
+        mock_coordinator.async_update_listeners.assert_called_once()
+        mock_hass.config_entries.async_reload.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_async_update_options_skips_reload_for_threshold_value(self, mock_hass):
+        mock_entry = Mock(spec=ConfigEntry)
+        mock_entry.entry_id = "test_entry_id"
+        mock_entry.data = {CONF_LITE_MODE: False}
+        mock_entry.options = {CONF_LOW_PRICE_THRESHOLD: 0.0}
+        mock_coordinator = Mock()
+        mock_coordinator.reload_options_snapshot = get_reload_options_snapshot(mock_entry)
+        mock_entry.options = {CONF_LOW_PRICE_THRESHOLD: 25.0}
+        mock_hass.data[DOMAIN] = {mock_entry.entry_id: mock_coordinator}
+        mock_hass.config_entries = Mock()
+        mock_hass.config_entries.async_reload = AsyncMock()
+
+        await async_update_options(mock_hass, mock_entry)
+
+        mock_coordinator.async_update_listeners.assert_called_once()
+        mock_hass.config_entries.async_reload.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_async_update_options_reloads_when_lite_mode_changes(self, mock_hass):
+        mock_entry = Mock(spec=ConfigEntry)
+        mock_entry.entry_id = "test_entry_id"
+        mock_entry.data = {CONF_LITE_MODE: False}
+        mock_entry.options = {}
+        mock_coordinator = Mock()
+        mock_coordinator.reload_options_snapshot = get_reload_options_snapshot(mock_entry)
+        mock_entry.options = {CONF_LITE_MODE: True}
+        mock_hass.data[DOMAIN] = {mock_entry.entry_id: mock_coordinator}
+        mock_hass.config_entries = Mock()
+        mock_hass.config_entries.async_reload = AsyncMock()
+
+        await async_update_options(mock_hass, mock_entry)
+
+        mock_hass.config_entries.async_reload.assert_called_once_with(mock_entry.entry_id)
+        mock_coordinator.async_update_listeners.assert_not_called()
 
 
 class TestRCEPSEConfigFlow:

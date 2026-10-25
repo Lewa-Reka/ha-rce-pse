@@ -14,10 +14,11 @@ from .config_flow import (
     migrate_option_defaults,
     migrate_price_unit_in_mapping,
 )
+from .options import get_reload_options_snapshot
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = ["sensor", "binary_sensor"]
+PLATFORMS = ["sensor", "binary_sensor", "select", "number"]
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
@@ -68,6 +69,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     
     coordinator = RCEPSEDataUpdateCoordinator(hass, entry)
+    coordinator.reload_options_snapshot = get_reload_options_snapshot(entry)
     _LOGGER.debug("Created data coordinator for RCE PSE")
     
     await coordinator.async_config_entry_first_refresh()
@@ -85,6 +87,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    coordinator = hass.data.get(DOMAIN, {}).get(entry.entry_id)
+    current_snapshot = get_reload_options_snapshot(entry)
+    previous_snapshot = getattr(coordinator, "reload_options_snapshot", None)
+    if coordinator is not None and previous_snapshot == current_snapshot:
+        _LOGGER.debug(
+            "Window or threshold options updated for RCE PSE, skipping reload: %s",
+            entry.entry_id,
+        )
+        coordinator.async_update_listeners()
+        return
+
     _LOGGER.debug("Options updated for RCE PSE, reloading entry: %s", entry.entry_id)
     await hass.config_entries.async_reload(entry.entry_id)
 

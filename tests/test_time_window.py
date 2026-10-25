@@ -3,6 +3,8 @@ from datetime import datetime
 import pytest
 
 from custom_components.rce_pse.time_window import (
+    duration_options,
+    end_time_options,
     is_now_in_window,
     is_search_end_end_of_day,
     is_valid_quarter_step,
@@ -13,6 +15,7 @@ from custom_components.rce_pse.time_window import (
     period_overlaps_search,
     search_window_exclusive_end,
     start_dtime_for_record,
+    start_time_options,
 )
 
 
@@ -100,3 +103,28 @@ def test_is_search_end_end_of_day():
 
 def test_parse_hhmm_to_time_2400():
     assert parse_hhmm_to_time("24:00") == datetime(2000, 1, 1, 23, 59).time()
+
+
+def test_start_time_options():
+    opts = start_time_options()
+    assert opts[0] == "00:00"
+    assert opts[-1] == "23:45"
+    assert "24:00" not in opts
+    assert len(opts) == 96
+
+
+def test_end_time_options():
+    opts = end_time_options()
+    assert opts[0] == "00:00"
+    assert opts[1] == "00:15"
+    assert opts[-1] == "23:45"
+    assert "24:00" not in opts
+    assert len(opts) == 96
+
+
+def test_duration_options():
+    opts = duration_options()
+    assert opts[0] == "00:15"
+    assert opts[-1] == "24:00"
+    assert "00:00" not in opts
+    assert len(opts) == 96

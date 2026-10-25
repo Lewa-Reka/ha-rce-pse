@@ -354,6 +354,43 @@
         "name": "Price Above Threshold End"
       }
     },
+    "select": {
+      "rce_pse_cheapest_time_window_start": {
+        "name": "Cheap Window Search Start"
+      },
+      "rce_pse_cheapest_time_window_end": {
+        "name": "Cheap Window Search End"
+      },
+      "rce_pse_cheapest_window_duration_hours": {
+        "name": "Cheap Window Duration"
+      },
+      "rce_pse_expensive_time_window_start": {
+        "name": "Expensive Window Search Start"
+      },
+      "rce_pse_expensive_time_window_end": {
+        "name": "Expensive Window Search End"
+      },
+      "rce_pse_expensive_window_duration_hours": {
+        "name": "Expensive Window Duration"
+      },
+      "rce_pse_second_expensive_time_window_start": {
+        "name": "Second Expensive Window Search Start"
+      },
+      "rce_pse_second_expensive_time_window_end": {
+        "name": "Second Expensive Window Search End"
+      },
+      "rce_pse_second_expensive_window_duration_hours": {
+        "name": "Second Expensive Window Duration"
+      }
+    },
+    "number": {
+      "rce_pse_low_price_threshold": {
+        "name": "Low Price Threshold"
+      },
+      "rce_pse_high_price_threshold": {
+        "name": "High Price Threshold"
+      }
+    },
     "binary_sensor": {
       "rce_pse_today_min_price_window_active": {
         "name": "Lowest Price Active"

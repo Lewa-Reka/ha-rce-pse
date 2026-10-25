@@ -50,15 +50,21 @@ from .const import (
     DEFAULT_USE_GROSS_PRICES,
     DEFAULT_LOW_PRICE_THRESHOLD,
     DEFAULT_HIGH_PRICE_THRESHOLD,
+    THRESHOLD_MAX,
+    THRESHOLD_MIN,
+    THRESHOLD_STEP,
 )
-from .options import with_option_defaults
+from .options import get_effective_options, with_option_defaults
 from .time_window import (
     duration_minutes_from_hhmm,
+    duration_options,
+    end_time_options,
     is_search_end_end_of_day,
     is_valid_duration_hhmm,
     is_valid_quarter_step,
     minutes_from_midnight,
     normalize_hhmm,
+    start_time_options,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -169,35 +175,20 @@ def migrate_option_defaults(data: Mapping[str, Any]) -> dict[str, Any]:
     return with_option_defaults(data)
 
 
+def _select_options(values: list[str]) -> list[dict[str, str]]:
+    return [{"value": value, "label": value} for value in values]
+
+
 def _start_time_select_options() -> list[dict[str, str]]:
-    return [
-        {"value": f"{h:02d}:{m:02d}", "label": f"{h:02d}:{m:02d}"}
-        for h in range(24)
-        for m in (0, 15, 30, 45)
-    ]
+    return _select_options(start_time_options())
 
 
 def _end_time_select_options() -> list[dict[str, str]]:
-    opts: list[dict[str, str]] = [{"value": "00:00", "label": "00:00"}]
-    for h in range(24):
-        for m in (0, 15, 30, 45):
-            if h == 0 and m == 0:
-                continue
-            v = f"{h:02d}:{m:02d}"
-            opts.append({"value": v, "label": v})
-    return opts
+    return _select_options(end_time_options())
 
 
 def _duration_select_options() -> list[dict[str, str]]:
-    opts: list[dict[str, str]] = []
-    for h in range(24):
-        for m in (0, 15, 30, 45):
-            if h == 0 and m == 0:
-                continue
-            v = f"{h:02d}:{m:02d}"
-            opts.append({"value": v, "label": v})
-    opts.append({"value": "24:00", "label": "24:00"})
-    return opts
+    return _select_options(duration_options())
 
 
 def _flatten_rce_user_input(user_input: dict[str, Any]) -> dict[str, Any]:
@@ -454,9 +445,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                 default=_get(CONF_LOW_PRICE_THRESHOLD, DEFAULT_LOW_PRICE_THRESHOLD),
             ): selector.NumberSelector(
                 selector.NumberSelectorConfig(
-                    min=-3000,
-                    max=3000,
-                    step=0.01,
+                    min=THRESHOLD_MIN,
+                    max=THRESHOLD_MAX,
+                    step=THRESHOLD_STEP,
                     mode=selector.NumberSelectorMode.BOX,
                     unit_of_measurement="PLN",
                 )
@@ -472,9 +463,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                 default=_get(CONF_HIGH_PRICE_THRESHOLD, DEFAULT_HIGH_PRICE_THRESHOLD),
             ): selector.NumberSelector(
                 selector.NumberSelectorConfig(
-                    min=-3000,
-                    max=3000,
-                    step=0.01,
+                    min=THRESHOLD_MIN,
+                    max=THRESHOLD_MAX,
+                    step=THRESHOLD_STEP,
                     mode=selector.NumberSelectorMode.BOX,
                     unit_of_measurement="PLN",
                 )
@@ -550,7 +541,7 @@ class RCEOptionsFlow(config_entries.OptionsFlow):
                 _LOGGER.debug("Updating RCE PSE options: %s", flat)
                 return self.async_create_entry(title="", data=flat)
 
-        current_data = self.config_entry.options if self.config_entry.options else self.config_entry.data
+        current_data = get_effective_options(self.config_entry)
         options_schema = _rce_form_schema(current_data)
 
         return self.async_show_form(

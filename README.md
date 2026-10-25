@@ -56,6 +56,7 @@ Plik korzysta z polskich `entity_id`. Przy HA po angielsku podmień identyfikato
 ## Spis treści
 
 - [Konfiguracja](#konfiguracja)
+- [Encje konfiguracyjne](#encje-konfiguracyjne)
 - [Sensory](#sensory)
 - [Kompas Energetyczny (PDGSZ)](#kompas-energetyczny-pdgsz)
 - [Binary sensory](#binary-sensory)
@@ -71,7 +72,7 @@ Formularz konfiguracji dzieli się na sekcje: podstawowe ustawienia, okno tanich
 
 ### Tryb Lite
 
-Domyślnie wyłączony. Po włączeniu integracja publikuje wyłącznie cztery sensory: **Cena**, **Cena Jutro**, **Kompas Energetyczny Dzisiaj** i **Kompas Energetyczny Jutro**. Statystyki, sensory poprzedniego i następnego okresu, wszystkie okna konfigurowalne, wszystkie sensory progów cenowych oraz wszystkie binary sensory są wtedy wyłączone razem z ich obliczeniami. Pełne dane PSE (dziś i jutro) zostają w atrybucie sensora **Cena** i **Cena Jutro** do własnych szablonów.
+Domyślnie wyłączony. Po włączeniu integracja publikuje wyłącznie cztery sensory: **Cena**, **Cena Jutro**, **Kompas Energetyczny Dzisiaj** i **Kompas Energetyczny Jutro**. Statystyki, sensory poprzedniego i następnego okresu, wszystkie okna konfigurowalne, wszystkie sensory progów cenowych, encje sterujące (`select` i `number`) oraz wszystkie binary sensory są wtedy wyłączone razem z ich obliczeniami. Pełne dane PSE (dziś i jutro) zostają w atrybucie sensora **Cena** i **Cena Jutro** do własnych szablonów.
 
 ### Jednostka ceny
 
@@ -89,7 +90,7 @@ Sensor **Cena Sprzedaży Prosument** (`sensor.rce_pse_cena_sprzedazy_prosument`)
 
 ### Okna tanie / drogie / drugie drogie
 
-Każde z trzech okien ma własny przełącznik włączenia, **Początek przeszukiwania** (HH:MM), **Koniec przeszukiwania** (HH:MM) i **Długość poszukiwanego okna** (HH:MM). Skok wartości to 15 minut. Po wyłączeniu przełącznika integracja nie publikuje sensorów ani binary sensora dla tego okna i nie wykonuje obliczeń.
+Każde z trzech okien ma własny przełącznik włączenia, **Początek przeszukiwania** (HH:MM), **Koniec przeszukiwania** (HH:MM) i **Długość poszukiwanego okna** (HH:MM). Skok wartości to 15 minut. Po wyłączeniu przełącznika integracja nie publikuje sensorów, binary sensora ani encji `select` dla tego okna i nie wykonuje obliczeń.
 
 Semantyka zakresów:
 
@@ -105,7 +106,7 @@ Domyślne wartości:
 
 ### Progi cenowe
 
-Sekcja **Progi cenowe** zawiera **Próg niskiej ceny** (domyślnie `0`) i **Próg wysokiej ceny** (domyślnie `1000`). Każdy próg ma własny przełącznik włączenia. Progi podaj w tej samej jednostce co **Jednostka ceny**.
+Sekcja **Progi cenowe** zawiera **Próg niskiej ceny** (domyślnie `0`) i **Próg wysokiej ceny** (domyślnie `1000`). Każdy próg ma własny przełącznik włączenia. Po wyłączeniu przełącznika integracja nie publikuje sensorów, binary sensora ani encji `number` dla tego progu. Progi podaj w tej samej jednostce co **Jednostka ceny**.
 
 Sensory timestamp **Cena Poniżej / Powyżej Progu Początek** i **Koniec** pokazują okno aktualnie trwające (kwadrans po kwadransie z ceną ≤ progu niskiego albo ≥ progu wysokiego). Jeśli takiego okna nie ma, sensory wskazują najbliższe przyszłe okno spośród rekordów dziś i jutra (jutro tylko gdy PSE już opublikuje dane). Brak trwającego i przyszłego okna → stan `unknown`.
 
@@ -114,6 +115,35 @@ Binary sensor **Cena Poniżej / Powyżej Progu Aktywna** reaguje wyłącznie na 
 ### Zmiana ustawień
 
 **Ustawienia** → **Integracje** → **RCE PSE** → **Konfiguruj**. Po zapisaniu integracja przeładuje się z nowymi ustawieniami. Encje na chwilę mogą być niedostępne.
+
+## Encje konfiguracyjne
+
+Gdy dane okno lub próg jest włączony, integracja publikuje encje sterujące w kategorii konfiguracyjnej. Można je dodać na pulpit albo zmieniać z automatyzacji. Wartość encji jest odczytywana i zapisywana w opcjach wpisu konfiguracyjnego — ten sam stan widać w **Ustawienia** → **Integracje** → **RCE PSE** → **Konfiguruj**.
+
+### Select — parametry okien czasowych
+
+Wartości `HH:MM` w krokach 15 minut, te same listy co w formularzu konfiguracji.
+
+| `entity_id` PL | Nazwa PL | `entity_id` EN | Nazwa EN |
+| --- | --- | --- | --- |
+| `select.rce_pse_tanie_okno_poczatek_przeszukiwania` | Tanie Okno Początek Przeszukiwania | `select.rce_pse_cheap_window_search_start` | Cheap Window Search Start |
+| `select.rce_pse_tanie_okno_koniec_przeszukiwania` | Tanie Okno Koniec Przeszukiwania | `select.rce_pse_cheap_window_search_end` | Cheap Window Search End |
+| `select.rce_pse_tanie_okno_dlugosc` | Tanie Okno Długość | `select.rce_pse_cheap_window_duration` | Cheap Window Duration |
+| `select.rce_pse_drogie_okno_poczatek_przeszukiwania` | Drogie Okno Początek Przeszukiwania | `select.rce_pse_expensive_window_search_start` | Expensive Window Search Start |
+| `select.rce_pse_drogie_okno_koniec_przeszukiwania` | Drogie Okno Koniec Przeszukiwania | `select.rce_pse_expensive_window_search_end` | Expensive Window Search End |
+| `select.rce_pse_drogie_okno_dlugosc` | Drogie Okno Długość | `select.rce_pse_expensive_window_duration` | Expensive Window Duration |
+| `select.rce_pse_drugie_drogie_okno_poczatek_przeszukiwania` | Drugie Drogie Okno Początek Przeszukiwania | `select.rce_pse_second_expensive_window_search_start` | Second Expensive Window Search Start |
+| `select.rce_pse_drugie_drogie_okno_koniec_przeszukiwania` | Drugie Drogie Okno Koniec Przeszukiwania | `select.rce_pse_second_expensive_window_search_end` | Second Expensive Window Search End |
+| `select.rce_pse_drugie_drogie_okno_dlugosc` | Drugie Drogie Okno Długość | `select.rce_pse_second_expensive_window_duration` | Second Expensive Window Duration |
+
+### Number — progi cenowe
+
+Zakres `-3000`–`3000`, krok `0.01`, jednostka jak w opcji **Jednostka ceny**.
+
+| `entity_id` PL | Nazwa PL | `entity_id` EN | Nazwa EN |
+| --- | --- | --- | --- |
+| `number.rce_pse_prog_niskiej_ceny` | Próg Niskiej Ceny | `number.rce_pse_low_price_threshold` | Low Price Threshold |
+| `number.rce_pse_prog_wysokiej_ceny` | Próg Wysokiej Ceny | `number.rce_pse_high_price_threshold` | High Price Threshold |
 
 ## Sensory
 
