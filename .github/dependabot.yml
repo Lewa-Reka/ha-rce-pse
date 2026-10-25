@@ -8,8 +8,6 @@ updates:
     labels:
       - "dependencies"
       - "python"
-    ignore:
-      - dependency-name: "aiohttp"
     groups:
       test-dependencies:
         patterns:
