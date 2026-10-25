@@ -45,6 +45,15 @@ def disable_frame_report_usage():
 
 
 @pytest.fixture(autouse=True)
+def mock_create_clientsession():
+    with patch(
+        "homeassistant.helpers.aiohttp_client._async_create_clientsession",
+        return_value=AsyncMock(),
+    ):
+        yield
+
+
+@pytest.fixture(autouse=True)
 def cleanup_hass():
     """Clean up the global hass reference after each test."""
     yield
