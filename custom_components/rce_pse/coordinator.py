@@ -8,6 +8,7 @@ from typing import Any
 
 import aiohttp
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
@@ -82,7 +83,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         _LOGGER.debug("Fetching fresh data from PSE API - last fetch: %s", self._last_api_fetch)
         
         if self.session is None:
-            self.session = aiohttp.ClientSession()
+            self.session = async_get_clientsession(self.hass)
             
         try:
             async with asyncio.timeout(30):
@@ -344,5 +345,4 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def async_close(self) -> None:
         _LOGGER.debug("Closing PSE API session")
-        if self.session:
-            await self.session.close() 
+        self.session = None
