@@ -12,6 +12,7 @@ from custom_components.rce_pse.time_window import (
     period_bounds_for_record,
     period_overlaps_search,
     search_window_exclusive_end,
+    start_dtime_for_record,
 )
 
 
@@ -45,6 +46,19 @@ def test_period_bounds_for_record():
     start, end = period_bounds_for_record(rec)
     assert start == datetime(2024, 1, 1, 10, 0, 0)
     assert end == datetime(2024, 1, 1, 10, 15, 0)
+
+
+def test_start_dtime_for_record():
+    assert start_dtime_for_record({"dtime": "2026-10-25 00:15:00"}) == "2026-10-25 00:00:00"
+
+
+def test_start_dtime_for_record_end_of_day():
+    assert start_dtime_for_record({"dtime": "2026-10-25 24:00:00"}) == "2026-10-25 23:45:00"
+
+
+def test_start_dtime_for_record_invalid():
+    assert start_dtime_for_record({"dtime": None}) is None
+    assert start_dtime_for_record({}) is None
 
 
 def test_search_end_eod():

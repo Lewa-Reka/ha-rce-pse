@@ -13,7 +13,7 @@ from homeassistant.helpers.event import async_track_time_change
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from .time_window import parse_pse_dtime
+from .time_window import parse_pse_dtime, start_dtime_for_record
 from .const import (
     API_UPDATE_INTERVAL,
     CONF_PRICE_UNIT,
@@ -167,7 +167,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 if record_count == 0:
                     _LOGGER.warning("PSE API returned no data records")
                 
-                raw_data = data["value"]
+                raw_data = self._attach_start_dtime(data["value"])
                 
                 use_hourly_prices = self._get_config_value(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
                 
@@ -233,6 +233,18 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
         result = sorted(seen.values(), key=lambda r: (r.get("business_date", ""), r.get("dtime", "")))
         _LOGGER.debug("PDGSZ fetched %d active hourly records", len(result))
         return result
+
+    def _attach_start_dtime(self, raw_data: list[dict]) -> list[dict]:
+        if not raw_data:
+            return raw_data
+        processed: list[dict] = []
+        for record in raw_data:
+            new_record = record.copy()
+            start_dtime = start_dtime_for_record(record)
+            if start_dtime is not None:
+                new_record["start_dtime"] = start_dtime
+            processed.append(new_record)
+        return processed
 
     def _calculate_hourly_averages(self, raw_data: list[dict]) -> list[dict]:
         if not raw_data:

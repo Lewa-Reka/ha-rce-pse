@@ -380,9 +380,9 @@ class TestSensorAttributes:
         
         with patch.object(sensor, "get_today_data") as mock_today_data:
             mock_today_data.return_value = [
-                {"rce_pln": "300.00", "rce_pln_neg_to_zero": "0.00", "publication_ts": "2024-01-01T10:00:00Z"},
-                {"rce_pln": "350.00", "publication_ts": "2024-01-01T10:15:00Z"},
-                {"rce_pln": "400.00", "rce_pln_neg_to_zero": "0.00"},
+                {"rce_pln": "300.00", "rce_pln_neg_to_zero": "0.00", "publication_ts": "2024-01-01T10:00:00Z", "start_dtime": "2024-01-01 00:00:00"},
+                {"rce_pln": "350.00", "publication_ts": "2024-01-01T10:15:00Z", "start_dtime": "2024-01-01 00:15:00"},
+                {"rce_pln": "400.00", "rce_pln_neg_to_zero": "0.00", "start_dtime": "2024-01-01 00:30:00"},
             ]
             
             attrs = sensor.extra_state_attributes
@@ -392,6 +392,14 @@ class TestSensorAttributes:
             assert "last_update" in attrs
             assert "prices" in attrs
             assert attrs["data_points"] == 3
+            assert [rec["start_dtime"] for rec in attrs["prices"]] == [
+                "2024-01-01 00:00:00",
+                "2024-01-01 00:15:00",
+                "2024-01-01 00:30:00",
+            ]
+            for rec in attrs["prices"]:
+                assert "rce_pln_neg_to_zero" not in rec
+                assert "publication_ts" not in rec
             for rec in attrs["prices"]:
                 assert "rce_pln_neg_to_zero" not in rec
                 assert "publication_ts" not in rec
@@ -486,8 +494,8 @@ class TestTomorrowMainSensor:
         sensor = RCETomorrowMainSensor(mock_coordinator)
         
         tomorrow_data = [
-            {"period": "10:00 - 10:15", "rce_pln": "350.00", "rce_pln_neg_to_zero": "0.00", "publication_ts": "2024-01-01T10:00:00Z"},
-            {"period": "11:00 - 11:15", "rce_pln": "375.50", "publication_ts": "2024-01-01T11:00:00Z"},
+            {"period": "10:00 - 10:15", "rce_pln": "350.00", "rce_pln_neg_to_zero": "0.00", "publication_ts": "2024-01-01T10:00:00Z", "start_dtime": "2024-01-02 10:00:00"},
+            {"period": "11:00 - 11:15", "rce_pln": "375.50", "publication_ts": "2024-01-01T11:00:00Z", "start_dtime": "2024-01-02 11:00:00"},
         ]
         
         with patch.object(sensor, 'get_tomorrow_data', return_value=tomorrow_data):
@@ -496,6 +504,13 @@ class TestTomorrowMainSensor:
             assert attrs is not None
             assert attrs["status"] == "Available"
             assert attrs["data_points"] == 2
+            assert [rec["start_dtime"] for rec in attrs["prices"]] == [
+                "2024-01-02 10:00:00",
+                "2024-01-02 11:00:00",
+            ]
+            for rec in attrs["prices"]:
+                assert "rce_pln_neg_to_zero" not in rec
+                assert "publication_ts" not in rec
             for rec in attrs["prices"]:
                 assert "rce_pln_neg_to_zero" not in rec
                 assert "publication_ts" not in rec
