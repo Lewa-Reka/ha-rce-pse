@@ -90,26 +90,28 @@ class TestDisplayRounding:
         _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
         sensor = RCETodayMainSensor(mock_coordinator)
         with patch.object(sensor, "get_current_price_data") as mock_current:
-            mock_current.return_value = {"rce_pln": "0.564630"}
-            assert sensor.native_value == 0.56463
+            mock_current.return_value = {"rce_pln": "0.564636"}
+            assert sensor.native_value == 0.56464
 
     def test_kwh_state_keeps_api_scale_maximum(self, mock_coordinator):
         _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
         sensor = RCETodayMainSensor(mock_coordinator)
         with patch.object(sensor, "get_current_price_data") as mock_current:
-            mock_current.return_value = {"rce_pln": "5.555550"}
-            assert sensor.native_value == 5.55555
+            mock_current.return_value = {"rce_pln": "5.555556"}
+            assert sensor.native_value == 5.55556
 
     def test_kwh_prices_attribute_keeps_five_decimals(self, mock_coordinator):
         _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
         sensor = RCETodayMainSensor(mock_coordinator)
         with patch.object(sensor, "get_today_data") as mock_today:
             mock_today.return_value = [
-                {"rce_pln": "0.564630", "start_dtime": "2024-01-01 00:00:00"},
-                {"rce_pln": "5.555550", "start_dtime": "2024-01-01 00:15:00"},
+                {"rce_pln": "0.564636", "start_dtime": "2024-01-01 00:00:00"},
+                {"rce_pln": "5.555554", "start_dtime": "2024-01-01 00:15:00"},
             ]
-            prices = sensor.extra_state_attributes["prices"]
-            assert prices[0]["rce_pln"] == 0.56463
+            attrs = sensor.extra_state_attributes
+            assert attrs is not None
+            prices = attrs["prices"]
+            assert prices[0]["rce_pln"] == 0.56464
             assert prices[1]["rce_pln"] == 5.55555
 
     def test_mwh_prices_attribute_keeps_two_decimals(self, mock_coordinator):
@@ -118,17 +120,19 @@ class TestDisplayRounding:
             mock_today.return_value = [
                 {"rce_pln": "564.637", "start_dtime": "2024-01-01 00:00:00"},
             ]
-            prices = sensor.extra_state_attributes["prices"]
+            attrs = sensor.extra_state_attributes
+            assert attrs is not None
+            prices = attrs["prices"]
             assert prices[0]["rce_pln"] == 564.64
 
     def test_kwh_data_summary_uses_five_decimals(self, mock_coordinator):
         _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
         sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
         summary = sensor.get_data_summary(
-            [{"rce_pln": "0.56463"}, {"rce_pln": "0.56465"}]
+            [{"rce_pln": "0.564631"}, {"rce_pln": "0.564639"}]
         )
-        assert summary["average"] == 0.56464
-        assert summary["median"] == 0.56464
+        assert summary["average"] == 0.56463
+        assert summary["median"] == 0.56463
 
 
 class TestDisplayPrecisionAndStateClass:
