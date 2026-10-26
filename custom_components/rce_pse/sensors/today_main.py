@@ -32,7 +32,6 @@ class RCETodayMainSensor(RCEPriceSensor):
         )
         
         attributes = {
-            "last_update": self.coordinator.data.get("last_update") if self.coordinator.data else None,
             "data_points": len(today_data),
             "prices": sanitized_today_data,
         }

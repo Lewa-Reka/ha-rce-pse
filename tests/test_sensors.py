@@ -305,7 +305,7 @@ class TestTodayPriceSensors:
                 "business_date": "2025-03-14",
                 "publication_ts": "2025-03-14T23:00:00Z",
             })
-            mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+            mock_coordinator.data = {"raw_data": raw}
             value = sensor.get_price_at_future_period(1)
             assert value == 388.5
 
@@ -324,7 +324,7 @@ class TestTodayPriceSensors:
             "business_date": "2025-03-14",
             "publication_ts": "2025-03-14T23:00:00Z",
         }]
-        mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+        mock_coordinator.data = {"raw_data": raw}
         with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
             from datetime import datetime
             mock_now.return_value = datetime(2025, 3, 14, 10, 0, 0)
@@ -346,7 +346,7 @@ class TestTodayPriceSensors:
                 "business_date": "2025-03-14",
                 "publication_ts": "2025-03-14T23:00:00Z",
             })
-            mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+            mock_coordinator.data = {"raw_data": raw}
             value = sensor.get_price_at_past_period(1)
             assert value == 362.0
 
@@ -365,7 +365,7 @@ class TestTodayPriceSensors:
             "business_date": "2025-03-14",
             "publication_ts": "2025-03-14T23:00:00Z",
         }]
-        mock_coordinator.data = {"raw_data": raw, "last_update": ""}
+        mock_coordinator.data = {"raw_data": raw}
         with patch("custom_components.rce_pse.sensors.base.dt_util.now") as mock_now:
             from datetime import datetime
             mock_now.return_value = datetime(2025, 3, 14, 12, 30, 0)
@@ -389,7 +389,7 @@ class TestSensorAttributes:
             
             assert attrs is not None
             assert "data_points" in attrs
-            assert "last_update" in attrs
+            assert "last_update" not in attrs
             assert "prices" in attrs
             assert attrs["data_points"] == 3
             assert [rec["start_dtime"] for rec in attrs["prices"]] == [
@@ -502,6 +502,7 @@ class TestTomorrowMainSensor:
             attrs = sensor.extra_state_attributes
             
             assert attrs is not None
+            assert "last_update" not in attrs
             assert attrs["status"] == "Available"
             assert attrs["data_points"] == 2
             assert [rec["start_dtime"] for rec in attrs["prices"]] == [
@@ -522,6 +523,7 @@ class TestTomorrowMainSensor:
             attrs = sensor.extra_state_attributes
             
             assert attrs is not None
+            assert "last_update" not in attrs
             assert attrs["status"] == "Data not available yet"
             assert attrs["data_points"] == 0
             assert attrs["prices"] == []

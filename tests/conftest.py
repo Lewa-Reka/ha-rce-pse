@@ -126,7 +126,6 @@ def coordinator_data(sample_api_response):
     return {
         "raw_data": sample_api_response["value"],
         "pdgsz_data": [],
-        "last_update": dt_util.now().isoformat(),
     }
 
 
