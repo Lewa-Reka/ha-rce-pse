@@ -16,7 +16,7 @@ from .const import (
     DOMAIN,
     THRESHOLD_MAX,
     THRESHOLD_MIN,
-    THRESHOLD_STEP,
+    threshold_step_for_unit,
 )
 from .coordinator import RCEPSEDataUpdateCoordinator
 from .options import (
@@ -51,7 +51,6 @@ class RCEPriceThresholdNumberEntity(RCEBaseCommonEntity, NumberEntity):
     _attr_mode = NumberMode.BOX
     _attr_native_min_value = THRESHOLD_MIN
     _attr_native_max_value = THRESHOLD_MAX
-    _attr_native_step = THRESHOLD_STEP
     _attr_icon = "mdi:cash"
 
     def __init__(
@@ -71,6 +70,10 @@ class RCEPriceThresholdNumberEntity(RCEBaseCommonEntity, NumberEntity):
     @property
     def available(self) -> bool:
         return True
+
+    @property
+    def native_step(self) -> float:
+        return threshold_step_for_unit(self.native_price_unit())
 
     @property
     def native_value(self) -> float:

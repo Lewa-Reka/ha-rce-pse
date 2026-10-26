@@ -18,16 +18,19 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 
 ![Przykładowy pulpit Lovelace](examples/img/dashboard-lovelace-PL.png)
 
-Gotowy plik YAML: [examples/dashboard-lovelace-PL.yaml](examples/dashboard-lovelace-PL.yaml). Zawiera dwa widoki — **Ceny Energii** (wykres 48h, kolumny Dziś i Jutro) oraz **Kompas Energetyczny** (siatka godzin PDGSZ, legenda alertów).
+Zrzut pokazuje wariant `PLN/MWh`. Każdy plik zawiera dwa widoki — **Ceny Energii** (wykres 48h, kolumny Dziś i Jutro) oraz **Kompas Energetyczny** (siatka godzin PDGSZ, legenda alertów).
+
+Wybierz plik zgodny z jednostką i językiem `entity_id`:
+
+- `PLN/MWh`, polskie encje: [examples/dashboard-lovelace-PL-MWh.yaml](examples/dashboard-lovelace-PL-MWh.yaml)
+- `PLN/kWh`, polskie encje: [examples/dashboard-lovelace-PL-kWh.yaml](examples/dashboard-lovelace-PL-kWh.yaml)
 
 Wymagania:
 
 - Karta **ApexCharts Card** zainstalowana z HACS (`custom:apexcharts-card`).
 - Widok typu **Sekcje** w pulpicie Home Assistant.
 - Integracja w trybie pełnym (nie Lite) — wszystkie użyte encje muszą istnieć.
-
 Plik korzysta z polskich `entity_id`. Przy HA po angielsku podmień identyfikatory
-
 ## Instalacja
 
 [![Otwórz HACS i dodaj repozytorium](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Lewa-Reka&repository=ha-rce-pse&category=integration)
@@ -76,7 +79,7 @@ Domyślnie wyłączony. Po włączeniu integracja publikuje wyłącznie cztery s
 
 ### Jednostka ceny
 
-Pole **Jednostka** przyjmuje `PLN/MWh` (domyślnie) lub `PLN/kWh`. Ta sama jednostka obowiązuje dla wszystkich sensorów i progów. Po przełączeniu PLN/MWh ↔ PLN/kWh historia w recorderze może mieszać stare i nowe próbki przy tym samym `entity_id` — zaktualizuj progi i automatyzacje. Konwersja z MWh na kWh odbywa się w koordynatorze przez podzielenie wartości API przez 1000; sensory zaokrąglają do 2 miejsc po przecinku, w `raw_data` jest wyższa precyzja wewnętrzna.
+Pole **Jednostka** przyjmuje `PLN/MWh` (domyślnie) lub `PLN/kWh`. Ta sama jednostka obowiązuje dla wszystkich sensorów i progów. Dashboard pod wybraną jednostkę jest w sekcji [Przykładowy dashboard Lovelace](#przykładowy-dashboard-lovelace): pliki `*-MWh.yaml` i `*-kWh.yaml`. Po przełączeniu PLN/MWh ↔ PLN/kWh historia w recorderze może mieszać stare i nowe próbki przy tym samym `entity_id` — zaktualizuj progi i automatyzacje. Konwersja z MWh na kWh odbywa się w koordynatorze przez podzielenie wartości API przez 1000. Sensory i atrybut `prices` zaokrąglają do 2 miejsc przy `PLN/MWh` i do 5 miejsc przy `PLN/kWh` (`5555.55 PLN/MWh` → `5.55555 PLN/kWh`).. Stara historia w recorderze zostaje przy poprzedniej precyzji.
 
 ### Średnie ceny godzinowe
 
@@ -147,7 +150,7 @@ Zakres `-3000`–`3000`, krok `0.01`, jednostka jak w opcji **Jednostka ceny**.
 
 ## Sensory
 
-Tabele poniżej używają polskich `entity_id` — Home Assistant w polskiej wersji generuje je ze slugowanej polskiej nazwy. W angielskiej wersji UI te same encje mają slugi angielskie (np. `sensor.rce_pse_price` zamiast `sensor.rce_pse_cena`); zasada jest ta sama, tłumaczy się tylko nazwa wyświetlana. Ceny zaokrąglane są do 2 miejsc po przecinku. Tryb Lite ogranicza listę do **Cena**, **Cena Jutro**, **Kompas Energetyczny Dzisiaj** i **Kompas Energetyczny Jutro**.
+Tabele poniżej używają polskich `entity_id` — Home Assistant w polskiej wersji generuje je ze slugowanej polskiej nazwy. W angielskiej wersji UI te same encje mają slugi angielskie (np. `sensor.rce_pse_price` zamiast `sensor.rce_pse_cena`); zasada jest ta sama, tłumaczy się tylko nazwa wyświetlana. Ceny zaokrąglane są do 2 miejsc po przecinku przy `PLN/MWh` i do 5 miejsc przy `PLN/kWh`. Tryb Lite ogranicza listę do **Cena**, **Cena Jutro**, **Kompas Energetyczny Dzisiaj** i **Kompas Energetyczny Jutro**.
 
 ### Cena bieżąca i prosument
 

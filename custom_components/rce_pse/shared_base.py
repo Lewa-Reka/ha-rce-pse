@@ -10,9 +10,9 @@ from .time_window import parse_pse_dtime
 from .const import (
     CONF_PRICE_UNIT,
     DEFAULT_PRICE_UNIT,
-    DISPLAY_PRICE_DECIMALS,
     DOMAIN,
     MANUFACTURER,
+    display_price_decimals,
 )
 from .price_calculator import PriceCalculator
 
@@ -30,17 +30,21 @@ class RCEBaseCommonEntity(CoordinatorEntity):
     def native_price_unit(self) -> str:
         return self.coordinator._get_config_value(CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT)
 
+    def display_price_decimals_for_entity(self) -> int:
+        return display_price_decimals(self.native_price_unit())
+
     def round_display_price(self, value: float) -> float:
-        return round(value, DISPLAY_PRICE_DECIMALS)
+        return round(value, self.display_price_decimals_for_entity())
 
     def round_price_records_for_attributes(self, records: list[dict]) -> list[dict]:
+        decimals = self.display_price_decimals_for_entity()
         out: list[dict] = []
         for record in records:
             item = dict(record)
             for key in ("rce_pln", "rce_pln_neg_to_zero"):
                 if key in item and item[key] is not None:
                     try:
-                        item[key] = round(float(item[key]), DISPLAY_PRICE_DECIMALS)
+                        item[key] = round(float(item[key]), decimals)
                     except (ValueError, TypeError):
                         pass
             out.append(item)
@@ -49,11 +53,12 @@ class RCEBaseCommonEntity(CoordinatorEntity):
     def round_price_dict_for_attributes(self, record: dict | None) -> dict | None:
         if record is None:
             return None
+        decimals = self.display_price_decimals_for_entity()
         item = dict(record)
         for key in ("rce_pln", "rce_pln_neg_to_zero"):
             if key in item and item[key] is not None:
                 try:
-                    item[key] = round(float(item[key]), DISPLAY_PRICE_DECIMALS)
+                    item[key] = round(float(item[key]), decimals)
                 except (ValueError, TypeError):
                     pass
         return item

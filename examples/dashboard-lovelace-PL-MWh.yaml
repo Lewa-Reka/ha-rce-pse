@@ -1,5 +1,5 @@
 views:
-  - title: Energy Prices
+  - title: Ceny Energii
     type: sections
     max_columns: 2
     sections:
@@ -8,7 +8,7 @@ views:
           - type: custom:apexcharts-card
             header:
               show: true
-              title: 📊 Energy Prices - 48h
+              title: 📊 Ceny Energii - 48h
               show_states: true
               colorize_states: true
             grid_options:
@@ -24,7 +24,7 @@ views:
                 decimals: 0
                 apex_config:
                   title:
-                    text: Price [PLN/MWh]
+                    text: Cena [PLN/MWh]
                     style:
                       fontWeight: 400
             apex_config:
@@ -42,92 +42,90 @@ views:
                   format: dd MMM HH:mm
               annotations:
                 yaxis:
-                  - 'y': 200
-                    borderColor: '#10B981'
+                  - "y": 200
+                    borderColor: "#10B981"
                     strokeDashArray: 4
                     label:
-                      text: Low prices
+                      text: Nieskie ceny
                       style:
-                        color: '#FFFFFF'
-                        background: '#059669'
+                        color: "#FFFFFF"
+                        background: "#059669"
                         fontWeight: bold
-                  - 'y': 600
-                    borderColor: '#F97316'
+                  - "y": 600
+                    borderColor: "#F97316"
                     strokeDashArray: 4
                     label:
-                      text: High prices
+                      text: Wysokie ceny
                       style:
-                        color: '#FFFFFF'
-                        background: '#C2410C'
+                        color: "#FFFFFF"
+                        background: "#C2410C"
                         fontWeight: bold
             series:
-              - entity: sensor.rce_pse_price
+              - entity: sensor.rce_pse_cena
                 attribute: prices
-                name: Price current
+                name: Cena bieżąca
                 yaxis_id: price
                 type: line
-                color: '#F59E0B'
-                time_delta: '-15min'
+                color: "#F59E0B"
                 stroke_width: 0
                 opacity: 1
                 extend_to: false
                 color_threshold:
                   - value: -100
-                    color: '#3B82F6'
+                    color: "#3B82F6"
                   - value: 0
-                    color: '#06B6D4'
+                    color: "#06B6D4"
                   - value: 200
-                    color: '#10B981'
+                    color: "#10B981"
                   - value: 400
-                    color: '#FBBF24'
+                    color: "#FBBF24"
                   - value: 600
-                    color: '#F97316'
+                    color: "#F97316"
                   - value: 800
-                    color: '#EF4444'
+                    color: "#EF4444"
                 data_generator: |
                   return entity.attributes.prices.map((entry) => {
-                    return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+                    return [new Date(entry.start_dtime).getTime(), parseFloat(entry.rce_pln)];
                   });
                 show:
                   extremas: true
                   in_header: after_now
                   legend_value: false
-              - entity: sensor.rce_pse_price_tomorrow
+              - entity: sensor.rce_pse_cena_jutro
                 attribute: prices
-                name: Price tomorrow
+                name: Cena jutro
                 yaxis_id: price
                 type: line
-                color: '#8B5CF6'
-                time_delta: '-15min'
+                color: "#8B5CF6"
                 stroke_width: 0
                 opacity: 0.7
                 extend_to: end
                 color_threshold:
                   - value: -100
-                    color: '#3B82F6'
+                    color: "#3B82F6"
                   - value: 0
-                    color: '#06B6D4'
+                    color: "#06B6D4"
                   - value: 200
-                    color: '#10B981'
+                    color: "#10B981"
                   - value: 400
-                    color: '#FBBF24'
+                    color: "#FBBF24"
                   - value: 600
-                    color: '#F97316'
+                    color: "#F97316"
                   - value: 800
-                    color: '#EF4444'
+                    color: "#EF4444"
                 data_generator: |
                   return entity.attributes.prices.map((entry) => {
-                    return [new Date(entry.dtime).getTime(), parseFloat(entry.rce_pln)];
+                    return [new Date(entry.start_dtime).getTime(), parseFloat(entry.rce_pln)];
                   });
                 show:
                   extremas: true
                   in_header: false
                   legend_value: false
-              - entity: sensor.rce_pse_prosumer_selling_price
-                name: Price of selling (prosumer)
+              - entity: sensor.rce_pse_cena_sprzedazy_prosument
+                name: Cena sprzedaży (prosument)
                 yaxis_id: price
                 type: line
-                color: '#27AE60'
+                color: "#27AE60"
                 stroke_width: 1
                 extend_to: end
                 show:
@@ -136,8 +134,8 @@ views:
                   in_header: true
             now:
               show: true
-              label: Now
-              color: '#06B6D4'
+              label: Teraz
+              color: "#06B6D4"
         column_span: 2
       - type: grid
         column_span: 1
@@ -145,29 +143,28 @@ views:
           - type: vertical-stack
             cards:
               - type: heading
-                heading: Today
+                heading: Dzisiaj
                 heading_style: title
                 icon: mdi:white-balance-sunny
                 badges:
                   - type: entity
                     show_state: true
                     show_icon: true
-                    entity: binary_sensor.rce_pse_second_expensive_window_active
+                    entity: binary_sensor.rce_pse_drugie_drogie_okno_aktywne
                     color: state
-                    name: Morning expensive window active
+                    name: Trwa poranne drogie okno
                   - type: entity
                     show_state: true
                     show_icon: true
-                    entity: >-
-                      binary_sensor.rce_pse_expensive_window_active
+                    entity: binary_sensor.rce_pse_drogie_okno_aktywne
                     color: state
-                    name: Evening expensive window active
+                    name: Trwa wieczorne drogie okno
                   - type: entity
                     show_state: true
                     show_icon: true
-                    entity: binary_sensor.rce_pse_cheap_window_active
+                    entity: binary_sensor.rce_pse_tanie_okno_aktywne
                     color: state
-                    name: Cheap window active
+                    name: Trwa tanie okno
               - type: markdown
                 text_only: true
                 content: >
@@ -197,40 +194,34 @@ views:
                   %}<font color="#94A3B8" size="5">= {{ (v | abs) | round(1)
                   }}</font> %{% endif %}{% endif %}</center>{% endmacro %}
 
-                  {{ trend_block('sensor.rce_pse_today_current_vs_average', 'Now
-                  / Average') }}
+                  {{ trend_block('sensor.rce_pse_aktualna_vs_srednia_dzisiaj',
+                  'Teraz / Średnia') }}
               - square: false
                 type: grid
                 columns: 2
                 cards:
                   - type: tile
-                    entity: sensor.rce_pse_minimum_price_today
+                    entity: sensor.rce_pse_minimalna_cena_dzisiaj
                     name: Min
                     icon: mdi:arrow-collapse-down
                     color: green
-                    vertical: false
-                    features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_maximum_price_today
+                    entity: sensor.rce_pse_maksymalna_cena_dzisiaj
                     name: Max
                     icon: mdi:arrow-collapse-up
                     color: red
-                    vertical: false
-                    features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_average_price_today
-                    name: Average
+                    entity: sensor.rce_pse_srednia_cena_dzisiaj
+                    name: Średnia
                     icon: mdi:chart-timeline-variant-shimmer
-                    color: '#F59E0B'
+                    color: "#F59E0B"
                     vertical: false
                     features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_median_price_today
-                    name: Median
+                    entity: sensor.rce_pse_mediana_cen_dzisiaj
+                    name: Mediana
                     icon: mdi:chart-bell-curve
                     color: amber
-                    vertical: false
-                    features_position: bottom
               - type: markdown
                 text_only: true
                 content: >
@@ -248,49 +239,49 @@ views:
                   {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else
                   %}—{% endif %}{% endmacro %}
 
-                  {% set uom = state_attr('sensor.rce_pse_price',
+                  {% set uom = state_attr('sensor.rce_pse_cena',
                   'unit_of_measurement') or 'PLN/MWh' %}
 
-                  <h2>User windows</h2>
+                  <h2>Okna użytkownika</h2>
 
                   <ha-alert alert-type="success">
 
-                  <div>Morning expensive window</div>
+                  <div>Drogie poranne okno</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_today_second_expensive_window_start','sensor.rce_pse_today_second_expensive_window_end')
+                  w('sensor.rce_pse_drugie_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drugie_drogie_okno_dzisiaj_koniec')
                   }}</strong>
 
-                  <div>Average: {{
-                  p('sensor.rce_pse_second_expensive_window_avg_price_today') }}
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_dzisiaj') }}
                   {{ uom }}</div>
 
                   </ha-alert>
 
                   <ha-alert alert-type="success">
 
-                  <div>Evening expensive window</div>
+                  <div>Drogie wieczorne okno</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_today_custom_most_expensive_window_start','sensor.rce_pse_today_custom_most_expensive_window_end')
+                  w('sensor.rce_pse_drogie_okno_dzisiaj_poczatek','sensor.rce_pse_drogie_okno_dzisiaj_koniec')
                   }}</strong>
 
-                  <div>Average: {{
-                  p('sensor.rce_pse_expensive_window_avg_price_today') }} {{ uom
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drogie_okno_srednia_cena_dzisiaj') }} {{ uom
                   }}</div>
 
                   </ha-alert>
 
-                  <ha-alert alert-type="info">
+                  <ha-alert alert-type="warning">
 
-                  <div>Cheap window</div>
+                  <div>Tanie okno</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_today_custom_cheapest_window_start','sensor.rce_pse_today_custom_cheapest_window_end')
+                  w('sensor.rce_pse_tanie_okno_dzisiaj_poczatek','sensor.rce_pse_tanie_okno_dzisiaj_koniec')
                   }}</strong>
 
-                  <div>Average: {{
-                  p('sensor.rce_pse_cheap_window_avg_price_today') }} {{ uom
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_tanie_okno_srednia_cena_dzisiaj') }} {{ uom
                   }}</div>
 
                   </ha-alert>
@@ -308,17 +299,18 @@ views:
                   is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
                   endmacro %}
 
-                  {% if has_value('sensor.rce_pse_lowest_price_today_start') or
-                  has_value('sensor.rce_pse_highest_price_today_start') %}
+                  {% if
+                  has_value('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek') or
+                  has_value('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek') %}
 
-                  <h2>Most expensive and cheapest period</h2>
+                  <h2>Najdroższy i najtańszy okres</h2>
 
                   <ha-alert alert-type="info">
 
                   <div>Najniższa cena</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_lowest_price_today_start','sensor.rce_pse_lowest_price_today_end')
+                  w('sensor.rce_pse_najnizsza_cena_dzisiaj_poczatek','sensor.rce_pse_najnizsza_cena_dzisiaj_koniec')
                   }}</strong>
 
                   </ha-alert>
@@ -328,7 +320,7 @@ views:
                   <div>Najwyższa cena</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_highest_price_today_start','sensor.rce_pse_highest_price_today_end')
+                  w('sensor.rce_pse_najwyzsza_cena_dzisiaj_poczatek','sensor.rce_pse_najwyzsza_cena_dzisiaj_koniec')
                   }}</strong>
 
                   </ha-alert>
@@ -340,7 +332,7 @@ views:
           - type: vertical-stack
             cards:
               - type: heading
-                heading: Tomorrow
+                heading: Jutro
                 heading_style: title
                 icon: mdi:weather-night-partly-cloudy
               - type: markdown
@@ -362,10 +354,10 @@ views:
           - type: vertical-stack
             visibility:
               - condition: state
-                entity: sensor.rce_pse_price_tomorrow
+                entity: sensor.rce_pse_cena_jutro
                 state_not: unavailable
               - condition: state
-                entity: sensor.rce_pse_price_tomorrow
+                entity: sensor.rce_pse_cena_jutro
                 state_not: unknown
             cards:
               - type: markdown
@@ -379,36 +371,34 @@ views:
                   %}<font color="#94A3B8" size="5">= {{ (v | abs) | round(1)
                   }}</font> %{% endif %}{% endif %}</center>{% endmacro %}
 
-                  {{ trend_block('sensor.rce_pse_tomorrow_vs_today_average',
-                  'Tomorrow / Today') }}
+                  {{ trend_block('sensor.rce_pse_jutro_vs_dzisiaj_srednia',
+                  'Jutro / Dzisiaj') }}
               - type: grid
                 square: false
                 columns: 2
                 cards:
                   - type: tile
-                    entity: sensor.rce_pse_minimum_price_tomorrow
+                    entity: sensor.rce_pse_minimalna_cena_jutro
                     name: Min
                     icon: mdi:arrow-collapse-down
                     color: green
                   - type: tile
-                    entity: sensor.rce_pse_maximum_price_tomorrow
+                    entity: sensor.rce_pse_maksymalna_cena_jutro
                     name: Max
                     icon: mdi:arrow-collapse-up
                     color: red
                   - type: tile
-                    entity: sensor.rce_pse_average_price_tomorrow
-                    name: Average
+                    entity: sensor.rce_pse_srednia_cena_jutro
+                    name: Średnia
                     icon: mdi:chart-timeline-variant-shimmer
-                    color: '#8B5CF6'
+                    color: "#8B5CF6"
                     vertical: false
                     features_position: bottom
                   - type: tile
-                    entity: sensor.rce_pse_median_price_tomorrow
-                    name: Median
+                    entity: sensor.rce_pse_mediana_cen_jutro
+                    name: Mediana
                     icon: mdi:chart-bell-curve
                     color: amber
-                    vertical: false
-                    features_position: bottom
               - type: markdown
                 text_only: true
                 content: >
@@ -426,49 +416,49 @@ views:
                   {% macro p(x) %}{% if has_value(x) %}{{ states(x) }}{% else
                   %}—{% endif %}{% endmacro %}
 
-                  {% set uom = state_attr('sensor.rce_pse_price',
+                  {% set uom = state_attr('sensor.rce_pse_cena',
                   'unit_of_measurement') or 'PLN/MWh' %}
 
-                  <h2>User windows</h2>
+                  <h2>Okna użytkownika</h2>
 
                   <ha-alert alert-type="success">
 
-                  <div>Morning expensive window</div>
+                  <div>Drogie poranne okno</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_tomorrow_second_expensive_window_start','sensor.rce_pse_tomorrow_second_expensive_window_end')
+                  w('sensor.rce_pse_drugie_drogie_okno_jutro_poczatek','sensor.rce_pse_drugie_drogie_okno_jutro_koniec')
                   }}</strong>
 
-                  <div>Average: {{
-                  p('sensor.rce_pse_second_expensive_window_avg_price_tomorrow')
-                  }} {{ uom }}</div>
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drugie_drogie_okno_srednia_cena_jutro') }}
+                  {{ uom }}</div>
 
                   </ha-alert>
 
                   <ha-alert alert-type="success">
 
-                  <div>Evening expensive window</div>
+                  <div>Drogie wieczorne okno</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_tomorrow_custom_most_expensive_window_start','sensor.rce_pse_tomorrow_custom_most_expensive_window_end')
+                  w('sensor.rce_pse_drogie_okno_jutro_poczatek','sensor.rce_pse_drogie_okno_jutro_koniec')
                   }}</strong>
 
-                  <div>Average: {{
-                  p('sensor.rce_pse_expensive_window_avg_price_tomorrow') }} {{
-                  uom }}</div>
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_drogie_okno_srednia_cena_jutro') }} {{ uom
+                  }}</div>
 
                   </ha-alert>
 
-                  <ha-alert alert-type="info">
+                  <ha-alert alert-type="warning">
 
-                  <div>Cheap window</div>
+                  <div>Tanie okno</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_tomorrow_custom_cheapest_window_start','sensor.rce_pse_tomorrow_custom_cheapest_window_end')
+                  w('sensor.rce_pse_tanie_okno_jutro_poczatek','sensor.rce_pse_tanie_okno_jutro_koniec')
                   }}</strong>
 
-                  <div>Average: {{
-                  p('sensor.rce_pse_cheap_window_avg_price_tomorrow') }} {{ uom
+                  <div>Średnia: {{
+                  p('sensor.rce_pse_tanie_okno_srednia_cena_jutro') }} {{ uom
                   }}</div>
 
                   </ha-alert>
@@ -486,17 +476,18 @@ views:
                   is not none %}{{ t(s) }} – {{ t(e) }}{% else %}—{% endif %}{%
                   endmacro %}
 
-                  {% if has_value('sensor.rce_pse_lowest_price_tomorrow_start')
-                  or has_value('sensor.rce_pse_highest_price_tomorrow_start') %}
+                  {% if
+                  has_value('sensor.rce_pse_najnizsza_cena_jutro_poczatek') or
+                  has_value('sensor.rce_pse_najwyzsza_cena_jutro_poczatek') %}
 
-                  <h2>Most expensive and cheapest period</h2>
+                  <h2>Najdroższy i najtańszy okres</h2>
 
                   <ha-alert alert-type="info">
 
                   <div>Najniższa cena</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_lowest_price_tomorrow_start','sensor.rce_pse_lowest_price_tomorrow_end')
+                  w('sensor.rce_pse_najnizsza_cena_jutro_poczatek','sensor.rce_pse_najnizsza_cena_jutro_koniec')
                   }}</strong>
 
                   </ha-alert>
@@ -506,7 +497,7 @@ views:
                   <div>Najwyższa cena</div>
 
                   <strong>{{
-                  w('sensor.rce_pse_highest_price_tomorrow_start','sensor.rce_pse_highest_price_tomorrow_end')
+                  w('sensor.rce_pse_najwyzsza_cena_jutro_poczatek','sensor.rce_pse_najwyzsza_cena_jutro_koniec')
                   }}</strong>
 
                   </ha-alert>
@@ -515,14 +506,14 @@ views:
           - type: markdown
             text_only: true
             content: >
-              > **Publikacja danych na tomorrow (PSE)**
+              > **Publikacja danych na jutro (PSE)**
 
               > Ceny na kolejny dzień są zwykle dostępne **po godzinie 14:00**.
-              Do tego czasu encje „tomorrow” mogą mieć stan `unknown` /
+              Do tego czasu encje „jutro” mogą mieć stan `unknown` /
               `unavailable`.
             visibility:
               - condition: state
-                entity: sensor.rce_pse_price_tomorrow
+                entity: sensor.rce_pse_cena_jutro
                 state: unknown
   - title: Kompas Energetyczny
     path: kompas-energetyczny
@@ -619,8 +610,8 @@ views:
 
                   {% for c in range(4) %}
 
-                  {{ compass_cell('sensor.rce_pse_energy_compass_today', r * 4 +
-                  c) }}
+                  {{ compass_cell('sensor.rce_pse_kompas_energetyczny_dzisiaj',
+                  r * 4 + c) }}
 
                   {% endfor %}
 
@@ -633,18 +624,18 @@ views:
                   <center>
 
                   {% if
-                  states['sensor.rce_pse_energy_compass_today'].last_updated is
-                  defined %}
+                  states['sensor.rce_pse_kompas_energetyczny_dzisiaj'].last_updated
+                  is defined %}
 
                   Ostatnia aktualizacja: {{ as_timestamp(
-                  states['sensor.rce_pse_energy_compass_today'].last_updated) |
-                  timestamp_custom('%Y-%m-%d %H:%M:%S', local=True) }}
+                  states['sensor.rce_pse_kompas_energetyczny_dzisiaj'].last_updated)
+                  | timestamp_custom('%Y-%m-%d %H:%M:%S', local=True) }}
 
                   {% endif %}
 
                   </center>
               - type: tile
-                entity: sensor.rce_pse_energy_compass_today
+                entity: sensor.rce_pse_kompas_energetyczny_dzisiaj
                 name: Teraz
                 icon: mdi:compass
                 color: green
@@ -747,8 +738,8 @@ views:
 
                   {% for c in range(4) %}
 
-                  {{ compass_cell('sensor.rce_pse_energy_compass_tomorrow', r *
-                  4 + c) }}
+                  {{ compass_cell('sensor.rce_pse_kompas_energetyczny_jutro', r
+                  * 4 + c) }}
 
                   {% endfor %}
 
@@ -761,11 +752,11 @@ views:
                   <center>
 
                   {% if
-                  states['sensor.rce_pse_energy_compass_tomorrow'].last_updated
+                  states['sensor.rce_pse_kompas_energetyczny_jutro'].last_updated
                   is defined %}
 
                   Ostatnia aktualizacja: {{ as_timestamp(
-                  states['sensor.rce_pse_energy_compass_tomorrow'].last_updated)
+                  states['sensor.rce_pse_kompas_energetyczny_jutro'].last_updated)
                   | timestamp_custom('%Y-%m-%d %H:%M:%S', local=True) }}
 
                   {% endif %}
@@ -800,4 +791,3 @@ views:
             grid_options:
               columns: 24
               rows: auto
-    cards: []
