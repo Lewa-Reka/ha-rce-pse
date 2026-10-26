@@ -20,7 +20,7 @@ Prezentacja i instalacja: <https://youtu.be/6N71uXgf9yc>
 
 Zrzut pokazuje wariant `PLN/MWh`. Każdy plik zawiera dwa widoki — **Ceny Energii** (wykres 48h, kolumny Dziś i Jutro) oraz **Kompas Energetyczny** (siatka godzin PDGSZ, legenda alertów).
 
-Wybierz plik zgodny z jednostką i językiem `entity_id`:
+Wybierz plik zgodny z jednostką:
 
 - `PLN/MWh`, polskie encje: [examples/dashboard-lovelace-PL-MWh.yaml](examples/dashboard-lovelace-PL-MWh.yaml)
 - `PLN/kWh`, polskie encje: [examples/dashboard-lovelace-PL-kWh.yaml](examples/dashboard-lovelace-PL-kWh.yaml)
