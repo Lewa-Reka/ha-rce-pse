@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Final
 
+from homeassistant.const import UnitOfEnergy
+
 DOMAIN: Final[str] = "rce_pse"
 SENSOR_PREFIX: Final[str] = "RCE PSE"
 MANUFACTURER: Final[str] = "Lewa-Reka"
@@ -47,12 +49,14 @@ CONF_HIGH_PRICE_THRESHOLD: Final[str] = "high_price_threshold"
 CONF_USE_GROSS_PRICES: Final[str] = "use_gross_prices"
 CONF_PRICE_UNIT: Final[str] = "price_unit"
 
-UNIT_PLN_MWH: Final[str] = "PLN/MWh"
-UNIT_PLN_KWH: Final[str] = "PLN/kWh"
+CURRENCY_PLN: Final[str] = "PLN"
+UNIT_PLN_MWH: Final[str] = f"{CURRENCY_PLN}/{UnitOfEnergy.MEGA_WATT_HOUR}"
+UNIT_PLN_KWH: Final[str] = f"{CURRENCY_PLN}/{UnitOfEnergy.KILO_WATT_HOUR}"
 MWH_TO_KWH_DIVISOR: Final[float] = 1000.0
 
 PRICE_INTERNAL_DECIMALS: Final[int] = 6
 DISPLAY_PRICE_DECIMALS: Final[int] = 2
+DISPLAY_PRICE_DECIMALS_KWH: Final[int] = 5
 
 DEFAULT_TIME_WINDOW_START: Final[str] = "00:00"
 DEFAULT_TIME_WINDOW_END: Final[str] = "00:00"
@@ -76,3 +80,22 @@ DEFAULT_PRICE_UNIT: Final[str] = UNIT_PLN_MWH
 THRESHOLD_MIN: Final[float] = -3000.0
 THRESHOLD_MAX: Final[float] = 3000.0
 THRESHOLD_STEP: Final[float] = 0.01
+THRESHOLD_STEP_KWH: Final[float] = 0.00001
+
+
+def display_price_decimals(unit: str) -> int:
+    if unit == UNIT_PLN_KWH:
+        return DISPLAY_PRICE_DECIMALS_KWH
+    return DISPLAY_PRICE_DECIMALS
+
+
+def threshold_step_for_unit(unit: str) -> float:
+    if unit == UNIT_PLN_KWH:
+        return THRESHOLD_STEP_KWH
+    return THRESHOLD_STEP
+
+
+def threshold_selector_step_for_unit(unit: str) -> float | str:
+    if unit == UNIT_PLN_KWH:
+        return "any"
+    return THRESHOLD_STEP

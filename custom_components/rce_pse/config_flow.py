@@ -52,7 +52,7 @@ from .const import (
     DEFAULT_HIGH_PRICE_THRESHOLD,
     THRESHOLD_MAX,
     THRESHOLD_MIN,
-    THRESHOLD_STEP,
+    threshold_selector_step_for_unit,
 )
 from .options import get_effective_options, with_option_defaults
 from .time_window import (
@@ -292,6 +292,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
             return normalize_hhmm(str(v))
         return v
 
+    price_unit = _get(CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT)
+    threshold_step = threshold_selector_step_for_unit(price_unit)
+
     pricing_inner = vol.Schema(
         {
             vol.Optional(
@@ -449,9 +452,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                 selector.NumberSelectorConfig(
                     min=THRESHOLD_MIN,
                     max=THRESHOLD_MAX,
-                    step=THRESHOLD_STEP,
+                    step=threshold_step,
                     mode=selector.NumberSelectorMode.BOX,
-                    unit_of_measurement="PLN",
+                    unit_of_measurement=price_unit,
                 )
             ),
             vol.Optional(
@@ -467,9 +470,9 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                 selector.NumberSelectorConfig(
                     min=THRESHOLD_MIN,
                     max=THRESHOLD_MAX,
-                    step=THRESHOLD_STEP,
+                    step=threshold_step,
                     mode=selector.NumberSelectorMode.BOX,
-                    unit_of_measurement="PLN",
+                    unit_of_measurement=price_unit,
                 )
             ),
         }
