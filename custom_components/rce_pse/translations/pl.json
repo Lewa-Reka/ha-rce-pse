@@ -10,12 +10,14 @@
             "data": {
               "lite_mode": "Tryb Lite",
               "price_unit": "Jednostka",
+              "price_display_precision": "Liczba miejsc po przecinku",
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)"
             },
             "data_description": {
               "lite_mode": "Tryb uproszczony nastawiony na zapewnienie pobierania danych z PSE i udostępnienie ich w atrybutach dostępnych sensorów. Publikowane są sensory aktualnej ceny, ceny jutro oraz Kompasu Energetycznego. Wszystkie analizy, statystyki, okna, progi i automatyzacje użytkownik może wykonać samodzielnie na podstawie tych danych.",
               "price_unit": "Jednostka dla wszystkich sensorów",
+              "price_display_precision": "Dla PLN/MWh zalecana wartość to 2, a dla PLN/kWh zalecana wartość to 5. Domyślnie 2.",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
               "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach"
             }
@@ -114,12 +116,14 @@
             "data": {
               "lite_mode": "Tryb Lite",
               "price_unit": "Jednostka",
+              "price_display_precision": "Liczba miejsc po przecinku",
               "use_hourly_prices": "Średnie ceny godzinowe",
               "use_gross_prices": "Ceny brutto (z VAT)"
             },
             "data_description": {
               "lite_mode": "Tryb uproszczony nastawiony na zapewnienie pobierania danych z PSE i udostępnienie ich w atrybutach dostępnych sensorów. Publikowane są sensory aktualnej ceny, ceny jutro oraz Kompasu Energetycznego. Wszystkie analizy, statystyki, okna, progi i automatyzacje użytkownik może wykonać samodzielnie na podstawie tych danych.",
               "price_unit": "UWAGA! Po zmianie, statystyki mogą mieszać starą i nową jednostkę. Po przełączeniu zaktualizuj automatyzacje oraz progi niskiej i wysokiej ceny.",
+              "price_display_precision": "Dla PLN/MWh zalecana wartość to 2, a dla PLN/kWh zalecana wartość to 5.",
               "use_hourly_prices": "Przydatne w rozliczeniach net-billing z uwagi na opomiarowanie prosumentów z dokładnością do godziny mimo cen 15 minutowych. W tym trybie obliczana jest średnia cena dla danej godziny z publikowanych cen dla kwadransów. Rozliczenie zgodnie z Art. 4b ust. 11 Ustawy o OZE",
               "use_gross_prices": "Po włączeniu wszystkie ceny są przeliczane na brutto według stawki VAT (obecnie 23%), bez konieczności ręcznych przeliczeń w automatyzacjach"
             }

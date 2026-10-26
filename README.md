@@ -79,7 +79,11 @@ Domyślnie wyłączony. Po włączeniu integracja publikuje wyłącznie cztery s
 
 ### Jednostka ceny
 
-Pole **Jednostka** przyjmuje `PLN/MWh` (domyślnie) lub `PLN/kWh`. Ta sama jednostka obowiązuje dla wszystkich sensorów i progów. Dashboard pod wybraną jednostkę jest w sekcji [Przykładowy dashboard Lovelace](#przykładowy-dashboard-lovelace): pliki `*-MWh.yaml` i `*-kWh.yaml`. Po przełączeniu PLN/MWh ↔ PLN/kWh historia w recorderze może mieszać stare i nowe próbki przy tym samym `entity_id` — zaktualizuj progi i automatyzacje. Konwersja z MWh na kWh odbywa się w koordynatorze przez podzielenie wartości API przez 1000. Sensory i atrybut `prices` zaokrąglają do 2 miejsc przy `PLN/MWh` i do 5 miejsc przy `PLN/kWh` (`5555.55 PLN/MWh` → `5.55555 PLN/kWh`).. Stara historia w recorderze zostaje przy poprzedniej precyzji.
+Pole **Jednostka** przyjmuje `PLN/MWh` (domyślnie) lub `PLN/kWh`. Ta sama jednostka obowiązuje dla wszystkich sensorów i progów. Dashboard pod wybraną jednostkę jest w sekcji [Przykładowy dashboard Lovelace](#przykładowy-dashboard-lovelace): pliki `*-MWh.yaml` i `*-kWh.yaml`. Po przełączeniu PLN/MWh ↔ PLN/kWh historia w recorderze może mieszać stare i nowe próbki przy tym samym `entity_id` — zaktualizuj progi i automatyzacje. Konwersja z MWh na kWh odbywa się w koordynatorze przez podzielenie wartości API przez 1000. Stara historia w recorderze zostaje przy poprzedniej jednostce.
+
+### Liczba miejsc po przecinku
+
+Pole **Liczba miejsc po przecinku** ustawia precyzję sensorów cenowych i atrybutu `prices`. Domyślnie 2. Dla `PLN/MWh` zalecana wartość to 2, a dla `PLN/kWh` zalecana wartość to 5. Zakres to 0–6. Sensory procentowe zostają przy jednym miejscu. Po zmianie integracja przeładowuje encje; stara historia w recorderze zostaje przy poprzedniej precyzji.
 
 ### Średnie ceny godzinowe
 
@@ -150,7 +154,7 @@ Zakres `-3000`–`3000`, krok `0.01`, jednostka jak w opcji **Jednostka ceny**.
 
 ## Sensory
 
-Tabele poniżej używają polskich `entity_id` — Home Assistant w polskiej wersji generuje je ze slugowanej polskiej nazwy. W angielskiej wersji UI te same encje mają slugi angielskie (np. `sensor.rce_pse_price` zamiast `sensor.rce_pse_cena`); zasada jest ta sama, tłumaczy się tylko nazwa wyświetlana. Ceny zaokrąglane są do 2 miejsc po przecinku przy `PLN/MWh` i do 5 miejsc przy `PLN/kWh`. Tryb Lite ogranicza listę do **Cena**, **Cena Jutro**, **Kompas Energetyczny Dzisiaj** i **Kompas Energetyczny Jutro**.
+Tabele poniżej używają polskich `entity_id` — Home Assistant w polskiej wersji generuje je ze slugowanej polskiej nazwy. W angielskiej wersji UI te same encje mają slugi angielskie (np. `sensor.rce_pse_price` zamiast `sensor.rce_pse_cena`); zasada jest ta sama, tłumaczy się tylko nazwa wyświetlana. Ceny zaokrąglane są do liczby miejsc z opcji **Liczba miejsc po przecinku** (domyślnie 2). Tryb Lite ogranicza listę do **Cena**, **Cena Jutro**, **Kompas Energetyczny Dzisiaj** i **Kompas Energetyczny Jutro**.
 
 ### Cena bieżąca i prosument
 

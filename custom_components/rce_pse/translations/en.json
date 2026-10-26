@@ -10,12 +10,14 @@
             "data": {
               "lite_mode": "Lite mode",
               "price_unit": "Price unit",
+              "price_display_precision": "Decimal places",
               "use_hourly_prices": "Hourly average prices",
               "use_gross_prices": "Gross prices (with VAT)"
             },
             "data_description": {
               "lite_mode": "A simplified mode focused on ensuring PSE data is fetched and exposed in the attributes of the available sensors. It publishes the current price, tomorrow price and Energy Compass sensors. All analyses, statistics, windows, thresholds and automations can then be built by the user from that data.",
               "price_unit": "Unit for all price sensors",
+              "price_display_precision": "The recommended value is 2 for PLN/MWh and 5 for PLN/kWh. Default 2.",
               "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
               "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations"
             }
@@ -114,12 +116,14 @@
             "data": {
               "lite_mode": "Lite mode",
               "price_unit": "Price unit",
+              "price_display_precision": "Decimal places",
               "use_hourly_prices": "Hourly average prices",
               "use_gross_prices": "Gross prices (with VAT)"
             },
             "data_description": {
               "lite_mode": "A simplified mode focused on ensuring PSE data is fetched and exposed in the attributes of the available sensors. It publishes the current price, tomorrow price and Energy Compass sensors. All analyses, statistics, windows, thresholds and automations can then be built by the user from that data.",
               "price_unit": "Unit for all price sensors. WARNING! After changing, statistics may mix old and new units. Update automations and the low and high price thresholds when switching between PLN/MWh and PLN/kWh",
+              "price_display_precision": "The recommended value is 2 for PLN/MWh and 5 for PLN/kWh.",
               "use_hourly_prices": "Useful in net-billing settlements due to prosumer metering with hourly accuracy despite 15-minute prices. In this mode, the average price for a given hour is calculated from published quarter-hour prices. Settlement according to Art. 4b sec. 11 of the Ustawa o OZE",
               "use_gross_prices": "When enabled, all prices are converted to gross using VAT (currently 23%), so you do not need to apply VAT in automations"
             }

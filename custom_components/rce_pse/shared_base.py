@@ -8,11 +8,13 @@ from homeassistant.util import dt as dt_util
 
 from .time_window import parse_pse_dtime
 from .const import (
+    CONF_PRICE_DISPLAY_PRECISION,
     CONF_PRICE_UNIT,
+    DEFAULT_PRICE_DISPLAY_PRECISION,
     DEFAULT_PRICE_UNIT,
     DOMAIN,
     MANUFACTURER,
-    display_price_decimals,
+    normalize_price_display_precision,
 )
 from .price_calculator import PriceCalculator
 
@@ -31,7 +33,10 @@ class RCEBaseCommonEntity(CoordinatorEntity):
         return self.coordinator._get_config_value(CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT)
 
     def display_price_decimals_for_entity(self) -> int:
-        return display_price_decimals(self.native_price_unit())
+        raw = self.coordinator._get_config_value(
+            CONF_PRICE_DISPLAY_PRECISION, DEFAULT_PRICE_DISPLAY_PRECISION
+        )
+        return normalize_price_display_precision(raw)
 
     def round_display_price(self, value: float) -> float:
         return round(value, self.display_price_decimals_for_entity())

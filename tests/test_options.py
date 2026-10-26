@@ -10,7 +10,9 @@ from custom_components.rce_pse.const import (
     CONF_ENABLE_CHEAPEST_WINDOW,
     CONF_LITE_MODE,
     CONF_LOW_PRICE_THRESHOLD,
+    CONF_PRICE_DISPLAY_PRECISION,
     CONF_PRICE_UNIT,
+    DEFAULT_PRICE_DISPLAY_PRECISION,
     UNIT_PLN_KWH,
 )
 from custom_components.rce_pse.options import (
@@ -37,6 +39,7 @@ def test_get_effective_options_merges_data_and_options():
     assert effective[CONF_CHEAPEST_WINDOW_DURATION_HOURS] == "03:00"
     assert effective[CONF_LOW_PRICE_THRESHOLD] == 0.0
     assert effective[CONF_ENABLE_CHEAPEST_WINDOW] is True
+    assert effective[CONF_PRICE_DISPLAY_PRECISION] == DEFAULT_PRICE_DISPLAY_PRECISION
 
 
 def test_get_reload_options_snapshot_ignores_window_duration():
@@ -60,6 +63,20 @@ def test_get_reload_options_snapshot_changes_with_lite_mode():
     config_entry.options = {CONF_LITE_MODE: True}
     second = get_reload_options_snapshot(config_entry)
 
+    assert first != second
+
+
+def test_get_reload_options_snapshot_changes_with_price_precision():
+    config_entry = Mock(spec=ConfigEntry)
+    config_entry.data = {}
+    config_entry.options = {}
+    first = get_reload_options_snapshot(config_entry)
+
+    config_entry.options = {CONF_PRICE_DISPLAY_PRECISION: 5}
+    second = get_reload_options_snapshot(config_entry)
+
+    assert first[CONF_PRICE_DISPLAY_PRECISION] == DEFAULT_PRICE_DISPLAY_PRECISION
+    assert second[CONF_PRICE_DISPLAY_PRECISION] == 5
     assert first != second
 
 
