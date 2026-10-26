@@ -78,7 +78,6 @@ class TestRCEPSEDataUpdateCoordinator:
             expected_data = {
                 "raw_data": sample_api_response["value"],
                 "pdgsz_data": [],
-                "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = expected_data
             
@@ -87,7 +86,7 @@ class TestRCEPSEDataUpdateCoordinator:
             assert result is not None
             assert "raw_data" in result
             assert "pdgsz_data" in result
-            assert "last_update" in result
+            assert "last_update" not in result
             assert len(result["raw_data"]) == 7
             assert result["raw_data"][0]["rce_pln"] == "350.00"
 
@@ -104,7 +103,6 @@ class TestRCEPSEDataUpdateCoordinator:
                 expected_data = {
                     "raw_data": sample_api_response["value"],
                     "pdgsz_data": [],
-                    "last_update": "2025-05-29T12:00:00+00:00"
                 }
                 mock_fetch.return_value = expected_data
                 
@@ -158,7 +156,7 @@ class TestRCEPSEDataUpdateCoordinator:
                 
                 result = await coordinator._fetch_data()
                 
-                assert "last_update" in result
+                assert "last_update" not in result
                 assert "pdgsz_data" in result
                 assert result["pdgsz_data"] == []
                 assert len(result["raw_data"]) == 7
@@ -228,7 +226,6 @@ class TestRCEPSEDataUpdateCoordinator:
             expected_data = {
                 "raw_data": sample_api_response["value"],
                 "pdgsz_data": [],
-                "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = expected_data
             
@@ -252,7 +249,6 @@ class TestRCEPSEDataUpdateCoordinator:
         cached_data = {
             "raw_data": sample_api_response["value"],
             "pdgsz_data": [],
-            "last_update": "2025-05-29T12:00:00+00:00"
         }
         coordinator.data = cached_data
         coordinator._last_api_fetch = dt_util.now()
@@ -267,7 +263,7 @@ class TestRCEPSEDataUpdateCoordinator:
     async def test_refresh_stale_data(self, mock_hass, sample_api_response):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)
         
-        old_data = {"raw_data": [], "last_update": "2025-05-29T10:00:00+00:00"}
+        old_data = {"raw_data": []}
         coordinator.data = old_data
         coordinator._last_api_fetch = dt_util.now() - timedelta(hours=2)
         
@@ -275,7 +271,6 @@ class TestRCEPSEDataUpdateCoordinator:
             fresh_data = {
                 "raw_data": sample_api_response["value"],
                 "pdgsz_data": [],
-                "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = fresh_data
             
@@ -291,7 +286,6 @@ class TestRCEPSEDataUpdateCoordinator:
         existing_data = {
             "raw_data": sample_api_response["value"],
             "pdgsz_data": [],
-            "last_update": "2025-05-29T10:00:00+00:00"
         }
         coordinator.data = existing_data
         coordinator._last_api_fetch = dt_util.now() - timedelta(hours=2)
@@ -322,7 +316,6 @@ class TestRCEPSEDataUpdateCoordinator:
         existing_data = {
             "raw_data": sample_api_response["value"],
             "pdgsz_data": [],
-            "last_update": "2025-05-29T10:00:00+00:00"
         }
         coordinator.data = existing_data
         coordinator._last_api_fetch = dt_util.now() - timedelta(hours=2)
@@ -355,7 +348,6 @@ class TestRCEPSEDataUpdateCoordinator:
             fresh_data = {
                 "raw_data": sample_api_response["value"],
                 "pdgsz_data": [],
-                "last_update": "2025-05-29T12:00:00+00:00"
             }
             mock_fetch.return_value = fresh_data
             
@@ -371,7 +363,6 @@ class TestRCEPSEDataUpdateCoordinator:
         existing_data = {
             "raw_data": sample_api_response["value"],
             "pdgsz_data": [],
-            "last_update": "2025-05-29T10:00:00+00:00"
         }
         coordinator.data = existing_data
         
@@ -430,7 +421,7 @@ class TestRCEPSEDataUpdateCoordinator:
                 
                 assert result["raw_data"] == []
                 assert result["pdgsz_data"] == []
-                assert "last_update" in result
+                assert "last_update" not in result
 
     def test_calculate_hourly_averages_empty_data(self, mock_hass):
         coordinator = RCEPSEDataUpdateCoordinator(mock_hass)

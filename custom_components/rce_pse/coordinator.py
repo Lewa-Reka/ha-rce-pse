@@ -194,7 +194,6 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 return {
                     "raw_data": processed_data,
                     "pdgsz_data": pdgsz_data,
-                    "last_update": dt_util.now().isoformat(),
                 }
                 
         except aiohttp.ClientError as exception:

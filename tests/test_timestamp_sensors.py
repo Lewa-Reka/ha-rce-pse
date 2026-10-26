@@ -130,7 +130,6 @@ def extended_api_data():
     
     return {
         "raw_data": today_data + tomorrow_data,
-        "last_update": dt_util.now().isoformat(),
     }
 
 
