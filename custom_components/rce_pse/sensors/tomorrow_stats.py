@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import SensorStateClass
 
-from ..const import CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT, display_price_decimals
+from ..const import CONF_PRICE_UNIT, DEFAULT_PRICE_UNIT
 from .base import RCEBaseSensor
 
 if TYPE_CHECKING:
@@ -30,7 +30,7 @@ class RCETomorrowStatsSensor(RCEBaseSensor):
         if resolved == "%":
             self._attr_suggested_display_precision = 1
         else:
-            self._attr_suggested_display_precision = display_price_decimals(resolved)
+            self._attr_suggested_display_precision = self.display_price_decimals_for_entity()
 
 
 class RCETomorrowAvgPriceSensor(RCETomorrowStatsSensor):

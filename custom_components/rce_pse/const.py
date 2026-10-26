@@ -48,6 +48,7 @@ CONF_LOW_PRICE_THRESHOLD: Final[str] = "low_price_threshold"
 CONF_HIGH_PRICE_THRESHOLD: Final[str] = "high_price_threshold"
 CONF_USE_GROSS_PRICES: Final[str] = "use_gross_prices"
 CONF_PRICE_UNIT: Final[str] = "price_unit"
+CONF_PRICE_DISPLAY_PRECISION: Final[str] = "price_display_precision"
 
 CURRENCY_PLN: Final[str] = "PLN"
 UNIT_PLN_MWH: Final[str] = f"{CURRENCY_PLN}/{UnitOfEnergy.MEGA_WATT_HOUR}"
@@ -55,8 +56,9 @@ UNIT_PLN_KWH: Final[str] = f"{CURRENCY_PLN}/{UnitOfEnergy.KILO_WATT_HOUR}"
 MWH_TO_KWH_DIVISOR: Final[float] = 1000.0
 
 PRICE_INTERNAL_DECIMALS: Final[int] = 6
-DISPLAY_PRICE_DECIMALS: Final[int] = 2
-DISPLAY_PRICE_DECIMALS_KWH: Final[int] = 5
+DEFAULT_PRICE_DISPLAY_PRECISION: Final[int] = 2
+PRICE_DISPLAY_PRECISION_MIN: Final[int] = 0
+PRICE_DISPLAY_PRECISION_MAX: Final[int] = PRICE_INTERNAL_DECIMALS
 
 DEFAULT_TIME_WINDOW_START: Final[str] = "00:00"
 DEFAULT_TIME_WINDOW_END: Final[str] = "00:00"
@@ -83,10 +85,14 @@ THRESHOLD_STEP: Final[float] = 0.01
 THRESHOLD_STEP_KWH: Final[float] = 0.00001
 
 
-def display_price_decimals(unit: str) -> int:
-    if unit == UNIT_PLN_KWH:
-        return DISPLAY_PRICE_DECIMALS_KWH
-    return DISPLAY_PRICE_DECIMALS
+def normalize_price_display_precision(raw: object) -> int:
+    if isinstance(raw, bool) or not isinstance(raw, (int, float, str)):
+        return DEFAULT_PRICE_DISPLAY_PRECISION
+    try:
+        value = int(raw)
+    except ValueError:
+        return DEFAULT_PRICE_DISPLAY_PRECISION
+    return min(PRICE_DISPLAY_PRECISION_MAX, max(PRICE_DISPLAY_PRECISION_MIN, value))
 
 
 def threshold_step_for_unit(unit: str) -> float:

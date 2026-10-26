@@ -6,19 +6,25 @@ from homeassistant.components.sensor import SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfEnergy
 
-from custom_components.rce_pse.config_flow import SECTION_THRESHOLDS, _rce_form_schema
+from custom_components.rce_pse.config_flow import (
+    SECTION_PRICING,
+    SECTION_THRESHOLDS,
+    _rce_form_schema,
+)
 from custom_components.rce_pse.const import (
     CONF_HIGH_PRICE_THRESHOLD,
     CONF_LOW_PRICE_THRESHOLD,
+    CONF_PRICE_DISPLAY_PRECISION,
     CONF_PRICE_UNIT,
     CURRENCY_PLN,
-    DISPLAY_PRICE_DECIMALS,
-    DISPLAY_PRICE_DECIMALS_KWH,
+    DEFAULT_PRICE_DISPLAY_PRECISION,
+    PRICE_DISPLAY_PRECISION_MAX,
+    PRICE_DISPLAY_PRECISION_MIN,
     THRESHOLD_STEP,
     THRESHOLD_STEP_KWH,
     UNIT_PLN_KWH,
     UNIT_PLN_MWH,
-    display_price_decimals,
+    normalize_price_display_precision,
     threshold_selector_step_for_unit,
     threshold_step_for_unit,
 )
@@ -44,6 +50,15 @@ def _set_price_unit(mock_coordinator, unit: str) -> None:
     mock_coordinator._get_config_value.side_effect = _get
 
 
+def _set_price_precision(mock_coordinator, precision: int) -> None:
+    def _get(key, default):
+        if key == CONF_PRICE_DISPLAY_PRECISION:
+            return precision
+        return default
+
+    mock_coordinator._get_config_value.side_effect = _get
+
+
 def _threshold_selector_config(current_data: dict, field: str):
     schema = _rce_form_schema(current_data)
     for key, val in schema.schema.items():
@@ -56,6 +71,18 @@ def _threshold_selector_config(current_data: dict, field: str):
     raise AssertionError(f"selector for {field} not found")
 
 
+def _pricing_field(current_data: dict, field: str):
+    schema = _rce_form_schema(current_data)
+    for key, val in schema.schema.items():
+        if getattr(key, "schema", None) != SECTION_PRICING:
+            continue
+        inner = val.schema
+        for inner_key, inner_val in inner.schema.items():
+            if getattr(inner_key, "schema", None) == field:
+                return inner_key, inner_val
+    raise AssertionError(f"field {field} not found")
+
+
 class TestUnitConstants:
 
     def test_units_use_iso_currency_and_energy(self):
@@ -63,11 +90,15 @@ class TestUnitConstants:
         assert UNIT_PLN_MWH == f"{CURRENCY_PLN}/{UnitOfEnergy.MEGA_WATT_HOUR}"
         assert UNIT_PLN_KWH == f"{CURRENCY_PLN}/{UnitOfEnergy.KILO_WATT_HOUR}"
 
-    def test_display_price_decimals_by_unit(self):
-        assert display_price_decimals(UNIT_PLN_MWH) == DISPLAY_PRICE_DECIMALS
-        assert display_price_decimals(UNIT_PLN_KWH) == DISPLAY_PRICE_DECIMALS_KWH
-        assert display_price_decimals(UNIT_PLN_MWH) == 2
-        assert display_price_decimals(UNIT_PLN_KWH) == 5
+    def test_normalize_price_display_precision(self):
+        assert normalize_price_display_precision(2) == DEFAULT_PRICE_DISPLAY_PRECISION
+        assert normalize_price_display_precision(5.0) == 5
+        assert normalize_price_display_precision("3") == 3
+        assert normalize_price_display_precision(-1) == PRICE_DISPLAY_PRECISION_MIN
+        assert normalize_price_display_precision(9) == PRICE_DISPLAY_PRECISION_MAX
+        assert normalize_price_display_precision("nope") == DEFAULT_PRICE_DISPLAY_PRECISION
+        assert normalize_price_display_precision(None) == DEFAULT_PRICE_DISPLAY_PRECISION
+        assert normalize_price_display_precision(True) == DEFAULT_PRICE_DISPLAY_PRECISION
 
     def test_threshold_step_by_unit(self):
         assert threshold_step_for_unit(UNIT_PLN_MWH) == THRESHOLD_STEP
@@ -86,22 +117,36 @@ class TestDisplayRounding:
             mock_current.return_value = {"rce_pln": "564.637"}
             assert sensor.native_value == 564.64
 
-    def test_kwh_state_keeps_five_decimals(self, mock_coordinator):
+    def test_default_precision_rounds_kwh_scale_to_two_decimals(self, mock_coordinator):
         _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
+        sensor = RCETodayMainSensor(mock_coordinator)
+        with patch.object(sensor, "get_current_price_data") as mock_current:
+            mock_current.return_value = {"rce_pln": "0.564636"}
+            assert sensor.native_value == 0.56
+
+    def test_configured_precision_keeps_five_decimals(self, mock_coordinator):
+        _set_price_precision(mock_coordinator, 5)
         sensor = RCETodayMainSensor(mock_coordinator)
         with patch.object(sensor, "get_current_price_data") as mock_current:
             mock_current.return_value = {"rce_pln": "0.564636"}
             assert sensor.native_value == 0.56464
 
-    def test_kwh_state_keeps_api_scale_maximum(self, mock_coordinator):
-        _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
+    def test_configured_precision_keeps_api_scale_maximum(self, mock_coordinator):
+        _set_price_precision(mock_coordinator, 5)
         sensor = RCETodayMainSensor(mock_coordinator)
         with patch.object(sensor, "get_current_price_data") as mock_current:
             mock_current.return_value = {"rce_pln": "5.555556"}
             assert sensor.native_value == 5.55556
 
-    def test_kwh_prices_attribute_keeps_five_decimals(self, mock_coordinator):
-        _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
+    def test_configured_precision_three(self, mock_coordinator):
+        _set_price_precision(mock_coordinator, 3)
+        sensor = RCETodayMainSensor(mock_coordinator)
+        with patch.object(sensor, "get_current_price_data") as mock_current:
+            mock_current.return_value = {"rce_pln": "0.564636"}
+            assert sensor.native_value == 0.565
+
+    def test_prices_attribute_follows_configured_precision(self, mock_coordinator):
+        _set_price_precision(mock_coordinator, 5)
         sensor = RCETodayMainSensor(mock_coordinator)
         with patch.object(sensor, "get_today_data") as mock_today:
             mock_today.return_value = [
@@ -125,8 +170,8 @@ class TestDisplayRounding:
             prices = attrs["prices"]
             assert prices[0]["rce_pln"] == 564.64
 
-    def test_kwh_data_summary_uses_five_decimals(self, mock_coordinator):
-        _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
+    def test_data_summary_follows_configured_precision(self, mock_coordinator):
+        _set_price_precision(mock_coordinator, 5)
         sensor = RCEBaseSensor(mock_coordinator, "test_sensor")
         summary = sensor.get_data_summary(
             [{"rce_pln": "0.564631"}, {"rce_pln": "0.564639"}]
@@ -137,16 +182,32 @@ class TestDisplayRounding:
 
 class TestDisplayPrecisionAndStateClass:
 
-    def test_suggested_display_precision_follows_unit(self, mock_coordinator):
-        mwh_sensor = RCETodayMainSensor(mock_coordinator)
-        assert mwh_sensor._attr_suggested_display_precision == DISPLAY_PRICE_DECIMALS
+    def test_suggested_display_precision_follows_configuration(self, mock_coordinator):
+        default_sensor = RCETodayMainSensor(mock_coordinator)
+        assert default_sensor._attr_suggested_display_precision == DEFAULT_PRICE_DISPLAY_PRECISION
 
         _set_price_unit(mock_coordinator, UNIT_PLN_KWH)
         kwh_sensor = RCETodayMainSensor(mock_coordinator)
-        assert kwh_sensor._attr_suggested_display_precision == DISPLAY_PRICE_DECIMALS_KWH
+        assert kwh_sensor._attr_suggested_display_precision == DEFAULT_PRICE_DISPLAY_PRECISION
+
+        _set_price_precision(mock_coordinator, 5)
+        precise_sensor = RCETodayMainSensor(mock_coordinator)
+        assert precise_sensor._attr_suggested_display_precision == 5
 
         percent_sensor = RCETodayCurrentVsAverageSensor(mock_coordinator)
         assert percent_sensor._attr_suggested_display_precision == 1
+
+    def test_config_flow_price_precision_defaults_to_two(self):
+        marker, field = _pricing_field({}, CONF_PRICE_DISPLAY_PRECISION)
+        assert marker.default() == DEFAULT_PRICE_DISPLAY_PRECISION
+        assert field.config["min"] == PRICE_DISPLAY_PRECISION_MIN
+        assert field.config["max"] == PRICE_DISPLAY_PRECISION_MAX
+        assert field.config["step"] == 1
+
+        stored, _field = _pricing_field(
+            {CONF_PRICE_DISPLAY_PRECISION: 5}, CONF_PRICE_DISPLAY_PRECISION
+        )
+        assert stored.default() == 5
 
     def test_price_sensors_use_measurement_state_class(self, mock_coordinator):
         mock_entry = Mock(spec=ConfigEntry)

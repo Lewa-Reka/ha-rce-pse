@@ -30,6 +30,7 @@ from .const import (
     CONF_LOW_PRICE_THRESHOLD,
     CONF_HIGH_PRICE_THRESHOLD,
     CONF_USE_GROSS_PRICES,
+    CONF_PRICE_DISPLAY_PRECISION,
     CONF_PRICE_UNIT,
     DEFAULT_ENABLE_CHEAPEST_WINDOW,
     DEFAULT_ENABLE_EXPENSIVE_WINDOW,
@@ -37,6 +38,7 @@ from .const import (
     DEFAULT_ENABLE_LOW_PRICE_THRESHOLD,
     DEFAULT_ENABLE_SECOND_EXPENSIVE_WINDOW,
     DEFAULT_LITE_MODE,
+    DEFAULT_PRICE_DISPLAY_PRECISION,
     DEFAULT_PRICE_UNIT,
     UNIT_PLN_KWH,
     UNIT_PLN_MWH,
@@ -50,6 +52,8 @@ from .const import (
     DEFAULT_USE_GROSS_PRICES,
     DEFAULT_LOW_PRICE_THRESHOLD,
     DEFAULT_HIGH_PRICE_THRESHOLD,
+    PRICE_DISPLAY_PRECISION_MAX,
+    PRICE_DISPLAY_PRECISION_MIN,
     THRESHOLD_MAX,
     THRESHOLD_MIN,
     threshold_selector_step_for_unit,
@@ -312,6 +316,19 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                 selector.SelectSelectorConfig(
                     options=_price_unit_select_options(),
                     mode=selector.SelectSelectorMode.DROPDOWN,
+                )
+            ),
+            vol.Optional(
+                CONF_PRICE_DISPLAY_PRECISION,
+                default=_get(
+                    CONF_PRICE_DISPLAY_PRECISION, DEFAULT_PRICE_DISPLAY_PRECISION
+                ),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=PRICE_DISPLAY_PRECISION_MIN,
+                    max=PRICE_DISPLAY_PRECISION_MAX,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
                 )
             ),
         }
