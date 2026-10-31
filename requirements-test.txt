@@ -1,10 +1,10 @@
 # Testing dependencies for RCE PSE integration
-pytest-asyncio>=1.4.0
+pytest-asyncio>=1.4.1
 pytest-cov>=7.1.0
-pytest-homeassistant-custom-component>=0.13.373
+pytest-homeassistant-custom-component>=0.13.375
 
 # Home Assistant core for testing
-homeassistant>=2026.10.2
+homeassistant>=2026.10.4
 
 # Mock and testing utilities
 pytest-mock>=3.17.0
