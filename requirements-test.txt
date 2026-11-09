@@ -1,5 +1,4 @@
 # Testing dependencies for RCE PSE integration
-pytest-asyncio>=1.4.1
 pytest-cov>=7.1.0
 pytest-homeassistant-custom-component>=0.13.375
 
