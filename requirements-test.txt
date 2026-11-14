@@ -3,7 +3,7 @@ pytest-cov>=7.1.0
 pytest-homeassistant-custom-component>=0.13.375
 
 # Home Assistant core for testing
-homeassistant>=2026.10.4
+homeassistant>=2026.11.1
 
 # Mock and testing utilities
 pytest-mock>=3.17.0
