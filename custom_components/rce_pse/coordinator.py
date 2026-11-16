@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from homeassistant.util import dt as dt_util
 
 from .time_window import parse_pse_dtime, start_dtime_for_record
+from .tariff import apply_tariff_surcharge
 from .const import (
     API_UPDATE_INTERVAL,
     CONF_PRICE_UNIT,
@@ -168,6 +169,12 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                     _LOGGER.warning("PSE API returned no data records")
                 
                 raw_data = self._attach_start_dtime(data["value"])
+                # Apply TARIFF per PSE quarter-hour before any hourly averaging.
+                effective_config = {}
+                if self.config_entry:
+                    effective_config.update(self.config_entry.data or {})
+                    effective_config.update(self.config_entry.options or {})
+                raw_data = apply_tariff_surcharge(raw_data, effective_config)
                 
                 use_hourly_prices = self._get_config_value(CONF_USE_HOURLY_PRICES, DEFAULT_USE_HOURLY_PRICES)
                 
@@ -176,7 +183,10 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                     processed_data = self._calculate_hourly_averages(raw_data)
                 else:
                     _LOGGER.debug("Hourly prices option disabled, using original 15-minute data")
-                    processed_data = self._add_neg_to_zero_key(raw_data)
+                    processed_data = (
+                        raw_data if raw_data and "rce_pln_neg_to_zero" in raw_data[0]
+                        else self._add_neg_to_zero_key(raw_data)
+                    )
 
                 use_gross_prices = self._get_config_value(CONF_USE_GROSS_PRICES, DEFAULT_USE_GROSS_PRICES)
                 if use_gross_prices:
@@ -268,11 +278,16 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 continue
                 
             prices = []
+            neg_to_zero_prices = []
             for record in records:
                 try:
                     price = float(record["rce_pln"])
                     prices.append(price)
-                except (ValueError, KeyError) as e:
+                    neg_value = record.get("rce_pln_neg_to_zero")
+                    neg_to_zero_prices.append(
+                        float(neg_value) if neg_value is not None else max(0.0, price)
+                    )
+                except (ValueError, KeyError, TypeError) as e:
                     _LOGGER.warning("Failed to parse price from record: %s, error: %s", record.get("rce_pln"), e)
                     continue
             
@@ -281,8 +296,7 @@ class RCEPSEDataUpdateCoordinator(DataUpdateCoordinator):
                 
             average_price = sum(prices) / len(prices)
             
-            prices_neg_to_zero = [max(0, price) for price in prices]
-            average_price_neg_to_zero = sum(prices_neg_to_zero) / len(prices_neg_to_zero)
+            average_price_neg_to_zero = sum(neg_to_zero_prices) / len(neg_to_zero_prices)
             
             _LOGGER.debug("Calculated hourly average for %s: %.2f PLN (from %d records)", 
                          date_hour_key, average_price, len(prices))
