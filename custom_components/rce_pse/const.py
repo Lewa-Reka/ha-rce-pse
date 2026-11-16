@@ -24,6 +24,39 @@ PDGSZ_USAGE_FCST_TO_ATTR: Final[dict[int, str]] = {
 
 TAX_RATE: Final[float] = 0.23
 
+# TARIFF tariff configuration. Rates are expressed in PLN/MWh.
+CONF_TARIFF_ENABLED: Final[str] = "tariff_enabled"
+CONF_TARIFF_SUMMER_RATE_I: Final[str] = "tariff_summer_rate_i"
+CONF_TARIFF_SUMMER_RATE_II: Final[str] = "tariff_summer_rate_ii"
+CONF_TARIFF_SUMMER_RATE_III: Final[str] = "tariff_summer_rate_iii"
+CONF_TARIFF_WINTER_RATE_I: Final[str] = "tariff_winter_rate_i"
+CONF_TARIFF_WINTER_RATE_II: Final[str] = "tariff_winter_rate_ii"
+CONF_TARIFF_WINTER_RATE_III: Final[str] = "tariff_winter_rate_iii"
+CONF_TARIFF_SUMMER_I_START: Final[str] = "tariff_summer_i_start"
+CONF_TARIFF_SUMMER_I_END: Final[str] = "tariff_summer_i_end"
+CONF_TARIFF_SUMMER_II_START: Final[str] = "tariff_summer_ii_start"
+CONF_TARIFF_SUMMER_II_END: Final[str] = "tariff_summer_ii_end"
+CONF_TARIFF_WINTER_I_START: Final[str] = "tariff_winter_i_start"
+CONF_TARIFF_WINTER_I_END: Final[str] = "tariff_winter_i_end"
+CONF_TARIFF_WINTER_II_START: Final[str] = "tariff_winter_ii_start"
+CONF_TARIFF_WINTER_II_END: Final[str] = "tariff_winter_ii_end"
+CONF_TARIFF_SUMMER_START: Final[str] = "tariff_summer_start"
+CONF_TARIFF_SUMMER_END: Final[str] = "tariff_summer_end"
+
+DEFAULT_TARIFF_ENABLED: Final[bool] = False
+DEFAULT_TARIFF_RATE: Final[float] = 0.0
+DEFAULT_TARIFF_SUMMER_I_START: Final[str] = "07:00"
+DEFAULT_TARIFF_SUMMER_I_END: Final[str] = "13:00"
+DEFAULT_TARIFF_SUMMER_II_START: Final[str] = "19:00"
+DEFAULT_TARIFF_SUMMER_II_END: Final[str] = "22:00"
+DEFAULT_TARIFF_WINTER_I_START: Final[str] = "07:00"
+DEFAULT_TARIFF_WINTER_I_END: Final[str] = "13:00"
+DEFAULT_TARIFF_WINTER_II_START: Final[str] = "16:00"
+DEFAULT_TARIFF_WINTER_II_END: Final[str] = "21:00"
+DEFAULT_TARIFF_SUMMER_START: Final[str] = "04-01"
+DEFAULT_TARIFF_SUMMER_END: Final[str] = "09-30"
+
+
 CONF_CHEAPEST_TIME_WINDOW_START: Final[str] = "cheapest_time_window_start"
 CONF_CHEAPEST_TIME_WINDOW_END: Final[str] = "cheapest_time_window_end"
 CONF_CHEAPEST_WINDOW_DURATION_HOURS: Final[str] = "cheapest_window_duration_hours"
