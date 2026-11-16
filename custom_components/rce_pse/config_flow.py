@@ -57,6 +57,17 @@ from .const import (
     THRESHOLD_MAX,
     THRESHOLD_MIN,
     threshold_selector_step_for_unit,
+    CONF_TARIFF_ENABLED, CONF_TARIFF_SUMMER_RATE_I, CONF_TARIFF_SUMMER_RATE_II,
+    CONF_TARIFF_SUMMER_RATE_III, CONF_TARIFF_WINTER_RATE_I, CONF_TARIFF_WINTER_RATE_II,
+    CONF_TARIFF_WINTER_RATE_III, CONF_TARIFF_SUMMER_I_START, CONF_TARIFF_SUMMER_I_END,
+    CONF_TARIFF_SUMMER_II_START, CONF_TARIFF_SUMMER_II_END, CONF_TARIFF_WINTER_I_START,
+    CONF_TARIFF_WINTER_I_END, CONF_TARIFF_WINTER_II_START, CONF_TARIFF_WINTER_II_END,
+    CONF_TARIFF_SUMMER_START, CONF_TARIFF_SUMMER_END, DEFAULT_TARIFF_ENABLED,
+    DEFAULT_TARIFF_RATE, DEFAULT_TARIFF_SUMMER_I_START, DEFAULT_TARIFF_SUMMER_I_END,
+    DEFAULT_TARIFF_SUMMER_II_START, DEFAULT_TARIFF_SUMMER_II_END,
+    DEFAULT_TARIFF_WINTER_I_START, DEFAULT_TARIFF_WINTER_I_END,
+    DEFAULT_TARIFF_WINTER_II_START, DEFAULT_TARIFF_WINTER_II_END,
+    DEFAULT_TARIFF_SUMMER_START, DEFAULT_TARIFF_SUMMER_END,
 )
 from .options import get_effective_options, with_option_defaults
 from .time_window import (
@@ -74,6 +85,7 @@ SECTION_CHEAPEST_WINDOW = "cheapest_window"
 SECTION_EXPENSIVE_WINDOW = "expensive_window"
 SECTION_SECOND_EXPENSIVE_WINDOW = "second_expensive_window"
 SECTION_THRESHOLDS = "thresholds"
+SECTION_TARIFF = "tariff"
 
 SECTION_KEYS = frozenset(
     {
@@ -82,6 +94,7 @@ SECTION_KEYS = frozenset(
         SECTION_EXPENSIVE_WINDOW,
         SECTION_SECOND_EXPENSIVE_WINDOW,
         SECTION_THRESHOLDS,
+        SECTION_TARIFF,
     }
 )
 
@@ -95,6 +108,9 @@ TIME_KEYS = (
     CONF_SECOND_EXPENSIVE_TIME_WINDOW_START,
     CONF_SECOND_EXPENSIVE_TIME_WINDOW_END,
     CONF_SECOND_EXPENSIVE_WINDOW_DURATION_HOURS,
+    CONF_TARIFF_SUMMER_I_START, CONF_TARIFF_SUMMER_I_END, CONF_TARIFF_SUMMER_II_START,
+    CONF_TARIFF_SUMMER_II_END, CONF_TARIFF_WINTER_I_START, CONF_TARIFF_WINTER_I_END,
+    CONF_TARIFF_WINTER_II_START, CONF_TARIFF_WINTER_II_END,
 )
 
 WINDOW_END_KEYS = frozenset(
@@ -185,6 +201,10 @@ def _start_time_select_options() -> list[dict[str, str]]:
 
 def _end_time_select_options() -> list[dict[str, str]]:
     return _select_options(end_time_options())
+
+
+def _tariff_time_select_options() -> list[dict[str, str]]:
+    return _select_options([f"{h:02d}:{m:02d}" for h in range(24) for m in (0, 15, 30, 45)])
 
 
 def _duration_select_options() -> list[dict[str, str]]:
@@ -495,9 +515,51 @@ def _rce_form_schema(current_data: Mapping[str, Any]) -> vol.Schema:
         }
     )
 
+    tariff_inner = vol.Schema(
+        {
+            vol.Optional(
+                CONF_TARIFF_ENABLED,
+                default=_get(CONF_TARIFF_ENABLED, DEFAULT_TARIFF_ENABLED),
+            ): selector.BooleanSelector(selector.BooleanSelectorConfig()),
+            vol.Required(CONF_TARIFF_SUMMER_RATE_I, default=_get(CONF_TARIFF_SUMMER_RATE_I, DEFAULT_TARIFF_RATE)):
+                selector.NumberSelector(selector.NumberSelectorConfig(min=0, max=10000, step=0.01, mode=selector.NumberSelectorMode.BOX, unit_of_measurement="PLN/MWh")),
+            vol.Required(CONF_TARIFF_SUMMER_RATE_II, default=_get(CONF_TARIFF_SUMMER_RATE_II, DEFAULT_TARIFF_RATE)):
+                selector.NumberSelector(selector.NumberSelectorConfig(min=0, max=10000, step=0.01, mode=selector.NumberSelectorMode.BOX, unit_of_measurement="PLN/MWh")),
+            vol.Required(CONF_TARIFF_SUMMER_RATE_III, default=_get(CONF_TARIFF_SUMMER_RATE_III, DEFAULT_TARIFF_RATE)):
+                selector.NumberSelector(selector.NumberSelectorConfig(min=0, max=10000, step=0.01, mode=selector.NumberSelectorMode.BOX, unit_of_measurement="PLN/MWh")),
+            vol.Required(CONF_TARIFF_WINTER_RATE_I, default=_get(CONF_TARIFF_WINTER_RATE_I, DEFAULT_TARIFF_RATE)):
+                selector.NumberSelector(selector.NumberSelectorConfig(min=0, max=10000, step=0.01, mode=selector.NumberSelectorMode.BOX, unit_of_measurement="PLN/MWh")),
+            vol.Required(CONF_TARIFF_WINTER_RATE_II, default=_get(CONF_TARIFF_WINTER_RATE_II, DEFAULT_TARIFF_RATE)):
+                selector.NumberSelector(selector.NumberSelectorConfig(min=0, max=10000, step=0.01, mode=selector.NumberSelectorMode.BOX, unit_of_measurement="PLN/MWh")),
+            vol.Required(CONF_TARIFF_WINTER_RATE_III, default=_get(CONF_TARIFF_WINTER_RATE_III, DEFAULT_TARIFF_RATE)):
+                selector.NumberSelector(selector.NumberSelectorConfig(min=0, max=10000, step=0.01, mode=selector.NumberSelectorMode.BOX, unit_of_measurement="PLN/MWh")),
+            vol.Required(CONF_TARIFF_SUMMER_I_START, default=_get(CONF_TARIFF_SUMMER_I_START, DEFAULT_TARIFF_SUMMER_I_START)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_SUMMER_I_END, default=_get(CONF_TARIFF_SUMMER_I_END, DEFAULT_TARIFF_SUMMER_I_END)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_SUMMER_II_START, default=_get(CONF_TARIFF_SUMMER_II_START, DEFAULT_TARIFF_SUMMER_II_START)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_SUMMER_II_END, default=_get(CONF_TARIFF_SUMMER_II_END, DEFAULT_TARIFF_SUMMER_II_END)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_WINTER_I_START, default=_get(CONF_TARIFF_WINTER_I_START, DEFAULT_TARIFF_WINTER_I_START)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_WINTER_I_END, default=_get(CONF_TARIFF_WINTER_I_END, DEFAULT_TARIFF_WINTER_I_END)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_WINTER_II_START, default=_get(CONF_TARIFF_WINTER_II_START, DEFAULT_TARIFF_WINTER_II_START)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_WINTER_II_END, default=_get(CONF_TARIFF_WINTER_II_END, DEFAULT_TARIFF_WINTER_II_END)):
+                selector.SelectSelector(selector.SelectSelectorConfig(options=_tariff_time_select_options(), mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required(CONF_TARIFF_SUMMER_START, default=_get(CONF_TARIFF_SUMMER_START, DEFAULT_TARIFF_SUMMER_START)):
+                selector.TextSelector(selector.TextSelectorConfig()),
+            vol.Required(CONF_TARIFF_SUMMER_END, default=_get(CONF_TARIFF_SUMMER_END, DEFAULT_TARIFF_SUMMER_END)):
+                selector.TextSelector(selector.TextSelectorConfig()),
+        }
+    )
+
     return vol.Schema(
         {
             vol.Required(SECTION_PRICING): section(pricing_inner, {"collapsed": False}),
+            vol.Required(SECTION_TARIFF): section(tariff_inner, {"collapsed": True}),
             vol.Required(SECTION_THRESHOLDS): section(thresholds_inner, {"collapsed": True}),
             vol.Required(SECTION_CHEAPEST_WINDOW): section(cheapest_inner, {"collapsed": True}),
             vol.Required(SECTION_EXPENSIVE_WINDOW): section(expensive_inner, {"collapsed": True}),
